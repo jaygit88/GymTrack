@@ -8,7 +8,7 @@ import { MOBILE } from './mobile.js'
 import { ensureAiConsent } from './coach-api.js'
 import { loadCoachDevice, saveCoachDevice, coachLimits } from './coach-device.js'
 import { getApiKey } from './coach-secrets.js'
-import { buildReviewPayload, buildReviewPrompt, checkReview, REVIEW_SCHEMA, REVIEW_MODES } from './ai-review.js'
+import { buildReviewPayload, buildReviewPrompt, checkReview, checkRunPlan, planToSave, schemaFor, REVIEW_MODES } from './ai-review.js'
 import { getLang } from './i18n-core.js'
 import { t } from './i18n.js'
 import { todayISO } from './format.js'
@@ -25,7 +25,7 @@ const langName = code => {
 let running = null
 export const aiReviewRunning = () => running
 
-/** Asks for a review (`mode`: 'month' | 'stall'), saves it and resolves with it. Throws with a readable message. */
+/** Asks for a review (`mode`: 'month' | 'stall') or a running plan ('runplan'), saves it and resolves with it. Throws with a readable message. */
 export function runAiReview(mode, { deps = {} } = {}) {
   if (running) return running
   running = run(mode, deps).finally(() => { running = null })
@@ -59,13 +59,21 @@ async function run(mode, deps) {
   const key = await (deps.getKey || getApiKey)()
   const r = await adapter.invoke({
     cfg: { provider: d.provider, providerOptions: d.baseUrl ? { [d.provider]: { baseUrl: d.baseUrl } } : {} },
-    prompt: user, system, schema: REVIEW_SCHEMA,
+    prompt: user, system, schema: schemaFor(mode),
     model: d.model || meta.defaultModel, timeoutMs: local.timeoutFor(d.provider),
     env: key ? { [meta.apiKeyEnv]: key } : {}, fetch: local.guardedFetch, maxTokens: coachLimits(d).maxOutputTokens,
   })
   if (r.timedOut) throw fail(t('GymTrackAI did not answer in time. Try again in a moment.'))
   if (r.code !== 0) throw fail(t('GymTrackAI did not answer. Try again in a moment.') + (r.stderr ? ' (' + String(r.stderr).slice(0, 160) + ')' : ''))
   const parsed = core.extractJSON(r.text)
+  // A running plan is saved as the plan (S.runPlan); a review beside the others (S.aiReviews).
+  if (mode === 'runplan') {
+    const checked = parsed.error ? { ok: false } : checkRunPlan(parsed.value)
+    if (!checked.ok) throw fail(t('GymTrackAI did not answer. Try again in a moment.'))
+    const plan = planToSave(useStore.getState().S, checked.plan)
+    useStore.getState().update(s => { s.runPlan = plan })
+    return plan
+  }
   const checked = parsed.error ? { ok: false } : checkReview(parsed.value)
   if (!checked.ok) throw fail(t('GymTrackAI did not answer. Try again in a moment.'))
   const entry = { at: Date.now(), period: payload.period, review: checked.review, ...(mode === 'stall' ? { goals: payload.stalledGoals } : {}) }

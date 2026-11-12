@@ -2455,6 +2455,21 @@ export const PT_BR_OVERRIDES = {
   "GymTrackAI did not answer in time. Try again in a moment.": "O GymTrackAI não respondeu a tempo. Tente de novo daqui a pouco.",
   "GymTrackAI did not answer. Try again in a moment.": "O GymTrackAI não respondeu. Tente de novo daqui a pouco.",
   "Set up the AI Coach with your own API key first: Settings, AI Coach.": "Primeiro configure o treinador de IA com sua própria chave de API: Configurações, Treinador de IA.",
+  "Long run": "Longão",
+  "As your watch estimates it": "Como seu relógio estima",
+  "From your watch, through Health Connect": "Do seu relógio, pelo Health Connect",
+  "The plan builds up to the distance; leave the time empty to just finish.": "O plano vai aumentando até a distância; deixe o tempo vazio para apenas terminar.",
+  "Your runs point to {0}": "Suas corridas apontam para {0}",
+  "Run 3 km or more to get an estimate.": "Corra 3 km ou mais para obter uma estimativa.",
+  "Made {0}": "Criado em {0}",
+  "Four weeks of runs towards your goal, fitted around your lifting.": "Quatro semanas de corridas rumo ao seu objetivo, ajustadas à sua musculação.",
+  "This plan has run its course. Ask for the next one.": "Este plano terminou. Peça o próximo.",
+  "Set a running goal first.": "Primeiro defina um objetivo de corrida.",
+  "No runs yet. Turn on Runs from your watch in Settings, Health Connect.": "Ainda sem corridas. Ative “Corridas do seu relógio” em Configurações, Health Connect.",
+  "This week: {0}, against a usual {1}. Build up by about 10% a week to stay injury free.": "Esta semana: {0}, contra os {1} de costume. Aumente cerca de 10% por semana para evitar lesões.",
+  "Steady heart rate for the pace all the way: your aerobic base held up.": "Batimento estável para o ritmo até o fim: sua base aeróbica aguentou.",
+  "Your heart worked {0}% harder for the pace in the second half. Longer easy runs build this up.": "Seu coração trabalhou {0}% mais para o ritmo na segunda metade. Corridas leves mais longas melhoram isso.",
+  "A big jump this week. Keep the next runs easy.": "Um grande salto esta semana. Faça as próximas corridas leves.",
 }
 
 export default { ...pt, ...PT_BR_OVERRIDES }

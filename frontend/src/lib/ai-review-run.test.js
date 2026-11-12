@@ -47,3 +47,14 @@ describe('runAiReview', () => {
     expect(useStore.getState().S.aiReviews.stall).toBeUndefined()
   })
 })
+
+describe('a running plan', () => {
+  it('is saved as the plan, from the start of this week', async () => {
+    const plan = { summary: 'Easy base.', weeks: [{ runs: [{ day: 'Tue', kind: 'easy', km: 5, notes: 'chatty pace' }] }] }
+    const d = deps({ local: { ...deps().local, ADAPTERS: { anthropic: { invoke: vi.fn(async () => ({ code: 0, text: JSON.stringify(plan) })) } } } })
+    const saved = await runAiReview('runplan', { deps: d })
+    expect(d.local.ADAPTERS.anthropic.invoke.mock.calls[0][0].schema.required).toEqual(['summary', 'weeks'])
+    expect(saved.weeks[0].runs[0]).toMatchObject({ day: 'Tue', km: 5 })
+    expect(useStore.getState().S.runPlan.startsOn).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+  })
+})

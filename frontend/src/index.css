@@ -3316,3 +3316,31 @@ button.wl-summary{width:100%;padding:0 0 10px;text-align:start;border-radius:var
 .ai-sug-t{font-weight:600}
 .ai-err{color:var(--red);margin-top:6px}
 .ai-actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:10px;position:relative;z-index:2}
+
+/* GymTrack: running (views/Running.jsx, components/RunningCard.jsx, components/RunSheets.jsx) */
+.run-plan{display:grid;gap:6px;margin-top:8px}
+.run-plan-i{display:flex;gap:8px;align-items:baseline}
+.run-plan-i svg{flex:none;color:var(--label-3);align-self:center}
+.run-plan-i.done svg{color:var(--green)}
+.run-plan-i.done .grow{color:var(--label-2)}
+.run-plan-d{min-width:28px;font-weight:600;color:var(--label-2)}
+.run-plan-n{display:block}
+.run-card .run-plan{position:relative;z-index:2;pointer-events:none}
+.run-goal{display:grid;gap:4px;margin-top:6px}
+.run-good{color:var(--green)}
+.run-warn{display:flex;gap:6px;align-items:baseline;color:var(--orange);margin-top:6px}
+.run-warn svg{flex:none}
+.run-note{display:flex;gap:6px;align-items:baseline;margin:10px 0}
+.run-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 12px}
+.run-stat-v{font-weight:600;font-variant-numeric:tabular-nums}
+.run-split{gap:10px}
+.run-split .lrow-m{flex:0 0 64px}
+.run-split-bar{flex:1;height:8px;border-radius:4px;background:var(--surface-3);overflow:hidden}
+.run-split-bar i{display:block;height:100%;background:var(--orange);border-radius:4px}
+.run-split-bar.z1 i{background:var(--label-3)}
+.run-split-bar.z2 i{background:var(--blue)}
+.run-split-bar.z3 i{background:var(--green)}
+.run-split-bar.z4 i{background:var(--orange)}
+.run-split-bar.z5 i{background:var(--red)}
+.run-split-v{min-width:44px;text-align:end;font-variant-numeric:tabular-nums}
+.run-time{max-width:110px;text-align:end}

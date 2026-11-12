@@ -138,6 +138,10 @@ export function parseRaceTime(text) {
   const secs = n.length === 3 ? n[0] * 3600 + n[1] * 60 + n[2] : n[0] * 60 + n[1]
   return secs > 0 ? secs : null
 }
+/** Two decimals in the UI language, for metres per heartbeat (1.18 against 1.24 is the whole story). */
+export const fmt2 = n => (Number.isFinite(n) ? n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '')
+/** A split's bar, 0 to 100: the fastest full, each 1 % slower 4 points shorter, never under 20. */
+export const splitBar = (secs, fastest) => Math.max(20, Math.round(100 - (secs - fastest) / fastest * 400))
 export const distUnit = unit => (unit === 'lb' ? 'mi' : 'km')
 export const toUnit = (km, unit) => (unit === 'lb' ? km / KM_PER_MI : km)
 

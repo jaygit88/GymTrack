@@ -166,9 +166,9 @@ final class HealthRead {
     /** Heart-rate samples inside [from, to], thinned to one per SAMPLE_GAP_MS, oldest first. */
     static List<long[]> thinHr(List<long[]> samples) {
         List<long[]> out = new ArrayList<>();
-        long last = Long.MIN_VALUE;
+        long last = 0;
         for (long[] s : samples) {
-            if (s[0] - last < SAMPLE_GAP_MS) continue;
+            if (!out.isEmpty() && s[0] - last < SAMPLE_GAP_MS) continue;
             out.add(s);
             last = s[0];
         }

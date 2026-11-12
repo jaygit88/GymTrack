@@ -9,6 +9,7 @@ import { t, tn } from '../lib/i18n.js'
 import { tappable } from '../lib/use-sheet-keyboard.js'
 import { runsOn, runDistance, runPace } from '../lib/runs.js'
 import { workoutDetailSheet, logPastWorkoutSheet } from '../sheets.jsx'
+import { runSheet } from './RunSheets.jsx'
 
 // The last seven days, today first, laid out like Plan's week: what you trained each day and
 // which muscles it hit, so what is due next reads straight off it. A day without a workout is a
@@ -50,13 +51,15 @@ export default function RecentDays({ S, days = 7 }) {
     done.forEach((x, n) => {
       if (x.kind === 'r') {
         const r = x.r, dist = runDistance(r, S.unit), pace = runPace(r, S.unit)
-        items.push(<div key={r.id} className="item plan-day recent-day recent-run" data-tour={!items.length ? tour : undefined} aria-label={t(DAYN[d.getDay()])}>
+        items.push(<div key={r.id} className="item plan-day recent-day recent-run" data-tour={!items.length ? tour : undefined} aria-label={t(DAYN[d.getDay()])}
+          {...tappable(() => runSheet(r))}>
           {dayLabel(!items.length)}
           <span className="lrow-i" style={{ background: 'var(--orange)' }}><Icon name="run" /></span>
           <div className="grow">
             <div className="tt">{r.title || t('Run')}</div>
-            <div className="ss">{[dist && fmtNum(dist.value) + ' ' + dist.unit, ...durPart(r.end - r.start), pace && pace.text + ' /' + pace.unit].filter(Boolean).join(' · ')}</div>
+            <div className="ss">{[dist && fmtNum(dist.value) + ' ' + dist.unit, ...durPart(r.end - r.start), pace && pace.text + ' /' + pace.unit, r.hr && r.hr.avg + ' bpm'].filter(Boolean).join(' · ')}</div>
           </div>
+          <Icon name="chevronRight" className="chev" />
         </div>)
         return
       }

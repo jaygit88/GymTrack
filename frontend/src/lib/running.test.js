@@ -147,3 +147,13 @@ describe('mergeFitness', () => {
     expect(mergeFitness(S, { vo2max: [[T0 + 3600e3, 44.8]] }, T0 + 7200e3)).toBe(0)
   })
 })
+
+describe('display helpers', async () => {
+  const { fmt2, splitBar } = await import('./running.js')
+  it('shows efficiency to two decimals and spreads the split bars', () => {
+    expect(fmt2(1.2)).toMatch(/^1[.,]20$/)
+    expect(splitBar(300, 300)).toBe(100)
+    expect(splitBar(309, 300)).toBe(88)
+    expect(splitBar(600, 300)).toBe(20)
+  })
+})

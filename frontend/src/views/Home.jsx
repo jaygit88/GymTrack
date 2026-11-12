@@ -11,6 +11,7 @@ import CardHead from '../components/CardHead.jsx'
 import RecentDays from '../components/RecentDays.jsx'
 import MeasureChangeCard from '../components/MeasureChangeCard.jsx'
 import AiReviewCard, { StallCard } from '../components/AiReviewCard.jsx'
+import RunningCard from '../components/RunningCard.jsx'
 import { stalledGoals } from '../lib/measure-change.js'
 import { weekTally } from '../lib/queue.js'
 import { WeeklySetsHomeLine } from '../components/WeeklySets.jsx'
@@ -78,6 +79,9 @@ export default function Home() {
         <RecentDays S={S} />
         {S.homeMuscleSets === true && <WeeklySetsHomeLine S={S} onOpen={() => nav('/stats?section=lifts')} />}
       </div>}
+
+    {/* Running from the watch: this week, the plan's runs, a warning on a jump (lib/running.js). */}
+    <RunningCard S={S} />
 
     {/* What your body measurements did over the last month, on the body (lib/measure-change.js). */}
     {on('body') && <MeasureChangeCard S={S} />}

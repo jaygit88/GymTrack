@@ -71,7 +71,7 @@ public class HealthReadTest {
         assertEquals("android.permission.health.READ_WEIGHT", HealthRead.readPermission("weight"));
         assertEquals("android.permission.health.READ_HEALTH_DATA_HISTORY", HealthRead.readPermission("history"));
         assertEquals("android.permission.health.WRITE_EXERCISE", HealthRead.writePermission("exercise"));
-        assertNull(HealthRead.readPermission("steps"));
+        assertNull(HealthRead.readPermission("sleep"));
     }
 
     // GymTrack: runs read back from Health Connect.

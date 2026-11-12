@@ -12,7 +12,7 @@ const S = {
     { id: 'b', d: day(40), name: 'Old', entries: [] },
     { id: 'c', d: day(45), name: 'Older', entries: [] },
   ],
-  runs: [{ id: 'hc:1', d: day(2), start: 0, end: 30 * 60e3, km: 5 }],
+  runs: [{ id: 'hc:1', d: day(2), start: NOW - 2 * 86400e3, end: NOW - 2 * 86400e3 + 30 * 60e3, km: 5 }],
   bodyweight: [{ d: day(20), w: 82 }, { d: day(1), w: 81.2 }],
   measurements: [
     { d: day(40), t: 0, other: [], chest: 100, waist: 90 },
@@ -30,7 +30,7 @@ describe('buildReviewPayload', () => {
     expect(p.workouts[0].exercises[0]).toEqual({ name: 'Bench press', sets: 2, best: '80 kg x 8' })
   })
   it('carries runs, body weight, measurement changes, goals and the stalled ones', () => {
-    expect(p.runs).toEqual([{ date: day(2), minutes: 30, distance: '5 km' }])
+    expect(p.runs).toEqual([{ date: day(2), minutes: 30, distance: '5 km', pace: '6:00 /km' }])
     expect(p.bodyweight).toEqual({ first: '82 kg', last: '81.2 kg' })
     expect(p.measurementChanges.find(c => c.measurement === 'Waist')).toMatchObject({ verdict: 'better' })
     expect(p.goals).toContain('Chest')
@@ -71,5 +71,29 @@ describe('storedReview', () => {
     expect(storedReview({ aiReviews: { month: r } }, 'month')).toBe(r)
     expect(storedReview({ aiReviews: { month: { at: 1 } } }, 'month')).toBeNull()
     expect(storedReview({}, 'stall')).toBeNull()
+  })
+})
+
+describe('the running plan', () => {
+  it('sends the running goal, weekly distance and the lifting weekdays', async () => {
+    const { buildReviewPayload } = await import('./ai-review.js')
+    const p = buildReviewPayload({ ...S, runGoal: { kind: 'fitness', weeklyKm: 15 } }, { mode: 'runplan', now: NOW })
+    expect(p.running.goal).toEqual({ kind: 'fitness', weeklyKm: 15 })
+    expect(p.running.weeks).toHaveLength(8)
+    expect(p.running.runs).toHaveLength(1)
+    expect(buildReviewPrompt(p).system).toMatch(/running plan/)
+  })
+
+  it('checks the plan and keeps only well-formed runs', async () => {
+    const { checkRunPlan } = await import('./ai-review.js')
+    const r = checkRunPlan({ summary: 'Base first.', weeks: [
+      { runs: [{ day: 'Sun', kind: 'long', km: 8.04, notes: 'easy' }, { day: 'Tue', kind: 'easy', km: 5, notes: 'zone 2' }, { day: 'Funday', kind: 'easy', km: 5 }, { day: 'Wed', kind: 'sprint', km: 3 }] },
+      { runs: [] },
+    ] })
+    expect(r.ok).toBe(true)
+    expect(r.plan.weeks).toHaveLength(1)
+    expect(r.plan.weeks[0].runs.map(x => x.day)).toEqual(['Tue', 'Sun'])
+    expect(r.plan.weeks[0].runs[1].km).toBe(8)
+    expect(checkRunPlan({ summary: 's', weeks: [] }).ok).toBe(false)
   })
 })
