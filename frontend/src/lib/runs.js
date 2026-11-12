@@ -4,11 +4,13 @@
 // volume, the streak) has to know about them. Home's last seven days lists them among the
 // workouts (components/RecentDays.jsx); the monthly review reads them too.
 //
-// A run: { id, d, start, end, km, title, type, src }. `id` is the hub's record id with a prefix,
+// A run: { id, d, start, end, km, title, type, src } and, where the watch saved them, hr, hrb,
+// splitsKm, splitsMi, cadence, elevM, kcal, eff and dec (lib/running.js summarizeRunDetail). `id` is the hub's record id with a prefix,
 // so a second read of the same run updates it (a watch can sync its distance late) instead of
 // adding it twice. Pure: lib/health-sync.js reads the hub and hands the sessions over.
 import { isOwnRecord } from './health-read.js'
 import { isoOf } from './format.js'
+import { summarizeRunDetail } from './running.js'
 
 // The session types that count as a run; walks, rides and the rest are left out for now.
 export const RUN_TYPES = new Set(['running', 'running_treadmill'])
@@ -38,10 +40,12 @@ export function mergeRuns(S, sessions, { src = 'hc', now = Date.now() } = {}) {
       km: m > 0 ? Math.round(m / 10) / 100 : null,
       title: typeof s.title === 'string' && s.title.trim() ? s.title.trim().slice(0, 80) : null,
       type: s.type, src,
+      // What else the watch saved: heart rate, splits, cadence, climb, energy (lib/running.js).
+      ...summarizeRunDetail({ ...s, start, end, meters: m }),
     }
     const i = S.runs.findIndex(r => r && r.id === run.id)
     if (i < 0) { S.runs.push(run); changed++ }
-    else if (['d', 'start', 'end', 'km', 'title', 'type'].some(k => S.runs[i][k] !== run[k])) { S.runs[i] = run; changed++ }
+    else if (JSON.stringify(S.runs[i]) !== JSON.stringify(run)) { S.runs[i] = run; changed++ }
   }
   if (changed) {
     const cutoff = now - KEEP_DAYS * 86400e3

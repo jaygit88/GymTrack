@@ -8,7 +8,14 @@ import androidx.activity.result.contract.ActivityResultContract;
 import androidx.health.connect.client.HealthConnectClient;
 import androidx.health.connect.client.HealthConnectFeatures;
 import androidx.health.connect.client.PermissionController;
+import androidx.health.connect.client.records.ActiveCaloriesBurnedRecord;
 import androidx.health.connect.client.records.DistanceRecord;
+import androidx.health.connect.client.records.ElevationGainedRecord;
+import androidx.health.connect.client.records.ExerciseLap;
+import androidx.health.connect.client.records.RestingHeartRateRecord;
+import androidx.health.connect.client.records.SpeedRecord;
+import androidx.health.connect.client.records.StepsRecord;
+import androidx.health.connect.client.records.Vo2MaxRecord;
 import androidx.health.connect.client.records.ExerciseSessionRecord;
 import androidx.health.connect.client.records.HeartRateRecord;
 import androidx.health.connect.client.records.Record;
@@ -333,8 +340,10 @@ public class HealthConnectPlugin extends Plugin {
         }
         worker.execute(() -> {
             try {
-                List<HealthRead.Session> sessions = HealthRead.sessions(
-                        read(ExerciseSessionRecord.class, TimeRangeFilter.after(Instant.ofEpochMilli(since))));
+                List<ExerciseSessionRecord> raw = read(ExerciseSessionRecord.class, TimeRangeFilter.after(Instant.ofEpochMilli(since)));
+                java.util.Map<String, ExerciseSessionRecord> recordsById = new java.util.HashMap<>();
+                for (ExerciseSessionRecord r : raw) recordsById.put(r.getMetadata().getId(), r);
+                List<HealthRead.Session> sessions = HealthRead.sessions(raw);
                 boolean distance = granted().contains(READ_DISTANCE);
                 JSArray list = new JSArray();
                 for (HealthRead.Session s : sessions) {
@@ -347,6 +356,7 @@ public class HealthConnectPlugin extends Plugin {
                         }
                         s.meters = HealthRead.metersFor(s, dists);
                     }
+                    if (s.type.startsWith("running")) details(s, recordsById.get(s.id));
                     JSObject o = new JSObject();
                     o.put("id", s.id);
                     o.put("origin", s.origin);
@@ -356,6 +366,24 @@ public class HealthConnectPlugin extends Plugin {
                     o.put("type", s.type);
                     o.put("title", s.title);
                     o.put("meters", s.meters);
+                    if (!s.hr.isEmpty()) {
+                        JSArray hr = new JSArray();
+                        for (long[] x : s.hr) hr.put(new JSArray().put(x[0]).put(x[1]));
+                        o.put("hr", hr);
+                    }
+                    if (!s.speed.isEmpty()) {
+                        JSArray sp = new JSArray();
+                        for (double[] x : s.speed) sp.put(new JSArray().put((long) x[0]).put(x[1]));
+                        o.put("speed", sp);
+                    }
+                    if (!s.laps.isEmpty()) {
+                        JSArray laps = new JSArray();
+                        for (double[] x : s.laps) laps.put(new JSArray().put((long) x[0]).put((long) x[1]).put(x[2]));
+                        o.put("laps", laps);
+                    }
+                    if (s.steps >= 0) o.put("steps", s.steps);
+                    if (s.elevation >= 0) o.put("elevation", s.elevation);
+                    if (s.kcal >= 0) o.put("kcal", s.kcal);
                     list.put(o);
                 }
                 JSObject out = new JSObject();
@@ -366,6 +394,88 @@ public class HealthConnectPlugin extends Plugin {
             } catch (Exception e) {
                 call.reject(e.getMessage(), "failed");
             }
+        });
+    }
+
+    // GymTrack: what the run's own app saved inside one run. Each kind is read only if its
+    // permission was granted; one refused (or not written at all) just leaves that part out.
+    private void details(HealthRead.Session s, ExerciseSessionRecord rec) {
+        TimeRangeFilter in = TimeRangeFilter.between(Instant.ofEpochMilli(s.start), Instant.ofEpochMilli(s.end));
+        try {
+            s.hr = HealthRead.thinHr(HealthRead.samples(read(HeartRateRecord.class, in), s.start, s.end));
+        } catch (Exception ignored) { }
+        try {
+            List<double[]> sp = new ArrayList<>();
+            for (SpeedRecord r : read(SpeedRecord.class, in)) {
+                if (!s.origin.equals(r.getMetadata().getDataOrigin().getPackageName())) continue;
+                for (SpeedRecord.Sample x : r.getSamples())
+                    sp.add(new double[] { x.getTime().toEpochMilli(), x.getSpeed().getMetersPerSecond() });
+            }
+            s.speed = HealthRead.thinSpeed(sp, s.start, s.end);
+        } catch (Exception ignored) { }
+        if (rec != null) {
+            try {
+                for (ExerciseLap lap : rec.getLaps()) {
+                    double m = lap.getLength() == null ? -1 : lap.getLength().getMeters();
+                    s.laps.add(new double[] { lap.getStartTime().toEpochMilli(), lap.getEndTime().toEpochMilli(), m });
+                }
+            } catch (Exception ignored) { }
+        }
+        try {
+            long n = 0; boolean any = false;
+            for (StepsRecord r : read(StepsRecord.class, in)) {
+                if (!s.origin.equals(r.getMetadata().getDataOrigin().getPackageName())) continue;
+                n += r.getCount(); any = true;
+            }
+            if (any) s.steps = n;
+        } catch (Exception ignored) { }
+        try {
+            double m = 0; boolean any = false;
+            for (ElevationGainedRecord r : read(ElevationGainedRecord.class, in)) {
+                if (!s.origin.equals(r.getMetadata().getDataOrigin().getPackageName())) continue;
+                m += r.getElevation().getMeters(); any = true;
+            }
+            if (any) s.elevation = m;
+        } catch (Exception ignored) { }
+        try {
+            double k = 0; boolean any = false;
+            for (ActiveCaloriesBurnedRecord r : read(ActiveCaloriesBurnedRecord.class, in)) {
+                if (!s.origin.equals(r.getMetadata().getDataOrigin().getPackageName())) continue;
+                k += r.getEnergy().getKilocalories(); any = true;
+            }
+            if (any) s.kcal = k;
+        } catch (Exception ignored) { }
+    }
+
+    // GymTrack: cardio fitness readings since `since`: VO2 max and resting heart rate, as a watch
+    // works them out. Either list is empty when it was not granted or never written.
+    //   await HC.readFitness({ since });  // { vo2max: [[ms, ml/kg/min]], restingHr: [[ms, bpm]] }
+    @PluginMethod
+    public void readFitness(PluginCall call) {
+        if (!"available".equals(sdkStatus())) {
+            call.reject("Health Connect is not available", "unavailable");
+            return;
+        }
+        Long since = millis(call, "since");
+        if (since == null) {
+            call.reject("since is needed", "failed");
+            return;
+        }
+        worker.execute(() -> {
+            TimeRangeFilter range = TimeRangeFilter.after(Instant.ofEpochMilli(since));
+            JSArray vo2 = new JSArray(), rhr = new JSArray();
+            try {
+                for (Vo2MaxRecord r : read(Vo2MaxRecord.class, range))
+                    vo2.put(new JSArray().put(r.getTime().toEpochMilli()).put(r.getVo2MillilitersPerMinuteKilogram()));
+            } catch (Exception ignored) { }
+            try {
+                for (RestingHeartRateRecord r : read(RestingHeartRateRecord.class, range))
+                    rhr.put(new JSArray().put(r.getTime().toEpochMilli()).put(r.getBeatsPerMinute()));
+            } catch (Exception ignored) { }
+            JSObject out = new JSObject();
+            out.put("vo2max", vo2);
+            out.put("restingHr", rhr);
+            call.resolve(out);
         });
     }
 

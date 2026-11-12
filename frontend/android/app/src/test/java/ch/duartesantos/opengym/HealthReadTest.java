@@ -94,4 +94,15 @@ public class HealthReadTest {
                 new HealthRead.Dist(3_000_000, 3_600_000, "watch", 900));   // after the run
         assertEquals(5200, HealthRead.metersFor(s, d), 0.001);
     }
+
+    @Test
+    public void thinsSamplesForTheTripToJs() {
+        java.util.List<long[]> hr = java.util.Arrays.asList(new long[] { 0, 100 }, new long[] { 1000, 101 }, new long[] { 5000, 120 }, new long[] { 9000, 130 }, new long[] { 10000, 131 });
+        assertEquals(3, HealthRead.thinHr(hr).size());
+        java.util.List<double[]> sp = java.util.Arrays.asList(new double[] { 6000, 3.1 }, new double[] { 0, 3.0 }, new double[] { 20000, 40 }, new double[] { 99000, 3.2 });
+        java.util.List<double[]> out = HealthRead.thinSpeed(sp, 0, 60000);
+        assertEquals(2, out.size());              // sorted, inside the window, no 40 m/s glitch
+        assertEquals(0, out.get(0)[0], 0.001);
+        assertEquals("android.permission.health.READ_VO2_MAX", HealthRead.readPermission("vo2max"));
+    }
 }

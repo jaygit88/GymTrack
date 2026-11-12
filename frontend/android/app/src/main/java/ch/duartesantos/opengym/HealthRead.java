@@ -72,6 +72,12 @@ final class HealthRead {
             // GymTrack: runs other apps saved (a Galaxy Watch through Samsung Health), and their distance.
             case "exercise": return "android.permission.health.READ_EXERCISE";
             case "distance": return "android.permission.health.READ_DISTANCE";
+            case "speed": return "android.permission.health.READ_SPEED";
+            case "elevation": return "android.permission.health.READ_ELEVATION_GAINED";
+            case "steps": return "android.permission.health.READ_STEPS";
+            case "calories": return "android.permission.health.READ_ACTIVE_CALORIES_BURNED";
+            case "vo2max": return "android.permission.health.READ_VO2_MAX";
+            case "restingHeartRate": return "android.permission.health.READ_RESTING_HEART_RATE";
             default: return null;
         }
     }
@@ -91,6 +97,12 @@ final class HealthRead {
         final String id, origin, clientId, type, title;
         final long start, end;
         double meters;
+        // GymTrack: what else the run's app saved inside it (filled in for runs only).
+        List<long[]> hr = new ArrayList<>();        // [ms, bpm], at most one per SAMPLE_GAP_MS
+        List<double[]> speed = new ArrayList<>();   // [ms, m/s], the same
+        List<double[]> laps = new ArrayList<>();    // [start ms, end ms, metres or -1]
+        long steps = -1;
+        double elevation = -1, kcal = -1;
 
         Session(String id, String origin, String clientId, long start, long end, String type, String title) {
             this.id = id; this.origin = origin; this.clientId = clientId;
@@ -145,5 +157,36 @@ final class HealthRead {
             if (d.meters > 0) sum += d.meters;
         }
         return sum;
+    }
+
+    // A sample every few seconds is plenty for averages, zones and splits, and keeps a two-hour
+    // run's heart rate to a couple of thousand points on the way to JS.
+    static final long SAMPLE_GAP_MS = 5000;
+
+    /** Heart-rate samples inside [from, to], thinned to one per SAMPLE_GAP_MS, oldest first. */
+    static List<long[]> thinHr(List<long[]> samples) {
+        List<long[]> out = new ArrayList<>();
+        long last = Long.MIN_VALUE;
+        for (long[] s : samples) {
+            if (s[0] - last < SAMPLE_GAP_MS) continue;
+            out.add(s);
+            last = s[0];
+        }
+        return out;
+    }
+
+    /** Speed samples [ms, m/s] inside [from, to], thinned like heart rate, oldest first. */
+    static List<double[]> thinSpeed(List<double[]> samples, long from, long to) {
+        List<double[]> sorted = new ArrayList<>();
+        for (double[] s : samples) if (s[0] >= from && s[0] <= to && s[1] >= 0 && s[1] < 15) sorted.add(s);
+        sorted.sort((a, b) -> Double.compare(a[0], b[0]));
+        List<double[]> out = new ArrayList<>();
+        double last = Double.NEGATIVE_INFINITY;
+        for (double[] s : sorted) {
+            if (s[0] - last < SAMPLE_GAP_MS) continue;
+            out.add(s);
+            last = s[0];
+        }
+        return out;
     }
 }

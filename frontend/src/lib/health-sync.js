@@ -19,6 +19,7 @@
 //
 // The web build never gets here (MOBILE is a build-time flag).
 import { mergeRuns } from './runs.js'
+import { mergeFitness } from './running.js'
 import { mergeHeartRate, mergeWeighIns, lacksHeartRate } from './health-read.js'
 import { MOBILE, nativePlatform, readJsonFile, writeJsonFile } from './mobile.js'
 import { healthRecords, planSync, writtenIds, goneIds } from './health-connect.js'
@@ -251,6 +252,7 @@ let lastRunsRead = 0
 // (with a day's overlap, for a watch that syncs late).
 const RUNS_FIRST_MS = 30 * 86400e3
 const RUNS_OVERLAP_MS = 86400e3
+const RUN_PERMISSIONS = ['exercise', 'distance', 'heartRate', 'speed', 'elevation', 'steps', 'calories', 'vo2max', 'restingHeartRate']
 
 /**
  * Turns one of the two reads on (`kind`: 'hr' | 'weight'): asks for that read permission only,
@@ -266,7 +268,9 @@ export async function enableRead(kind, getState, { apply = null } = {}) {
   const perm = kind === 'hr' ? 'heartRate' : kind === 'runs' ? 'exercise' : 'weight'
   // The history permission only where Health Connect has it (status says so); Apple Health has none.
   const history = kind === 'weight' && p.platform !== 'ios' && st.history === true
-  const read = kind === 'runs' ? ['exercise', 'distance'] : history ? [perm, 'history'] : [perm]
+  // Runs: the sessions and everything the watch saves about them, plus the fitness readings (VO2
+  // max, resting heart rate). Only exercise is needed; the rest each add their part when allowed.
+  const read = kind === 'runs' ? RUN_PERMISSIONS : history ? [perm, 'history'] : [perm]
   const res = await p.HC.requestPermissions({ read, write: [] }).catch(() => null)
   // Apple Health never says whether reading was allowed (that it was refused is itself private):
   // `read` is then missing, and a refusal just reads nothing.
@@ -375,6 +379,9 @@ async function readOnce(getState, force, now, applyFn) {
       lastRunsRead = now
       const sessions = Array.isArray(res?.sessions) ? res.sessions : []
       if (sessions.length) apply(probe => mergeRuns(probe, sessions, { now }) > 0, s => { mergeRuns(s, sessions, { now }) })
+      // Cardio fitness as the watch works it out: VO2 max and resting heart rate (lib/running.js).
+      const fit = p.HC.readFitness ? await p.HC.readFitness({ since }).catch(() => null) : null
+      if (fit) apply(probe => mergeFitness(probe, fit, now) > 0, s => { mergeFitness(s, fit, now) })
       h.runsAt = now
     } catch (e) { fail(e) }
   }
