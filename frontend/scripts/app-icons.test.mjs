@@ -42,7 +42,7 @@ describe('generated icon files', () => {
   })
 
   it('match a fresh draw (the small ones; --check compares them all)', () => {
-    for (const v of APP_ICON_VARIANTS) {
+    for (const v of ALT) {
       expect(readFileSync(join(ROOT, `public/app-icons/${v.id}.png`)).equals(draw(v, PREVIEW)), v.id).toBe(true)
     }
     const sky = APP_ICON_VARIANTS.find(v => v.id === 'sky')

@@ -260,8 +260,10 @@ export function files(rects = glyph()) {
   const out = []
   const colors = []
   for (const v of APP_ICON_VARIANTS) {
-    out.push([`public/app-icons/${v.id}.png`, () => draw(v, PREVIEW, { rects })])
+    // GymTrack: the default icon is a picture, not a drawing, so its preview and launcher files
+    // are made from it once and left alone here.
     if (v.id === 'default') continue
+    out.push([`public/app-icons/${v.id}.png`, () => draw(v, PREVIEW, { rects })])
     if (!v.art) out.push([`resources/icons/${v.id}.svg`, () => svgOf(v, rects)])
     const set = `ios/App/App/Assets.xcassets/${v.ios}.appiconset`
     out.push([`${set}/Contents.json`, () => iosContents])
