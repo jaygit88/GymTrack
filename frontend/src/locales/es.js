@@ -3748,4 +3748,5 @@ export default {
   "Upper chest": "Pecho superior",
   "Side delts": "Deltoides laterales",
   "Rear delts": "Deltoides posteriores",
+  "Simple pick": "Selección simple",
 }

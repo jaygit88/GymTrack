@@ -58,3 +58,17 @@ describe('a running plan', () => {
     expect(useStore.getState().S.runPlan.startsOn).toMatch(/^\d{4}-\d{2}-\d{2}$/)
   })
 })
+
+describe('a quick workout', () => {
+  it('is handed back for the time asked, not saved', async () => {
+    useStore.setState(s => ({ S: { ...s.S, workouts: [{ id: 'h', d: '2026-11-01', start: Date.parse('2026-11-01T10:00:00'), entries: [{ id: '0314', sets: [{ w: 24, r: 10, done: true }] }] }] } }))
+    const answer2 = { summary: 'Incline work.', focus: ['Upper chest'], exercises: [{ id: '0314', sets: 3, reps: 10, why: 'gap' }] }
+    const d = deps({ local: { ...deps().local, ADAPTERS: { anthropic: { invoke: vi.fn(async () => ({ code: 0, text: JSON.stringify(answer2) })) } } } })
+    const plan = await runAiReview('quick', { deps: d, minutes: 20 })
+    const call = d.local.ADAPTERS.anthropic.invoke.mock.calls[0][0]
+    expect(call.schema.required).toEqual(['summary', 'focus', 'exercises'])
+    expect(call.prompt).toContain('"minutes":20')
+    expect(plan.items[0]).toMatchObject({ id: '0314', sets: 3 })
+    expect(useStore.getState().S.aiReviews.quick).toBeUndefined()
+  })
+})

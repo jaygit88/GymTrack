@@ -97,3 +97,31 @@ describe('the running plan', () => {
     expect(checkRunPlan({ summary: 's', weeks: [] }).ok).toBe(false)
   })
 })
+
+describe('a quick workout from GymTrackAI', () => {
+  it('sends the time, the needs, two weeks of sessions and the library it may pick from', async () => {
+    const { buildReviewPayload, buildReviewPrompt } = await import('./ai-review.js')
+    const S2 = { unit: 'kg', workouts: [{ id: 'q', d: day(2), start: NOW - 2 * 86400e3, entries: [{ id: '0025', sets: [{ w: 80, r: 8, done: true }] }] }] }
+    const p = buildReviewPayload(S2, { mode: 'quick', minutes: 30, now: NOW })
+    expect(p.quick.minutes).toBe(30)
+    expect(p.quick.recentSessions[0].exercises[0]).toMatchObject({ sets: 1, best: '80 kg x 8' })
+    expect(p.quick.library[0]).toMatchObject({ id: '0025', yours: true })
+    expect(p.quick.library.length).toBeGreaterThan(30)
+    expect(p.quick.needs.some(n => n.area === 'Upper chest')).toBe(true)
+    expect(buildReviewPrompt(p).system).toMatch(/upper and lower chest/)
+  })
+
+  it('keeps only library exercises, once each, within bounds, and trims to the time', async () => {
+    const { checkQuick } = await import('./ai-review.js')
+    const lib = [{ id: '0314', name: 'dumbbell incline bench press' }, { id: '0334', name: 'dumbbell lateral raise' }, { id: '0378', name: 'dumbbell rear fly' }]
+    const r = checkQuick({ summary: 'Upper chest and delts.', focus: ['Upper chest', 'Side delts'], exercises: [
+      { id: '0314', sets: 9, reps: 10, why: 'no incline work in 12 days' }, { id: '0314', sets: 3, reps: 10 }, { id: 'nope', sets: 3, reps: 10 },
+      { id: '0334', sets: 4, reps: 15, why: 'side delts' }, { id: '0378', sets: 4, reps: 15, why: 'rear delts' },
+    ] }, lib, 20)
+    expect(r.ok).toBe(true)
+    expect(r.plan.items[0]).toMatchObject({ id: '0314', sets: 5 })
+    expect(r.plan.items.map(i => i.id)).not.toContain('nope')
+    expect(r.plan.estMinutes).toBeLessThanOrEqual(23)
+    expect(checkQuick({ summary: 's', exercises: [{ id: 'nope', sets: 3, reps: 8 }] }, lib, 30).ok).toBe(false)
+  })
+})

@@ -3748,4 +3748,5 @@ export default {
   "Upper chest": "Górna klatka",
   "Side delts": "Boczne barki",
   "Rear delts": "Tylne barki",
+  "Simple pick": "Prosty wybór",
 }

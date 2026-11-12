@@ -3349,3 +3349,5 @@ button.wl-summary{width:100%;padding:0 0 10px;text-align:start;border-radius:var
 .qw-list{margin-top:12px}
 .qw-foot{margin:8px 2px 12px}
 .qw-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.qw-ai{margin-top:12px;padding:10px 12px;border-radius:12px;background:rgba(94,92,230,.14);background:color-mix(in srgb,var(--indigo) 14%,transparent)}
+.qw-focus{display:flex;flex-wrap:wrap;gap:6px}

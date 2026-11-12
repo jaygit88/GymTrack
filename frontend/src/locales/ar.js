@@ -3803,4 +3803,5 @@ export default {
   "Upper chest": "أعلى الصدر",
   "Side delts": "الكتف الجانبي",
   "Rear delts": "الكتف الخلفي",
+  "Simple pick": "اختيار بسيط",
 }

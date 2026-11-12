@@ -3827,4 +3827,5 @@ export default {
   "Upper chest": "উপরের বুক",
   "Side delts": "সাইড ডেল্ট",
   "Rear delts": "রিয়ার ডেল্ট",
+  "Simple pick": "সহজ বাছাই",
 }

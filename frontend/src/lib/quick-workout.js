@@ -145,3 +145,80 @@ export function quickWorkout(S, minutes, { now = Date.now(), shuffle = 0 } = {})
   items.sort((a, b) => Number(b.compound) - Number(a.compound))
   return { minutes: budget, estMinutes: Math.round(used), items, recovering }
 }
+
+/* ---------- for GymTrackAI (lib/ai-review.js, mode 'quick') ---------- */
+
+// Well-known exercises for the finer areas (heads and regions a muscle map does not split), so
+// the model has a sensible choice for each even when you have never done one. Per pattern the
+// shortest names your gym's equipment allows, two of each.
+const AI_PATTERNS = [
+  /incline .*press$/, /decline .*press$/, /cable (cross ?over|.*fly)$/, /dumbbell fly$/, /^push-up$/, /chest dip/,
+  /lateral raise$/, /rear (delt|fly)|face pull/, /shoulder press$|military press$|overhead press$/, /front raise$/,
+  /pulldown$/, /^(pull-up|chin-up)$/, /seated row$|bent over row$|one arm row$|t-bar row$|chest supported row/, /shrug$/, /straight arm pulldown|pullover$/,
+  /preacher curl$|concentration curl$/, /hammer curl$/, /incline curl$|biceps curl$/,
+  /overhead triceps extension|triceps extension$/, /pushdown$/, /close[- ]grip bench press$/, /skull ?crusher|lying triceps extension$/,
+  /full squat$|front squat$|goblet squat$/, /leg press$/, /leg extension$/, /romanian deadlift$|stiff leg/, /leg curl$/,
+  /hip thrust$|glute bridge$/, /split squat$|lunge$/, /hip abduction|abductor/, /adductor|hip adduction/,
+  /standing calf raise$/, /seated calf raise$/,
+  /hanging leg raise$|leg raise$/, /crunch$|cable kneeling crunch/, /woodchop|russian twist$|side plank$/, /back extension$|hyperextension$/, /wrist curl$/,
+]
+const AI_EQUIPMENT = new Set(['body weight', 'dumbbell', 'cable', 'barbell', 'leverage machine', 'kettlebell', 'smith machine', 'ez barbell', 'sled machine', 'weighted'])
+// Variants nobody looks for in a gym: stretches, jumps, sleds, household objects, mobility drills.
+const ODD = /v\. ?\d|\(|female|male|stretch|jump|plank|bottle|power sled|stepback|frog|quadruped|l sit|hyght|push press|reverse|bench full squat|on (exercise|stability) ball|assisted|band/i
+const muscleList = ex => [ex.tg, ...(ex.sm || [])].filter(Boolean).slice(0, 5)
+
+/**
+ * The exercises GymTrackAI may choose from: yours from the last 90 days first (with your usual
+ * reps and best set), then the well-known ones above that your gym can do. Each { id, name,
+ * muscles, yours?, usualReps?, best? }. The model must answer with ids from this list.
+ */
+export function aiLibrary(S, now = Date.now(), max = 140) {
+  const yours = yourExercises(S, now)
+  const best = new Map()
+  for (const w of S?.workouts || []) for (const e of w?.entries || []) for (const st of e.sets || []) {
+    if (!st || !st.done || isWarmupRow(st) || !(+st.w > 0)) continue
+    const b = best.get(e.id)
+    if (!b || +st.w * (+st.r || 1) > b.w * (b.r || 1)) best.set(e.id, { w: +st.w, r: +st.r || 0 })
+  }
+  const out = []
+  const seen = new Set()
+  const unit = S?.unit === 'lb' ? 'lb' : 'kg'
+  const add = (id, mine) => {
+    const ex = exOf(id)
+    if (!ex || seen.has(id) || !exAvailable(S, ex)) return
+    seen.add(id)
+    const b = best.get(id)
+    out.push({ id, name: nameOf(ex), muscles: muscleList(ex),
+      ...(mine ? { yours: true, usualReps: median(yours.get(id)?.reps || []) || undefined } : {}),
+      ...(b ? { best: `${b.w} ${unit} x ${b.r}` } : {}) })
+  }
+  for (const [id] of [...yours.entries()].sort((a, b) => b[1].n - a[1].n)) add(id, true)
+  const all = Object.values(EXIDX).filter(ex => ex && AI_EQUIPMENT.has(ex.eq) && !ODD.test(ex.n) && ex.n.length <= 40)
+  // A plain gym name ("dumbbell ...", "cable ...") over a novelty one, then the shorter.
+  const rank = ex => (/^(dumbbell|barbell|cable|lever|smith|ez-bar|kettlebell) /.test(ex.n) || /^(pull-up|chin-up|push-up)$/.test(ex.n) ? 0 : 100) + ex.n.length
+  for (const re of AI_PATTERNS) {
+    all.filter(ex => re.test(ex.n)).sort((a, b) => rank(a) - rank(b)).slice(0, 2).forEach(ex => add(ex.id, false))
+  }
+  return out.slice(0, max)
+}
+
+/** What GymTrackAI is told for a quick workout: the time, the needs, the last two weeks and the library. */
+export function quickContext(S, minutes, now = Date.now()) {
+  const unit = S?.unit === 'lb' ? 'lb' : 'kg'
+  const needs = areaNeeds(S, now).map(a => ({ area: a.label, setsLast7Days: a.sets7, weeklyTarget: a.target, daysSince: a.days, recovering: a.recovering }))
+  const sessions = (S?.workouts || []).filter(w => w && (Number(w.start) || Date.parse(w.d + 'T12:00:00')) > now - 14 * DAY).map(w => ({
+    date: w.d, name: w.name || null,
+    exercises: (w.entries || []).map(e => {
+      const sets = (e.sets || []).filter(st => st && st.done && !isWarmupRow(st))
+      if (!sets.length) return null
+      const top = sets.reduce((b, st) => ((+st.w || 0) * (+st.r || 0) > (+b.w || 0) * (+b.r || 0) ? st : b), sets[0])
+      return { name: nameOf(exOf(e.id)) || e.name || e.id, sets: sets.length, best: top.w ? `${top.w} ${unit} x ${top.r || 0}` : `${top.r || 0} reps` }
+    }).filter(Boolean),
+  }))
+  const rule = quickWorkout(S, minutes, { now })
+  return { minutes: Math.max(10, Math.min(120, Number(minutes) || 30)), needs, recentSessions: sessions,
+    simpleSuggestion: rule.items.map(i => `${i.name} ${i.sets}x${i.reps} (${i.area.label})`), library: aiLibrary(S, now) }
+}
+
+/** Minutes a list of { sets } takes, by the same rule as quickWorkout (a warm-up, then sets with rest). */
+export const minutesFor = items => Math.round(WARMUP_MIN + items.reduce((n, i) => n + i.sets * MIN_PER_SET[isCompound(exOf(i.id)) ? 'compound' : 'isolation'], 0))

@@ -8,7 +8,7 @@ import { MOBILE } from './mobile.js'
 import { ensureAiConsent } from './coach-api.js'
 import { loadCoachDevice, saveCoachDevice, coachLimits } from './coach-device.js'
 import { getApiKey } from './coach-secrets.js'
-import { buildReviewPayload, buildReviewPrompt, checkReview, checkRunPlan, planToSave, schemaFor, REVIEW_MODES } from './ai-review.js'
+import { buildReviewPayload, buildReviewPrompt, checkReview, checkRunPlan, checkQuick, planToSave, schemaFor, REVIEW_MODES } from './ai-review.js'
 import { getLang } from './i18n-core.js'
 import { t } from './i18n.js'
 import { todayISO } from './format.js'
@@ -25,14 +25,14 @@ const langName = code => {
 let running = null
 export const aiReviewRunning = () => running
 
-/** Asks for a review (`mode`: 'month' | 'stall') or a running plan ('runplan'), saves it and resolves with it. Throws with a readable message. */
-export function runAiReview(mode, { deps = {} } = {}) {
+/** Asks for a review (`mode`: 'month' | 'stall') or a running plan ('runplan'), saves it and resolves with it; a quick workout ('quick', for `minutes`) is only returned. Throws with a readable message. */
+export function runAiReview(mode, { deps = {}, minutes = 30 } = {}) {
   if (running) return running
-  running = run(mode, deps).finally(() => { running = null })
+  running = run(mode, deps, { minutes }).finally(() => { running = null })
   return running
 }
 
-async function run(mode, deps) {
+async function run(mode, deps, opts = {}) {
   if (!REVIEW_MODES.includes(mode)) throw fail('unknown review')
   if (!(deps.ready || aiReviewReady)()) throw fail(t('Set up the AI Coach with your own API key first: Settings, AI Coach.'), 'off')
   await (deps.consent || ensureAiConsent)()
@@ -54,7 +54,7 @@ async function run(mode, deps) {
   await (deps.saveDevice || saveCoachDevice)({ daily: { d: today, n: used + 1 } })
 
   const S = useStore.getState().S
-  const payload = buildReviewPayload(S, { mode })
+  const payload = buildReviewPayload(S, { mode, minutes: opts.minutes })
   const { system, user } = buildReviewPrompt(payload, langName(getLang()))
   const key = await (deps.getKey || getApiKey)()
   const r = await adapter.invoke({
@@ -66,6 +66,12 @@ async function run(mode, deps) {
   if (r.timedOut) throw fail(t('GymTrackAI did not answer in time. Try again in a moment.'))
   if (r.code !== 0) throw fail(t('GymTrackAI did not answer. Try again in a moment.') + (r.stderr ? ' (' + String(r.stderr).slice(0, 160) + ')' : ''))
   const parsed = core.extractJSON(r.text)
+  // A quick workout is for right now: handed back to the sheet, never saved.
+  if (mode === 'quick') {
+    const checked = parsed.error ? { ok: false } : checkQuick(parsed.value, payload.quick.library, payload.quick.minutes)
+    if (!checked.ok) throw fail(t('GymTrackAI did not answer. Try again in a moment.'))
+    return checked.plan
+  }
   // A running plan is saved as the plan (S.runPlan); a review beside the others (S.aiReviews).
   if (mode === 'runplan') {
     const checked = parsed.error ? { ok: false } : checkRunPlan(parsed.value)

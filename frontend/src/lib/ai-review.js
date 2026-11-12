@@ -18,9 +18,10 @@ import { MEASUREMENT_FIELDS } from './measurements.js'
 import { runDistance } from './runs.js'
 import { isoOf, startOfWeek, weekStartOf } from './format.js'
 import { loadOfWorkouts } from './muscles.js'
+import { quickContext, minutesFor } from './quick-workout.js'
 import { runGoalOf, goalProgress, fitnessTrend, weeklyKm, loadWarning, planThisWeek, fmtPace, fmtRaceTime, RUN_KINDS } from './running.js'
 
-export const REVIEW_MODES = ['month', 'stall', 'runplan']
+export const REVIEW_MODES = ['month', 'stall', 'runplan', 'quick']
 const LEG_MUSCLES = ['quadriceps', 'hamstring', 'gluteal', 'adductors', 'calves']
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const DAY = 86400e3
@@ -44,7 +45,9 @@ function workoutLine(w, unit) {
 }
 
 /** What the model is told about the last `days` (30), ending today. */
-export function buildReviewPayload(S, { mode = 'month', now = Date.now(), days = 30 } = {}) {
+export function buildReviewPayload(S, { mode = 'month', now = Date.now(), days = 30, minutes = 30 } = {}) {
+  // A quick workout needs the last two weeks in detail and nothing about the month.
+  if (mode === 'quick') return { mode, unit: S?.unit === 'lb' ? 'lb' : 'kg', quick: quickContext(S || {}, minutes, now) }
   const to = isoOf(new Date(now)), from = isoOf(new Date(now - days * DAY))
   const before = isoOf(new Date(now - 2 * days * DAY))
   const unit = S?.unit === 'lb' ? 'lb' : 'kg'
@@ -132,6 +135,13 @@ const RULES = {
     'Write "suggestions": three to five concrete changes for next month, each with a short "title" and a one or two sentence "why" that points at the data. Prefer training changes (volume per muscle, exercise choice, frequency, progression, running mix) and mention food or sleep only where a goal clearly calls for it.',
     'Cover running too, from "running": weekly distance, pace and heart rate, metres per heartbeat (higher is fitter), resting heart rate (lower is fitter), VO2 max, any load warning, and how this week of the running plan went.',
   ],
+  quick: [
+    'You build one gym workout for someone who is short on time and lifts for muscle size. It must fit in "quick.minutes" including rest (count about 2.75 minutes per set of a big compound lift and 2.25 per set of an isolation exercise, plus 3 minutes of warm-up).',
+    'Read "quick": "needs" (per muscle area: working sets in the last 7 days, the weekly target, days since last trained, and whether it is still recovering), "recentSessions" (the last two weeks, each exercise with sets and best set), "simpleSuggestion" (what a simple rule picked) and "library" (the exercises you may use; "yours" means they have done it, with their usual reps and best set).',
+    'Think in finer areas than the needs list: upper and lower chest, front, side and rear delts, lats and mid-back, the long and short heads of the biceps and triceps, brachialis, quads, hamstrings, glutes, calves (gastrocnemius and soleus), abs and obliques. Spot which of these the recent sessions neglected, for example only flat pressing and no incline work, or rows but no vertical pulling.',
+    'Pick the exercises that fix the biggest gaps, leave anything recovering alone, prefer exercises they know ("yours") when they fit the need, put big lifts first, and do not give an area more work than the time allows. Use only "id" values from "library".',
+    'Write "summary": one or two plain sentences on what this session targets and why. Write "focus": the two to four finer areas it targets. Write "exercises": in order, each {"id", "sets" (2 to 5), "reps" (a number), "why" (one short line naming the gap it fills)}.',
+  ],
   runplan: [
     'You write a running plan for one person who also lifts weights for muscle size. Their app shows it as a weekly checklist.',
     'Read "running" in the JSON payload: their goal (kind "fitness": cardio fitness at a weekly distance while gaining muscle; kind "race": a race distance, maybe a target time and date), recent runs with pace and heart rate, weekly distance, fitness trend, and the weekdays they lift and train legs.',
@@ -153,6 +163,7 @@ const COMMON = [
 ]
 const SHAPE = {
   review: 'Return exactly one JSON object and nothing else: {"summary": string, "highlights": [string], "suggestions": [{"title": string, "why": string}]}.',
+  quick: 'Return exactly one JSON object and nothing else: {"summary": string, "focus": [string], "exercises": [{"id": string, "sets": number, "reps": number, "why": string}]}.',
   runplan: 'Return exactly one JSON object and nothing else: {"summary": string, "weeks": [{"runs": [{"day": string, "kind": string, "km": number, "notes": string}]}]}.',
 }
 
@@ -167,7 +178,17 @@ export const RUNPLAN_SCHEMA = {
     } } },
   },
 }
-export const schemaFor = mode => (mode === 'runplan' ? RUNPLAN_SCHEMA : REVIEW_SCHEMA)
+export const QUICK_SCHEMA = {
+  type: 'object', additionalProperties: false, required: ['summary', 'focus', 'exercises'],
+  properties: {
+    summary: { type: 'string' },
+    focus: { type: 'array', items: { type: 'string' } },
+    exercises: { type: 'array', items: { type: 'object', additionalProperties: false, required: ['id', 'sets', 'reps', 'why'], properties: {
+      id: { type: 'string' }, sets: { type: 'integer' }, reps: { type: 'integer' }, why: { type: 'string' },
+    } } },
+  },
+}
+export const schemaFor = mode => (mode === 'runplan' ? RUNPLAN_SCHEMA : mode === 'quick' ? QUICK_SCHEMA : REVIEW_SCHEMA)
 
 export const REVIEW_SCHEMA = {
   type: 'object', additionalProperties: false, required: ['summary', 'highlights', 'suggestions'],
@@ -182,7 +203,7 @@ export const REVIEW_SCHEMA = {
 export function buildReviewPrompt(payload, langName = 'English') {
   const mode = REVIEW_MODES.includes(payload?.mode) ? payload.mode : 'month'
   return {
-    system: [...RULES[mode], ...COMMON, SHAPE[mode === 'runplan' ? 'runplan' : 'review'], `Write in ${langName}. Weights are in ${payload?.unit || 'kg'}; running distances in km.`].join('\n'),
+    system: [...RULES[mode], ...COMMON, SHAPE[mode === 'runplan' || mode === 'quick' ? mode : 'review'], `Write in ${langName}. Weights are in ${payload?.unit || 'kg'}; running distances in km.`].join('\n'),
     user: 'Payload:\n```json\n' + JSON.stringify(payload) + '\n```',
   }
 }
@@ -230,4 +251,29 @@ export function checkRunPlan(value) {
 export function planToSave(S, plan, now = Date.now()) {
   const goal = runGoalOf(S)
   return { at: now, startsOn: isoOf(startOfWeek(isoOf(new Date(now)), weekStartOf(S))), goal, ...plan }
+}
+
+/**
+ * A quick workout from the model, checked: only exercises from the library it was given, each
+ * once, 2 to 5 sets of 3 to 30 reps, and trimmed from the end until it fits the time (with 15 %
+ * of slack). Returns { ok: true, plan: { summary, focus, items, estMinutes } } or { ok: false }.
+ */
+export function checkQuick(value, library, minutes) {
+  if (!value || typeof value !== 'object' || typeof value.summary !== 'string' || !value.summary.trim()) return { ok: false, error: 'no summary' }
+  const known = new Map((library || []).map(e => [e.id, e]))
+  const seen = new Set()
+  const items = (Array.isArray(value.exercises) ? value.exercises : []).filter(e => e && known.has(String(e.id)) && !seen.has(String(e.id)) && seen.add(String(e.id)))
+    .map(e => ({
+      id: String(e.id), name: known.get(String(e.id)).name,
+      sets: Math.max(2, Math.min(5, Math.round(Number(e.sets) || 3))),
+      reps: Math.max(3, Math.min(30, Math.round(Number(e.reps) || 10))),
+      why: clip(e.why || '', 140),
+    })).slice(0, 10)
+  while (items.length > 1 && minutesFor(items) > minutes * 1.15) {
+    const last = items[items.length - 1]
+    if (last.sets > 2) last.sets--; else items.pop()
+  }
+  if (!items.length) return { ok: false, error: 'no usable exercises' }
+  const focus = (Array.isArray(value.focus) ? value.focus : []).filter(f => typeof f === 'string' && f.trim()).slice(0, 4).map(f => clip(f, 40))
+  return { ok: true, plan: { summary: clip(value.summary, 400), focus, items, estMinutes: minutesFor(items) } }
 }

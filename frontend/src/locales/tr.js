@@ -3748,4 +3748,5 @@ export default {
   "Upper chest": "Üst göğüs",
   "Side delts": "Yan omuz",
   "Rear delts": "Arka omuz",
+  "Simple pick": "Basit seçim",
 }

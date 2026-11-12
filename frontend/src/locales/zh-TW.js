@@ -3741,4 +3741,5 @@ export default {
   "Upper chest": "上胸",
   "Side delts": "三角肌中束",
   "Rear delts": "三角肌後束",
+  "Simple pick": "簡單推薦",
 }

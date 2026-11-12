@@ -3748,4 +3748,5 @@ export default {
   "Upper chest": "윗가슴",
   "Side delts": "측면 삼각근",
   "Rear delts": "후면 삼각근",
+  "Simple pick": "간단 추천",
 }

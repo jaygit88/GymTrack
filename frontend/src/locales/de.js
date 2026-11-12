@@ -3768,4 +3768,5 @@ export default {
   "Upper chest": "Obere Brust",
   "Side delts": "Seitliche Schulter",
   "Rear delts": "Hintere Schulter",
+  "Simple pick": "Einfache Auswahl",
 }

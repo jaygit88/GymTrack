@@ -3759,4 +3759,5 @@ export default {
   "Upper chest": "อกส่วนบน",
   "Side delts": "ไหล่ด้านข้าง",
   "Rear delts": "ไหล่ด้านหลัง",
+  "Simple pick": "ตัวเลือกแบบง่าย",
 }

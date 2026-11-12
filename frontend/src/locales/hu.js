@@ -3751,4 +3751,5 @@ export default {
   "Upper chest": "Felső mell",
   "Side delts": "Oldalsó váll",
   "Rear delts": "Hátsó váll",
+  "Simple pick": "Egyszerű választás",
 }

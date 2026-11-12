@@ -3748,4 +3748,5 @@ export default {
   "Upper chest": "ऊपरी छाती",
   "Side delts": "साइड डेल्ट्स",
   "Rear delts": "रियर डेल्ट्स",
+  "Simple pick": "सरल चुनाव",
 }

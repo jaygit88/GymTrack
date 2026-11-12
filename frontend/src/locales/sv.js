@@ -3795,4 +3795,5 @@ export default {
   "Upper chest": "Övre bröst",
   "Side delts": "Sidodelts",
   "Rear delts": "Bakre delts",
+  "Simple pick": "Enkelt val",
 }

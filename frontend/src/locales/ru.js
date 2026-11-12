@@ -3752,4 +3752,5 @@ export default {
   "Upper chest": "Верх груди",
   "Side delts": "Средняя дельта",
   "Rear delts": "Задняя дельта",
+  "Simple pick": "Простой подбор",
 }
