@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- openGym on Wear OS, es. Written by frontend/android/wear/wear-strings.mjs: change that, not this. -->
+<!-- GymTrack on Wear OS, es. Written by frontend/android/wear/wear-strings.mjs: change that, not this. -->
 <resources>
     <string name="added_weight">Peso añadido</string>
     <string name="all_done_q">¿Has terminado?</string>
@@ -29,7 +29,7 @@
     <string name="not_now">Ahora no</string>
     <string name="not_synced">Aún sin sincronizar</string>
     <string name="notif_running">Entreno en curso. Toca para volver.</string>
-    <string name="open_phone_once">Abre openGym una vez en tu móvil y tus rutinas aparecerán aquí.</string>
+    <string name="open_phone_once">Abre GymTrack una vez en tu móvil y tus rutinas aparecerán aquí.</string>
     <string name="phone_away">Móvil fuera de alcance. Tus series esperan aquí.</string>
     <string name="prs">Récords</string>
     <string name="quick_start">Inicio rápido</string>

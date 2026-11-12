@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- openGym on Wear OS, English. Written by frontend/android/wear/wear-strings.mjs: change that, not this. -->
+<!-- GymTrack on Wear OS, English. Written by frontend/android/wear/wear-strings.mjs: change that, not this. -->
 <resources>
     <string name="added_weight">Added weight</string>
     <string name="all_done_q">All done?</string>
     <string name="all_sets_done">All sets done</string>
     <string name="allow">Allow</string>
-    <string name="app_name">openGym Beta</string>
+    <string name="app_name">GymTrack</string>
     <string name="bodyweight">Bodyweight</string>
     <string name="cancel">Cancel</string>
     <string name="complication_desc">Your sets so far, or your streak.</string>
@@ -30,7 +30,7 @@
     <string name="not_now">Not now</string>
     <string name="not_synced">Not synced yet</string>
     <string name="notif_running">Workout running. Tap to jump back in.</string>
-    <string name="open_phone_once">Open openGym on your phone once and your routines show up here.</string>
+    <string name="open_phone_once">Open GymTrack on your phone once and your routines show up here.</string>
     <string name="phone_away">Phone out of reach. Your sets wait here.</string>
     <string name="prs">PRs</string>
     <string name="quick_start">Quick start</string>

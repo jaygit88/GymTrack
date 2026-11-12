@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- openGym on Wear OS, sv. Written by frontend/android/wear/wear-strings.mjs: change that, not this. -->
+<!-- GymTrack on Wear OS, sv. Written by frontend/android/wear/wear-strings.mjs: change that, not this. -->
 <resources>
     <string name="added_weight">Extra vikt</string>
     <string name="all_done_q">Klart?</string>
@@ -29,7 +29,7 @@
     <string name="not_now">Inte nu</string>
     <string name="not_synced">Inte synkat än</string>
     <string name="notif_running">Passet pågår. Tryck för att hoppa in igen.</string>
-    <string name="open_phone_once">Öppna openGym på telefonen en gång så dyker dina rutiner upp här.</string>
+    <string name="open_phone_once">Öppna GymTrack på telefonen en gång så dyker dina rutiner upp här.</string>
     <string name="phone_away">Telefonen är utom räckhåll. Dina set väntar här.</string>
     <string name="prs">Personbästan</string>
     <string name="quick_start">Snabbstart</string>

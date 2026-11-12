@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- openGym on Wear OS, bn. Written by frontend/android/wear/wear-strings.mjs: change that, not this. -->
+<!-- GymTrack on Wear OS, bn. Written by frontend/android/wear/wear-strings.mjs: change that, not this. -->
 <resources>
     <string name="added_weight">অতিরিক্ত ওজন</string>
     <string name="all_done_q">শেষ হয়েছে?</string>
@@ -29,7 +29,7 @@
     <string name="not_now">এখন না</string>
     <string name="not_synced">এখনো সিঙ্ক হয়নি</string>
     <string name="notif_running">ওয়ার্কআউট চলছে। ফিরে যেতে ট্যাপ করুন।</string>
-    <string name="open_phone_once">ফোনে openGym একবার খুলুন, আপনার রুটিন এখানে দেখা যাবে।</string>
+    <string name="open_phone_once">ফোনে GymTrack একবার খুলুন, আপনার রুটিন এখানে দেখা যাবে।</string>
     <string name="phone_away">ফোন নাগালের বাইরে। আপনার সেট এখানে অপেক্ষা করছে।</string>
     <string name="prs">রেকর্ড</string>
     <string name="quick_start">দ্রুত শুরু</string>

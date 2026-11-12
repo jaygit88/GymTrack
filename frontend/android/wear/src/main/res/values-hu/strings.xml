@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- openGym on Wear OS, hu. Written by frontend/android/wear/wear-strings.mjs: change that, not this. -->
+<!-- GymTrack on Wear OS, hu. Written by frontend/android/wear/wear-strings.mjs: change that, not this. -->
 <resources>
     <string name="added_weight">Plusz súly</string>
     <string name="all_done_q">Végeztél?</string>
@@ -29,7 +29,7 @@
     <string name="not_now">Most nem</string>
     <string name="not_synced">Még nincs szinkronizálva</string>
     <string name="notif_running">Edzés folyamatban. Koppints a visszatéréshez.</string>
-    <string name="open_phone_once">Nyisd meg egyszer az openGymet a telefonon, és itt lesznek a rutinjaid.</string>
+    <string name="open_phone_once">Nyisd meg egyszer az GymTracket a telefonon, és itt lesznek a rutinjaid.</string>
     <string name="phone_away">A telefon hatótávon kívül. A sorozataid itt várnak.</string>
     <string name="prs">Rekordok</string>
     <string name="quick_start">Gyors indítás</string>

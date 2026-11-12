@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- openGym on Wear OS, zh-TW. Written by frontend/android/wear/wear-strings.mjs: change that, not this. -->
+<!-- GymTrack on Wear OS, zh-TW. Written by frontend/android/wear/wear-strings.mjs: change that, not this. -->
 <resources>
     <string name="added_weight">附加重量</string>
     <string name="all_done_q">練完了嗎？</string>
@@ -29,7 +29,7 @@
     <string name="not_now">暫不啟用</string>
     <string name="not_synced">尚未同步</string>
     <string name="notif_running">訓練進行中。點一下返回。</string>
-    <string name="open_phone_once">在手機上打開一次 openGym，你的訓練計畫就會出現在這裡。</string>
+    <string name="open_phone_once">在手機上打開一次 GymTrack，你的訓練計畫就會出現在這裡。</string>
     <string name="phone_away">手機不在範圍內。你的組數先存在這裡。</string>
     <string name="prs">個人紀錄</string>
     <string name="quick_start">快速開始</string>

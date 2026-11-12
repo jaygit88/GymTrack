@@ -58,26 +58,26 @@ const SV_WATCH = {
 // Only this watch says these ("phone", not "iPhone"; the crown is not a Digital Crown).
 const OWN = {
   open_phone_once: {
-    en: 'Open openGym on your phone once and your routines show up here.',
-    de: 'Öffne openGym einmal auf dem Handy, dann tauchen deine Routinen hier auf.',
-    fr: 'Ouvre openGym une fois sur ton téléphone et tes routines apparaissent ici.',
-    es: 'Abre openGym una vez en tu móvil y tus rutinas aparecerán aquí.',
-    it: 'Apri openGym una volta sul telefono e le tue routine compaiono qui.',
-    pt: 'Abre o openGym uma vez no telemóvel e as tuas rotinas aparecem aqui.',
-    'pt-BR': 'Abra o openGym uma vez no celular e suas rotinas aparecem aqui.',
-    pl: 'Otwórz raz openGym na telefonie, a twoje plany pojawią się tutaj.',
-    hu: 'Nyisd meg egyszer az openGymet a telefonon, és itt lesznek a rutinjaid.',
-    tr: 'openGym’i telefonunda bir kez aç, rutinlerin burada görünür.',
-    ru: 'Откройте openGym на телефоне один раз, и ваши программы появятся здесь.',
-    uk: 'Відкрий openGym на телефоні один раз, і твої програми з’являться тут.',
-    ar: 'افتح openGym على هاتفك مرة واحدة وستظهر تمارينك الروتينية هنا.',
-    hi: 'फ़ोन पर openGym एक बार खोलें, आपके रूटीन यहाँ दिखेंगे।',
-    bn: 'ফোনে openGym একবার খুলুন, আপনার রুটিন এখানে দেখা যাবে।',
-    th: 'เปิด openGym บนโทรศัพท์สักครั้ง แล้วรูทีนของคุณจะแสดงที่นี่',
-    ko: '휴대폰에서 openGym을 한 번 열면 루틴이 여기에 나타나요.',
-    sv: 'Öppna openGym på telefonen en gång så dyker dina rutiner upp här.',
-    zh: '在手机上打开一次 openGym，你的训练计划就会出现在这里。',
-    'zh-TW': '在手機上打開一次 openGym，你的訓練計畫就會出現在這裡。',
+    en: 'Open GymTrack on your phone once and your routines show up here.',
+    de: 'Öffne GymTrack einmal auf dem Handy, dann tauchen deine Routinen hier auf.',
+    fr: 'Ouvre GymTrack une fois sur ton téléphone et tes routines apparaissent ici.',
+    es: 'Abre GymTrack una vez en tu móvil y tus rutinas aparecerán aquí.',
+    it: 'Apri GymTrack una volta sul telefono e le tue routine compaiono qui.',
+    pt: 'Abre o GymTrack uma vez no telemóvel e as tuas rotinas aparecem aqui.',
+    'pt-BR': 'Abra o GymTrack uma vez no celular e suas rotinas aparecem aqui.',
+    pl: 'Otwórz raz GymTrack na telefonie, a twoje plany pojawią się tutaj.',
+    hu: 'Nyisd meg egyszer az GymTracket a telefonon, és itt lesznek a rutinjaid.',
+    tr: 'GymTrack’i telefonunda bir kez aç, rutinlerin burada görünür.',
+    ru: 'Откройте GymTrack на телефоне один раз, и ваши программы появятся здесь.',
+    uk: 'Відкрий GymTrack на телефоні один раз, і твої програми з’являться тут.',
+    ar: 'افتح GymTrack على هاتفك مرة واحدة وستظهر تمارينك الروتينية هنا.',
+    hi: 'फ़ोन पर GymTrack एक बार खोलें, आपके रूटीन यहाँ दिखेंगे।',
+    bn: 'ফোনে GymTrack একবার খুলুন, আপনার রুটিন এখানে দেখা যাবে।',
+    th: 'เปิด GymTrack บนโทรศัพท์สักครั้ง แล้วรูทีนของคุณจะแสดงที่นี่',
+    ko: '휴대폰에서 GymTrack을 한 번 열면 루틴이 여기에 나타나요.',
+    sv: 'Öppna GymTrack på telefonen en gång så dyker dina rutiner upp här.',
+    zh: '在手机上打开一次 GymTrack，你的训练计划就会出现在这里。',
+    'zh-TW': '在手機上打開一次 GymTrack，你的訓練計畫就會出現在這裡。',
   },
   start_on_phone: {
     en: 'Start one on your phone and it shows up here.',
@@ -225,7 +225,7 @@ function write (folder, strings, comment) {
   mkdirSync(dir, { recursive: true })
   const body = Object.keys(strings).sort().map(k => `    <string name="${k}">${resEscape(strings[k])}</string>`).join('\n')
   writeFileSync(join(dir, 'strings.xml'), `<?xml version="1.0" encoding="utf-8"?>
-<!-- openGym on Wear OS, ${comment}. Written by frontend/android/wear/wear-strings.mjs: change that, not this. -->
+<!-- GymTrack on Wear OS, ${comment}. Written by frontend/android/wear/wear-strings.mjs: change that, not this. -->
 <resources>
 ${body}
 </resources>
@@ -235,7 +235,7 @@ ${body}
 /* ---------- writing ---------- */
 
 const enWatch = readLproj('en')
-const en = { app_name: 'openGym Beta' }
+const en = { app_name: 'GymTrack' }
 for (const [name, key] of Object.entries(FROM_APP)) en[name] = key
 for (const [name, [key, fmt]] of Object.entries(COMPOSED)) en[name] = fmt(key)
 for (const [name, key] of Object.entries(FROM_WATCH)) en[name] = androidFormat(enWatch[key] || key)

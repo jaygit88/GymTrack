@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- openGym on Wear OS, th. Written by frontend/android/wear/wear-strings.mjs: change that, not this. -->
+<!-- GymTrack on Wear OS, th. Written by frontend/android/wear/wear-strings.mjs: change that, not this. -->
 <resources>
     <string name="added_weight">น้ำหนักเพิ่ม</string>
     <string name="all_done_q">เสร็จแล้วหรือยัง</string>
@@ -29,7 +29,7 @@
     <string name="not_now">ไม่ใช่ตอนนี้</string>
     <string name="not_synced">ยังไม่ได้ซิงค์</string>
     <string name="notif_running">กำลังฝึกอยู่ แตะเพื่อกลับไป</string>
-    <string name="open_phone_once">เปิด openGym บนโทรศัพท์สักครั้ง แล้วรูทีนของคุณจะแสดงที่นี่</string>
+    <string name="open_phone_once">เปิด GymTrack บนโทรศัพท์สักครั้ง แล้วรูทีนของคุณจะแสดงที่นี่</string>
     <string name="phone_away">โทรศัพท์อยู่นอกระยะ เซ็ตของคุณรออยู่ที่นี่</string>
     <string name="prs">สถิติใหม่</string>
     <string name="quick_start">เริ่มด่วน</string>
