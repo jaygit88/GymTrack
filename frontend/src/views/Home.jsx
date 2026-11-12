@@ -9,7 +9,8 @@ import { calendarSheet, starterPlanSheet } from '../sheets.jsx'
 import Icon from '../components/Icon.jsx'
 import CardHead from '../components/CardHead.jsx'
 import RecentDays from '../components/RecentDays.jsx'
-import MeasureChangeCard, { goalsSheet } from '../components/MeasureChangeCard.jsx'
+import MeasureChangeCard from '../components/MeasureChangeCard.jsx'
+import AiReviewCard, { StallCard } from '../components/AiReviewCard.jsx'
 import { stalledGoals } from '../lib/measure-change.js'
 import { weekTally } from '../lib/queue.js'
 import { WeeklySetsHomeLine } from '../components/WeeklySets.jsx'
@@ -52,11 +53,7 @@ export default function Home() {
       <button className="iconbtn" data-tour="settings-gear" onClick={() => nav('/settings')} aria-label={trouble ? t('Settings') + ', ' + t('Connection problem') : t('Settings')}><Icon name="gear" />{trouble && <span className="tab-dot" aria-hidden="true" />}</button>
     </div>
 
-    {stalled.length > 0 && <div className="card tap-host mstall-card">
-      <CardHead icon="warning" tint="var(--orange)" eyebrow={t('Measurement goals')} title={t('No progress in a month')}
-        sub={stalled.map(r => t(r.label)).join(', ')} open={{ onClick: () => nav('/measurements') }}
-        action={<Button size="sm" variant="ghost" icon="target" onClick={goalsSheet}>{t('Goals')}</Button>} />
-    </div>}
+    {stalled.length > 0 && <StallCard S={S} stalled={stalled} />}
 
     {/* The streak opens its calendar from its text (CardHead open); the last seven days, the
         weekly-sets line and the party banner are buttons of their own inside it. */}
@@ -84,6 +81,9 @@ export default function Home() {
 
     {/* What your body measurements did over the last month, on the body (lib/measure-change.js). */}
     {on('body') && <MeasureChangeCard S={S} />}
+
+    {/* Claude's review of the last month, with ideas for the next (lib/ai-review.js), on a tap. */}
+    <AiReviewCard S={S} />
 
     {/* Monday: Your week; the 1st: Your month (lib/recap.js). Off in Settings → Look & Home. */}
     <RecapHomeCard S={S} />

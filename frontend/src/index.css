@@ -3306,3 +3306,13 @@ button.wl-summary{width:100%;padding:0 0 10px;text-align:start;border-radius:var
 .mchange-range{margin-top:10px;position:relative;z-index:2}
 .mchange-goal{font-size:.85em;margin-inline-end:4px;color:var(--gold-ink);vertical-align:-1px}
 .mchange-foot{display:flex;justify-content:flex-end;margin-top:6px}
+.ai-review{margin-top:8px}
+.ai-sum{margin:0 0 8px;line-height:1.45}
+.ai-hl{list-style:none;margin:0 0 8px;padding:0;display:grid;gap:4px}
+.ai-hl li{display:flex;gap:6px;align-items:baseline}
+.ai-hl li svg{color:var(--green);flex:none;font-size:.9em}
+.ai-sug-h{margin:4px 0}
+.ai-sug{margin:0;padding-inline-start:20px;display:grid;gap:8px}
+.ai-sug-t{font-weight:600}
+.ai-err{color:var(--red);margin-top:6px}
+.ai-actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:10px;position:relative;z-index:2}

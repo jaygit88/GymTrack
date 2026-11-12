@@ -2446,6 +2446,16 @@ export const PT_BR_OVERRIDES = {
   "Home warns you when one of these has not improved for a month.": "O Início avisa você quando uma delas não melhora por um mês.",
   "Runs from your watch": "Corridas do seu relógio",
   "Runs saved by Samsung Health or another app show in your last 7 days on Home.": "Corridas salvas pelo Samsung Health ou outro app aparecem nos seus últimos 7 dias no Início.",
+  "Your month with Claude": "Seu mês com o Claude",
+  "Review my month": "Revisar meu mês",
+  "Review again": "Revisar de novo",
+  "Reviewed {0}": "Revisado em {0}",
+  "Set up the AI Coach": "Configurar o treinador de IA",
+  "Claude is thinking…": "O Claude está pensando…",
+  "Ask again": "Perguntar de novo",
+  "Claude did not answer in time. Try again in a moment.": "O Claude não respondeu a tempo. Tente de novo daqui a pouco.",
+  "Claude did not answer. Try again in a moment.": "O Claude não respondeu. Tente de novo daqui a pouco.",
+  "Set up the AI Coach with your own API key first: Settings, AI Coach.": "Primeiro configure o treinador de IA com sua própria chave de API: Configurações, Treinador de IA.",
 }
 
 export default { ...pt, ...PT_BR_OVERRIDES }
