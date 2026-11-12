@@ -1,0 +1,138 @@
+# Builds GymTrack's signed Android packages and publishes them as a GitHub Release:
+#   GymTrack-<version>.apk        the phone app (sideload flavour: updates itself from these releases)
+#   GymTrack-Wear-<version>.apk   the Wear OS watch app (install on the watch with adb)
+# plus a .sha256 beside each, which the phone's updater checks the download against.
+#
+# Start it by pushing a version tag:   git tag v1.4.5 && git push origin v1.4.5
+# or from the Actions tab (Run workflow) with a version.
+#
+# The tag sets the version, so nothing needs bumping in the source: versionName and the app's
+# shown version become the tag, and versionCode is derived from it (major*1000000 + minor*1000 +
+# patch), so each higher tag installs over the last. The watch takes the phone's code + 10000
+# (wear/build.gradle).
+#
+# Signing: the phone and the watch must share one key, or the Wear OS Data Layer will not link
+# them. Repository secrets (Settings > Secrets and variables > Actions):
+#   ANDROID_KEYSTORE_BASE64    the .jks / .p12 keystore, base64-encoded
+#   ANDROID_KEYSTORE_PASSWORD  its password (also used for the key)
+#   ANDROID_KEY_ALIAS          the key's alias
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release, e.g. 1.4.5 (becomes tag v1.4.5)'
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Work out the version
+        id: ver
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = workflow_dispatch ]; then V="${INPUT_VERSION#v}"; else V="${GITHUB_REF_NAME#v}"; fi
+          [[ "$V" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)$ ]] || { echo "::error::version must look like 1.4.5, got '$V'"; exit 1; }
+          MA=${BASH_REMATCH[1]}; MI=${BASH_REMATCH[2]}; PA=${BASH_REMATCH[3]}
+          [ "$MI" -lt 1000 ] && [ "$PA" -lt 1000 ] && [ "$MA" -lt 2000 ] || { echo "::error::version part too large"; exit 1; }
+          echo "version=$V" >> "$GITHUB_OUTPUT"
+          echo "code=$((MA * 1000000 + MI * 1000 + PA))" >> "$GITHUB_OUTPUT"
+
+      - name: Check the signing secrets are set
+        env:
+          KS: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          PW: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          AL: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          missing=""
+          [ -n "$KS" ] || missing="$missing ANDROID_KEYSTORE_BASE64"
+          [ -n "$PW" ] || missing="$missing ANDROID_KEYSTORE_PASSWORD"
+          [ -n "$AL" ] || missing="$missing ANDROID_KEY_ALIAS"
+          [ -z "$missing" ] || { echo "::error::missing repository secrets:$missing"; exit 1; }
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
+        with:
+          cache-read-only: true
+          add-job-summary: on-failure
+
+      - name: Stamp the version into the build (not committed)
+        env:
+          VER: ${{ steps.ver.outputs.version }}
+          CODE: ${{ steps.ver.outputs.code }}
+        run: |
+          (cd frontend && npm version "$VER" --no-git-tag-version --allow-same-version >/dev/null)
+          sed -i -E "s/versionCode [0-9]+/versionCode $CODE/; s/versionName \"[^\"]+\"/versionName \"$VER\"/" frontend/android/app/build.gradle
+          grep -nE "versionCode|versionName" frontend/android/app/build.gradle | head -2
+
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+        working-directory: frontend
+      - name: Phone bundle + cap sync
+        run: npm run build:mobile
+        working-directory: frontend
+        env:
+          VITE_APK_VARIANT: standard
+
+      - name: Build the phone and watch apps
+        working-directory: frontend/android
+        run: ./gradlew --no-daemon assembleSideloadRelease :wear:assembleRelease
+
+      - name: Sign
+        env:
+          VER: ${{ steps.ver.outputs.version }}
+          KS_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KS_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KS_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          set -euo pipefail
+          BT=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
+          KS="$RUNNER_TEMP/release.keystore"
+          echo "$KS_B64" | base64 -d > "$KS"
+          mkdir -p out
+          sign() {  # <unsigned apk> <output name>
+            "$BT/zipalign" -f -p 4 "$1" out/aligned.apk
+            "$BT/apksigner" sign --ks "$KS" --ks-pass env:KS_PASS --key-pass env:KS_PASS \
+              --ks-key-alias "$KS_ALIAS" --out "out/$2" out/aligned.apk
+            rm -f out/aligned.apk "out/$2.idsig"
+            "$BT/apksigner" verify --print-certs "out/$2" | grep -i "SHA-256"
+            (cd out && sha256sum "$2" > "$2.sha256")
+          }
+          sign frontend/android/app/build/outputs/apk/sideload/release/app-sideload-release-unsigned.apk "GymTrack-$VER.apk"
+          sign frontend/android/wear/build/outputs/apk/release/wear-release-unsigned.apk "GymTrack-Wear-$VER.apk"
+          rm -f "$KS"
+          ls -la out
+
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VER: ${{ steps.ver.outputs.version }}
+        run: |
+          gh release create "v$VER" out/* \
+            --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
+            --title "GymTrack $VER" \
+            --notes "Phone: install GymTrack-$VER.apk on your phone. Watch: install GymTrack-Wear-$VER.apk on the watch with adb (see docs/WEAR_OS.md). Both are signed with the same key, so they pair." \
+            --latest
