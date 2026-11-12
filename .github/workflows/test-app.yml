@@ -1,0 +1,106 @@
+# Builds the test version of the Android apps from the `test` branch, on every push to it:
+#   GymTrack-Test.apk        the phone app, "GymTrack Test" (com.jaygit88.gymtrack.test)
+#   GymTrack-Test-Wear.apk   its Wear OS watch app, which pairs with it
+# They install beside the live apps, with their own data, so a change can be tried without
+# touching the real log. Each push replaces the files on one rolling pre-release, "Test build"
+# (tag test-build), so its download links stay the same. The test app never offers the live
+# releases as an update (VITE_TEST=1): install the next test APK over it instead.
+#
+# These are the debug builds (applicationId suffix .test, app/build.gradle and wear/build.gradle),
+# re-signed with the same key as the live releases (the repository secrets release.yml uses), so
+# each one installs over the last.
+name: Test app
+
+on:
+  push:
+    branches: [test]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: test-app
+  cancel-in-progress: true
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check the signing secrets are set
+        env:
+          KS: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          PW: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          AL: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          [ -n "$KS" ] && [ -n "$PW" ] && [ -n "$AL" ] || { echo "::error::set ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD and ANDROID_KEY_ALIAS (see release.yml)"; exit 1; }
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
+        with:
+          cache-read-only: true
+          add-job-summary: on-failure
+
+      # The run number as the build number, so each test build installs over the one before.
+      - name: Stamp a build number (not committed)
+        run: |
+          sed -i -E "s/versionCode [0-9]+/versionCode $((1000 + GITHUB_RUN_NUMBER))/" frontend/android/app/build.gradle
+          grep -n "versionCode" frontend/android/app/build.gradle | head -1
+
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+        working-directory: frontend
+      - name: Phone bundle + cap sync
+        run: npm run build:mobile
+        working-directory: frontend
+        env:
+          VITE_TEST: '1'
+          VITE_APK_VARIANT: standard
+          APP_BUILD: test.${{ github.run_number }}
+
+      - name: Build the test phone and watch apps
+        working-directory: frontend/android
+        run: ./gradlew --no-daemon assembleSideloadDebug :wear:assembleDebug
+
+      - name: Sign with the release key
+        env:
+          KS_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KS_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KS_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          set -euo pipefail
+          BT=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
+          KS="$RUNNER_TEMP/release.keystore"
+          echo "$KS_B64" | base64 -d > "$KS"
+          mkdir -p out
+          sign() {
+            "$BT/zipalign" -f -p 4 "$1" out/aligned.apk
+            "$BT/apksigner" sign --ks "$KS" --ks-pass env:KS_PASS --key-pass env:KS_PASS \
+              --ks-key-alias "$KS_ALIAS" --out "out/$2" out/aligned.apk
+            rm -f out/aligned.apk "out/$2.idsig"
+            "$BT/apksigner" verify "out/$2"
+          }
+          sign "$(ls frontend/android/app/build/outputs/apk/sideload/debug/*.apk | head -1)" GymTrack-Test.apk
+          sign "$(ls frontend/android/wear/build/outputs/apk/debug/*.apk | head -1)" GymTrack-Test-Wear.apk
+          rm -f "$KS"
+          ls -la out
+
+      - name: Publish to the rolling test pre-release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete test-build --repo "$GITHUB_REPOSITORY" --yes --cleanup-tag 2>/dev/null || true
+          gh release create test-build out/* --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
+            --prerelease --title "Test build" \
+            --notes "Test build ${{ github.run_number }} from the test branch (${GITHUB_SHA::7}). Installs beside the live app as GymTrack Test, with its own data. Install GymTrack-Test.apk on the phone; GymTrack-Test-Wear.apk on the watch with adb."

@@ -15,7 +15,7 @@ name: Tests
 on:
   pull_request:
   push:
-    branches: [main, stores, watch, 'ci-*']
+    branches: [main, test, stores, watch, 'ci-*']
   workflow_dispatch:
 
 permissions:

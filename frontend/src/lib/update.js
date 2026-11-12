@@ -56,6 +56,9 @@ export async function checkForUpdate() {
   return cached
 }
 async function fetchLatest() {
+  // GymTrack: a test build (the `test` branch, VITE_TEST=1) is updated by installing the next test
+  // APK, never by the live releases this checks: those are a different app beside it.
+  if (import.meta.env.VITE_TEST === '1') return { hasUpdate: false, latestVersion: __APP_VERSION__, apkUrl: null, hashUrl: null }
   const res = await fetch(LATEST_URL, { headers: { Accept: 'application/vnd.github+json' } })
   // 404: the repository has no published release yet
   if (res.status === 404) return { hasUpdate: false, latestVersion: __APP_VERSION__, apkUrl: null, hashUrl: null }

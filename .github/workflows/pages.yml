@@ -1,0 +1,94 @@
+# Publishes the browser demo of both versions to GitHub Pages, as one site:
+#   https://jaygit88.github.io/GymTrack/        live: the `main` branch
+#   https://jaygit88.github.io/GymTrack/test/   test: the `test` branch (left out while it does not exist)
+# A push to either branch rebuilds both, since Pages holds one site per repository.
+#
+# Pages serves static files only, so these builds have no backend: VITE_DEMO=1 boots straight into
+# guest mode with example data (frontend/src/lib/demo.js). The two share one browser storage (same
+# origin), so their example data can mix; Settings, Data & backup, Reset sets it back.
+# The test build says "GymTrack Test" on Home (VITE_TEST=1).
+#
+# One-time setup: repository Settings > Pages > Source: GitHub Actions.
+name: Pages
+
+on:
+  push:
+    branches: [main, test]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          path: live
+          persist-credentials: false
+      - name: Is there a test branch?
+        id: test
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh api "repos/$GITHUB_REPOSITORY/branches/test" >/dev/null 2>&1; then echo "exists=true" >> "$GITHUB_OUTPUT"; else echo "exists=false" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        if: steps.test.outputs.exists == 'true'
+        with:
+          ref: test
+          path: testsrc
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+
+      - name: Build live (main)
+        working-directory: live/frontend
+        env:
+          VITE_DEMO: '1'
+        run: |
+          npm ci --no-audit --no-fund
+          npm run build
+          node ../scripts/catalogue/stage-media.mjs dist
+
+      - name: Build test (test branch)
+        if: steps.test.outputs.exists == 'true'
+        working-directory: testsrc/frontend
+        env:
+          VITE_DEMO: '1'
+          VITE_TEST: '1'
+        run: |
+          npm ci --no-audit --no-fund
+          npm run build
+          node ../scripts/catalogue/stage-media.mjs dist
+
+      - name: Put the site together
+        run: |
+          mkdir site
+          cp -r live/frontend/dist/. site/
+          if [ -d testsrc/frontend/dist ]; then mkdir site/test && cp -r testsrc/frontend/dist/. site/test/; fi
+          du -sh site
+
+      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
