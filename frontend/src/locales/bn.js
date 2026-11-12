@@ -3731,4 +3731,8 @@ export default {
   "Your webhooks stop sending while Integrations is off. They stay set up.": "\"ইন্টিগ্রেশন\" বন্ধ থাকলে আপনার ওয়েবহুক কিছু পাঠায় না। সেগুলো সেট আপ করাই থাকে।",
   "{0} of {1} modules on.": "{1}টির মধ্যে {0}টি মডিউল চালু।",
   "{0} stops syncing while Health is off. Nothing is disconnected, and it catches up once Health is back.": "\"স্বাস্থ্য\" বন্ধ থাকলে {0} সিঙ্ক বন্ধ রাখে। কিছুই বিচ্ছিন্ন হয় না, আর \"স্বাস্থ্য\" ফিরলেই সব পুষিয়ে নেয়।",
+  "Better": "ভালো",
+  "Worse": "খারাপ",
+  "Measure at least twice to see what changed.": "কী বদলেছে দেখতে অন্তত দুবার মাপ নিন।",
+  "Since {0}": "{0} থেকে",
 }

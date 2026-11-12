@@ -3652,4 +3652,8 @@ export default {
   "Your webhooks stop sending while Integrations is off. They stay set up.": "'연동'이 꺼져 있는 동안 웹훅이 전송되지 않아요. 설정은 그대로예요.",
   "{0} of {1} modules on.": "모듈 {1}개 중 {0}개 켜짐.",
   "{0} stops syncing while Health is off. Nothing is disconnected, and it catches up once Health is back.": "'건강'이 꺼져 있는 동안 {0} 동기화가 멈춰요. 연결은 끊기지 않고, '건강'을 다시 켜면 밀린 걸 따라잡아요.",
+  "Better": "좋아짐",
+  "Worse": "나빠짐",
+  "Measure at least twice to see what changed.": "무엇이 바뀌었는지 보려면 최소 두 번 측정하세요.",
+  "Since {0}": "{0}부터",
 }

@@ -3272,3 +3272,34 @@ button.wl-summary{width:100%;padding:0 0 10px;text-align:start;border-radius:var
   .kpis .tile{padding:10px 11px}
   .kpis .tile .v{font-size:var(--fs-title3)}
 }
+
+/* GymTrack: Home's last seven days (components/RecentDays.jsx) and body change map
+   (components/MeasureChangeCard.jsx). */
+.streak-card .recent-days{margin-top:10px}
+.recent-days .plan-day-n:empty{visibility:hidden}
+.mchange-map{margin-top:10px;justify-content:center}
+.mchange-map .bm-v{max-height:min(34vh,240px)}
+.bm-m.mc-better.mc-l1{fill:color-mix(in srgb,var(--green) 40%,var(--bm-base))}
+.bm-m.mc-better.mc-l2{fill:color-mix(in srgb,var(--green) 70%,var(--bm-base))}
+.bm-m.mc-better.mc-l3{fill:var(--green)}
+.bm-m.mc-worse.mc-l1{fill:color-mix(in srgb,var(--red) 40%,var(--bm-base))}
+.bm-m.mc-worse.mc-l2{fill:color-mix(in srgb,var(--red) 70%,var(--bm-base))}
+.bm-m.mc-worse.mc-l3{fill:var(--red)}
+.mchange-legend{display:flex;gap:14px;justify-content:center;margin:6px 0 4px}
+.mchange-legend span{display:inline-flex;align-items:center;gap:5px}
+.mc-sw{display:inline-block;width:10px;height:10px;border-radius:3px}
+.mc-sw.mc-better{background:var(--green)}
+.mc-sw.mc-worse{background:var(--red)}
+.mchange-rows{display:grid;grid-template-columns:1fr 1fr;column-gap:16px;row-gap:2px;margin-top:6px}
+.mchange-row{display:flex;justify-content:space-between;gap:8px;min-width:0}
+.mchange-row > span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--label-2)}
+.mchange-d{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
+.mchange-row.v-better .mchange-d{color:var(--green)}
+.mchange-row.v-worse .mchange-d{color:var(--red)}
+.mchange-row.v-same .mchange-d,.mchange-row.v-neutral .mchange-d{color:var(--label-2)}
+@supports not (color: color-mix(in srgb, red 50%, blue)) {
+  .bm-m.mc-better.mc-l1{fill:rgba(48,209,88,0.4)}
+  .bm-m.mc-better.mc-l2{fill:rgba(48,209,88,0.7)}
+  .bm-m.mc-worse.mc-l1{fill:rgba(255,69,58,0.4)}
+  .bm-m.mc-worse.mc-l2{fill:rgba(255,69,58,0.7)}
+}
