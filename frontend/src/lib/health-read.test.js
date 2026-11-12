@@ -21,6 +21,8 @@ describe('isOwnRecord', () => {
     expect(isOwnRecord({ origin: 'ch.duartesantos.opengym' })).toBe(true)
     expect(isOwnRecord({ origin: 'ch.duartesantos.opengym.test' })).toBe(true)
     expect(isOwnRecord({ origin: 'ch.duartesantos.opengymx' })).toBe(false)
+    expect(isOwnRecord({ origin: 'com.jaygit88.gymtrack' })).toBe(true)
+    expect(isOwnRecord({ origin: 'com.jaygit88.gymtrack.test' })).toBe(true)
     expect(isOwnRecord({ origin: 'com.garmin.android.apps.connectmobile', clientId: 'abc' })).toBe(false)
   })
 })

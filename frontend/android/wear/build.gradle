@@ -26,7 +26,7 @@ android {
     namespace = "ch.duartesantos.opengym.wear"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "ch.duartesantos.opengym"
+        applicationId "com.jaygit88.gymtrack"
         minSdkVersion rootProject.ext.wearMinSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode phoneCode + WEAR_VERSION_OFFSET
