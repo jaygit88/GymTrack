@@ -3735,4 +3735,8 @@ export default {
   "Worse": "খারাপ",
   "Measure at least twice to see what changed.": "কী বদলেছে দেখতে অন্তত দুবার মাপ নিন।",
   "Since {0}": "{0} থেকে",
+  "Goals": "লক্ষ্য",
+  "Measurement goals": "মাপের লক্ষ্য",
+  "No progress in a month": "এক মাস ধরে কোনো অগ্রগতি নেই",
+  "Home warns you when one of these has not improved for a month.": "এগুলোর কোনোটি এক মাস ধরে উন্নত না হলে হোম আপনাকে জানাবে।",
 }

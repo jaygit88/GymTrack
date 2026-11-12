@@ -3667,4 +3667,8 @@ export default {
   "Worse": "แย่ลง",
   "Measure at least twice to see what changed.": "วัดอย่างน้อยสองครั้งเพื่อดูว่ามีอะไรเปลี่ยนไป",
   "Since {0}": "ตั้งแต่ {0}",
+  "Goals": "เป้าหมาย",
+  "Measurement goals": "เป้าหมายสัดส่วน",
+  "No progress in a month": "ไม่มีความคืบหน้ามาหนึ่งเดือน",
+  "Home warns you when one of these has not improved for a month.": "หน้าหลักจะเตือนเมื่อค่าใดในนี้ไม่ดีขึ้นมาหนึ่งเดือน",
 }

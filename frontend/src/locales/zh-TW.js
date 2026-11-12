@@ -3649,4 +3649,8 @@ export default {
   "Worse": "變差",
   "Measure at least twice to see what changed.": "至少測量兩次，才能看到變化。",
   "Since {0}": "自 {0} 起",
+  "Goals": "目標",
+  "Measurement goals": "圍度目標",
+  "No progress in a month": "一個月沒有進展",
+  "Home warns you when one of these has not improved for a month.": "其中任何一項一個月沒有改善時，首頁會提醒你。",
 }

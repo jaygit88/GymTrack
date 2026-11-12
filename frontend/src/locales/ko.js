@@ -3656,4 +3656,8 @@ export default {
   "Worse": "나빠짐",
   "Measure at least twice to see what changed.": "무엇이 바뀌었는지 보려면 최소 두 번 측정하세요.",
   "Since {0}": "{0}부터",
+  "Goals": "목표",
+  "Measurement goals": "치수 목표",
+  "No progress in a month": "한 달째 진전 없음",
+  "Home warns you when one of these has not improved for a month.": "이 중 하나가 한 달 동안 나아지지 않으면 홈에서 알려줘요.",
 }

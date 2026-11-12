@@ -3653,4 +3653,8 @@ export default {
   "Worse": "Гірше",
   "Measure at least twice to see what changed.": "Зроби заміри щонайменше двічі, щоб побачити зміни.",
   "Since {0}": "З {0}",
+  "Goals": "Цілі",
+  "Measurement goals": "Цілі за замірами",
+  "No progress in a month": "Немає прогресу вже місяць",
+  "Home warns you when one of these has not improved for a month.": "Головна попередить, якщо один із них не покращується місяць.",
 }

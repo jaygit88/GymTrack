@@ -3660,4 +3660,8 @@ export default {
   "Worse": "Хуже",
   "Measure at least twice to see what changed.": "Сделайте замеры хотя бы дважды, чтобы увидеть изменения.",
   "Since {0}": "С {0}",
+  "Goals": "Цели",
+  "Measurement goals": "Цели по замерам",
+  "No progress in a month": "Нет прогресса уже месяц",
+  "Home warns you when one of these has not improved for a month.": "Главная предупредит, если один из них не улучшается месяц.",
 }

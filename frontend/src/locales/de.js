@@ -3676,4 +3676,8 @@ export default {
   "Worse": "Schlechter",
   "Measure at least twice to see what changed.": "Miss mindestens zweimal, um zu sehen, was sich verändert hat.",
   "Since {0}": "Seit {0}",
+  "Goals": "Ziele",
+  "Measurement goals": "Maßziele",
+  "No progress in a month": "Kein Fortschritt seit einem Monat",
+  "Home warns you when one of these has not improved for a month.": "Home warnt dich, wenn sich eines davon einen Monat lang nicht verbessert hat.",
 }

@@ -125,3 +125,27 @@ describe('the tables', () => {
     for (const { parts } of Object.values(REGIONS)) for (const p of parts) expect(drawn.has(p)).toBe(true)
   })
 })
+
+describe('goals', () => {
+  it('defaults to arms, chest and waist, and keeps only fields with a direction', async () => {
+    const { goalKeys, DEFAULT_GOALS } = await import('./measure-change.js')
+    expect(goalKeys({})).toEqual(DEFAULT_GOALS)
+    expect(goalKeys({ measureGoals: ['chest', 'wristLeft', 'nope'] })).toEqual(['chest'])
+    expect(goalKeys({ measureGoals: [] })).toEqual([])
+  })
+
+  it('flags a goal that held steady or went the wrong way over a month, not one that improved', async () => {
+    const { stalledGoals } = await import('./measure-change.js')
+    const s = st([
+      entry('2026-09-01', { chest: 100, waist: 90, upperArmLeft: 38, thighLeft: 55 }),
+      entry('2026-10-01', { chest: 100.1, waist: 91, upperArmLeft: 39, thighLeft: 55 }),
+    ])
+    expect(stalledGoals(s).map(r => r.key)).toEqual(['chest', 'waist'])
+    expect(stalledGoals({ ...s, measureGoals: ['thighLeft'] }).map(r => r.key)).toEqual(['thighLeft'])
+  })
+
+  it('does not call a fortnight of readings stuck', async () => {
+    const { stalledGoals } = await import('./measure-change.js')
+    expect(stalledGoals(st([entry('2026-09-15', { chest: 100 }), entry('2026-10-01', { chest: 100 })]))).toEqual([])
+  })
+})

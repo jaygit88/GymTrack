@@ -3656,4 +3656,8 @@ export default {
   "Worse": "बदतर",
   "Measure at least twice to see what changed.": "क्या बदला यह देखने के लिए कम से कम दो बार नाप लें।",
   "Since {0}": "{0} से",
+  "Goals": "लक्ष्य",
+  "Measurement goals": "माप के लक्ष्य",
+  "No progress in a month": "एक महीने से कोई प्रगति नहीं",
+  "Home warns you when one of these has not improved for a month.": "इनमें से कोई एक महीने तक बेहतर न हो, तो होम आपको बताएगा।",
 }

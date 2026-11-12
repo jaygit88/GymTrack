@@ -3304,3 +3304,5 @@ button.wl-summary{width:100%;padding:0 0 10px;text-align:start;border-radius:var
   .bm-m.mc-worse.mc-l2{fill:rgba(255,69,58,0.7)}
 }
 .mchange-range{margin-top:10px;position:relative;z-index:2}
+.mchange-goal{font-size:.85em;margin-inline-end:4px;color:var(--gold-ink);vertical-align:-1px}
+.mchange-foot{display:flex;justify-content:flex-end;margin-top:6px}

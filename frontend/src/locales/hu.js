@@ -3659,4 +3659,8 @@ export default {
   "Worse": "Rosszabb",
   "Measure at least twice to see what changed.": "Mérj legalább kétszer, hogy lásd, mi változott.",
   "Since {0}": "{0} óta",
+  "Goals": "Célok",
+  "Measurement goals": "Méretcélok",
+  "No progress in a month": "Egy hónapja nincs fejlődés",
+  "Home warns you when one of these has not improved for a month.": "A Kezdőlap szól, ha ezek közül valamelyik egy hónapja nem javult.",
 }

@@ -3656,4 +3656,8 @@ export default {
   "Worse": "Daha kötü",
   "Measure at least twice to see what changed.": "Neyin değiştiğini görmek için en az iki kez ölçüm yap.",
   "Since {0}": "{0} tarihinden beri",
+  "Goals": "Hedefler",
+  "Measurement goals": "Ölçü hedefleri",
+  "No progress in a month": "Bir aydır ilerleme yok",
+  "Home warns you when one of these has not improved for a month.": "Bunlardan biri bir ay boyunca iyileşmezse Ana sayfa seni uyarır.",
 }

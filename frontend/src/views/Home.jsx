@@ -9,7 +9,8 @@ import { calendarSheet, starterPlanSheet } from '../sheets.jsx'
 import Icon from '../components/Icon.jsx'
 import CardHead from '../components/CardHead.jsx'
 import RecentDays from '../components/RecentDays.jsx'
-import MeasureChangeCard from '../components/MeasureChangeCard.jsx'
+import MeasureChangeCard, { goalsSheet } from '../components/MeasureChangeCard.jsx'
+import { stalledGoals } from '../lib/measure-change.js'
 import { weekTally } from '../lib/queue.js'
 import { WeeklySetsHomeLine } from '../components/WeeklySets.jsx'
 import { RecapHomeCard } from '../components/Recap.jsx'
@@ -41,6 +42,8 @@ export default function Home() {
   const streak = useMemo(() => streakInfo(S, todayKey), [S.workouts, S.weekStart, todayKey]) // eslint-disable-line react-hooks/exhaustive-deps
   // Settings → Modules (lib/modules.js): what a module switched off hides here.
   const on = id => isOn(S, id)
+  // Goal measurements that have not improved in a month (lib/measure-change.js): flagged up top.
+  const stalled = useMemo(() => (isOn(S, 'body') ? stalledGoals(S) : []), [S.measurements, S.measureGoals, S.modules]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return <div className="narrow">
     <div className="hdr">
@@ -48,6 +51,12 @@ export default function Home() {
       <div><h1>{user ? t('Hi {0}', user.name) : 'GymTrack'}</h1><div className="sub">{today.toLocaleDateString(dateLocale(), { weekday: 'long', day: 'numeric', month: 'long' })}</div></div>
       <button className="iconbtn" data-tour="settings-gear" onClick={() => nav('/settings')} aria-label={trouble ? t('Settings') + ', ' + t('Connection problem') : t('Settings')}><Icon name="gear" />{trouble && <span className="tab-dot" aria-hidden="true" />}</button>
     </div>
+
+    {stalled.length > 0 && <div className="card tap-host mstall-card">
+      <CardHead icon="warning" tint="var(--orange)" eyebrow={t('Measurement goals')} title={t('No progress in a month')}
+        sub={stalled.map(r => t(r.label)).join(', ')} open={{ onClick: () => nav('/measurements') }}
+        action={<Button size="sm" variant="ghost" icon="target" onClick={goalsSheet}>{t('Goals')}</Button>} />
+    </div>}
 
     {/* The streak opens its calendar from its text (CardHead open); the last seven days, the
         weekly-sets line and the party banner are buttons of their own inside it. */}

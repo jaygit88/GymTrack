@@ -3656,4 +3656,8 @@ export default {
   "Worse": "Peggio",
   "Measure at least twice to see what changed.": "Misurati almeno due volte per vedere cosa è cambiato.",
   "Since {0}": "Dal {0}",
+  "Goals": "Obiettivi",
+  "Measurement goals": "Obiettivi di misura",
+  "No progress in a month": "Nessun progresso da un mese",
+  "Home warns you when one of these has not improved for a month.": "La Home ti avvisa quando una di queste non migliora da un mese.",
 }

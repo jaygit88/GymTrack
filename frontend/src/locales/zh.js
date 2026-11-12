@@ -3656,4 +3656,8 @@ export default {
   "Worse": "变差",
   "Measure at least twice to see what changed.": "至少测量两次，才能看到变化。",
   "Since {0}": "自 {0} 起",
+  "Goals": "目标",
+  "Measurement goals": "围度目标",
+  "No progress in a month": "一个月没有进展",
+  "Home warns you when one of these has not improved for a month.": "其中任何一项一个月没有改善时，首页会提醒你。",
 }

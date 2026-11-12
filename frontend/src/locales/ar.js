@@ -3711,4 +3711,8 @@ export default {
   "Worse": "أسوأ",
   "Measure at least twice to see what changed.": "قِس مرتين على الأقل لترى ما الذي تغيّر.",
   "Since {0}": "منذ {0}",
+  "Goals": "الأهداف",
+  "Measurement goals": "أهداف القياسات",
+  "No progress in a month": "لا تقدّم منذ شهر",
+  "Home warns you when one of these has not improved for a month.": "تنبّهك الصفحة الرئيسية عندما لا يتحسن أحدها لمدة شهر.",
 }

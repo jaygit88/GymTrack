@@ -2443,6 +2443,7 @@ export const PT_BR_OVERRIDES = {
   "{0} stops syncing while Health is off. Nothing is disconnected, and it catches up once Health is back.": "{0} para de sincronizar enquanto “Saúde” estiver desligado. Nada fica desconectado, e ele se atualiza quando “Saúde” voltar.",
   // --- GymTrack: Home body change map ---
   "Measure at least twice to see what changed.": "Meça pelo menos duas vezes para ver o que mudou.",
+  "Home warns you when one of these has not improved for a month.": "O Início avisa você quando uma delas não melhora por um mês.",
 }
 
 export default { ...pt, ...PT_BR_OVERRIDES }

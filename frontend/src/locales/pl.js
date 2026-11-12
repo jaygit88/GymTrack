@@ -3656,4 +3656,8 @@ export default {
   "Worse": "Gorzej",
   "Measure at least twice to see what changed.": "Zmierz się co najmniej dwa razy, aby zobaczyć, co się zmieniło.",
   "Since {0}": "Od {0}",
+  "Goals": "Cele",
+  "Measurement goals": "Cele pomiarów",
+  "No progress in a month": "Brak postępu od miesiąca",
+  "Home warns you when one of these has not improved for a month.": "Ekran główny ostrzeże cię, gdy któryś z nich nie poprawi się przez miesiąc.",
 }

@@ -68,3 +68,21 @@ describe('Home follows the modules', () => {
     expect(rows[1].classList.contains('rest')).toBe(true)
   })
 })
+
+describe('measurement goals on Home', () => {
+  const m = (d, v) => ({ d, t: Date.parse(d + 'T12:00:00Z'), other: [], ...v })
+  it('flags a goal that has not improved in a month', () => {
+    mountWith(undefined, { measurements: [m('2026-09-01', { chest: 100, waist: 90 }), m('2026-10-05', { chest: 100, waist: 88 })] })
+    const card = host.querySelector('.mstall-card')
+    expect(card).toBeTruthy()
+    expect(card.textContent).toContain('No progress in a month')
+    expect(card.textContent).toContain('Chest')
+    expect(card.textContent).not.toContain('Waist')
+  })
+  it('stays away when every goal improved, or with body off', () => {
+    mountWith(undefined, { measurements: [m('2026-09-01', { chest: 100 }), m('2026-10-05', { chest: 102 })] })
+    expect(host.querySelector('.mstall-card')).toBeNull()
+    mountWith({ body: false }, { measurements: [m('2026-09-01', { chest: 100 }), m('2026-10-05', { chest: 100 })] })
+    expect(host.querySelector('.mstall-card')).toBeNull()
+  })
+})

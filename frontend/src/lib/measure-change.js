@@ -120,3 +120,26 @@ export function sideOfPath(d, vb, view) {
   const viewerLeft = +m[1] < x0 + w / 2
   return view === 'front' ? (viewerLeft ? 'right' : 'left') : (viewerLeft ? 'left' : 'right')
 }
+
+// ---- Goals: the measurements you are working on, and the ones that stopped moving ----
+
+// Until you choose, the goals are what most people lift for: arms, chest and a smaller waist.
+export const DEFAULT_GOALS = ['upperArmLeft', 'upperArmRight', 'chest', 'waist']
+// Only fields with a direction can be a goal: a wrist has no better or worse.
+export const GOAL_FIELDS = MEASUREMENT_FIELDS.filter(f => BETTER[f.key])
+
+export function goalKeys(state) {
+  return Array.isArray(state?.measureGoals) ? state.measureGoals.filter(k => BETTER[k]) : DEFAULT_GOALS
+}
+
+/**
+ * Goal measurements that have not improved over the last `days`: no change beyond tape noise, or
+ * a change the wrong way. Only once the readings really span the window (give or take a few
+ * days), so a habit started last week is not called stuck, and only from readings: a field you
+ * never measured is not flagged.
+ */
+export function stalledGoals(state, days = 30) {
+  const goals = new Set(goalKeys(state))
+  return measurementChanges(state, days).rows.filter(r =>
+    goals.has(r.key) && r.verdict !== 'better' && (dayMs(r.latest) - dayMs(r.since)) / DAY >= days - 3)
+}

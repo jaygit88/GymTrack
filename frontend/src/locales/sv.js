@@ -3703,4 +3703,8 @@ export default {
   "Worse": "Sämre",
   "Measure at least twice to see what changed.": "Mät minst två gånger för att se vad som har ändrats.",
   "Since {0}": "Sedan {0}",
+  "Goals": "Mål",
+  "Measurement goals": "Måttmål",
+  "No progress in a month": "Ingen framgång på en månad",
+  "Home warns you when one of these has not improved for a month.": "Hem varnar dig när något av dessa inte har förbättrats på en månad.",
 }
