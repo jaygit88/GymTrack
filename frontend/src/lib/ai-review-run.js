@@ -63,11 +63,11 @@ async function run(mode, deps) {
     model: d.model || meta.defaultModel, timeoutMs: local.timeoutFor(d.provider),
     env: key ? { [meta.apiKeyEnv]: key } : {}, fetch: local.guardedFetch, maxTokens: coachLimits(d).maxOutputTokens,
   })
-  if (r.timedOut) throw fail(t('Claude did not answer in time. Try again in a moment.'))
-  if (r.code !== 0) throw fail(t('Claude did not answer. Try again in a moment.') + (r.stderr ? ' (' + String(r.stderr).slice(0, 160) + ')' : ''))
+  if (r.timedOut) throw fail(t('GymTrackAI did not answer in time. Try again in a moment.'))
+  if (r.code !== 0) throw fail(t('GymTrackAI did not answer. Try again in a moment.') + (r.stderr ? ' (' + String(r.stderr).slice(0, 160) + ')' : ''))
   const parsed = core.extractJSON(r.text)
   const checked = parsed.error ? { ok: false } : checkReview(parsed.value)
-  if (!checked.ok) throw fail(t('Claude did not answer. Try again in a moment.'))
+  if (!checked.ok) throw fail(t('GymTrackAI did not answer. Try again in a moment.'))
   const entry = { at: Date.now(), period: payload.period, review: checked.review, ...(mode === 'stall' ? { goals: payload.stalledGoals } : {}) }
   useStore.getState().update(s => { s.aiReviews = { ...(s.aiReviews || {}), [mode]: entry } })
   return entry

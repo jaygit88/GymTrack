@@ -11,7 +11,7 @@ import { isOn } from '../lib/modules.js'
 import { t } from '../lib/i18n.js'
 import { goalsSheet } from './MeasureChangeCard.jsx'
 
-// GymTrack: Claude's monthly review on Home (lib/ai-review.js), and the same answer layout for
+// GymTrack: GymTrackAI (the AI Coach's connection, Claude on your own key): the monthly review on Home (lib/ai-review.js), and the same answer layout for
 // the suggestions on the "no progress" card. Asked for with a tap, never on its own: each one is
 // a paid request on your own key.
 
@@ -54,13 +54,13 @@ export default function AiReviewCard({ S }) {
   const saved = storedReview(S, 'month')
   const { ready, busy, error, ask } = useAiReview('month')
   return <div className="card ai-card">
-    <CardHead icon="sparkles" tint="var(--indigo)" title={t('Your month with Claude')}
+    <CardHead icon="sparkles" tint="var(--indigo)" eyebrow="GymTrackAI" title={t('Your month')}
       sub={saved ? t('Reviewed {0}', fmtDate(isoOf(new Date(saved.at)), true)) : t('A summary of the last 30 days and ideas for next month.')} />
     {saved && <ReviewBody review={saved.review} />}
     {error && <div className="small ai-err">{error}</div>}
     <div className="ai-actions">
       <Button size="sm" variant={saved ? 'ghost' : 'tinted'} icon="sparkles" disabled={busy} onClick={ask}>
-        {!ready ? t('Set up the AI Coach') : busy ? t('Claude is thinking…') : saved ? t('Review again') : t('Review my month')}
+        {!ready ? t('Set up the AI Coach') : busy ? t('GymTrackAI is thinking…') : saved ? t('Review again') : t('Review my month')}
       </Button>
     </div>
   </div>
@@ -86,7 +86,7 @@ export function StallCard({ S, stalled }) {
     <div className="ai-actions">
       <Button size="sm" variant="ghost" icon="target" onClick={goalsSheet}>{t('Goals')}</Button>
       <Button size="sm" variant={same ? 'ghost' : 'tinted'} icon="sparkles" disabled={busy} onClick={ask}>
-        {!ready ? t('Set up the AI Coach') : busy ? t('Claude is thinking…') : same ? t('Ask again') : t('Ask Claude')}
+        {!ready ? t('Set up the AI Coach') : busy ? t('GymTrackAI is thinking…') : same ? t('Ask again') : t('Ask GymTrackAI')}
       </Button>
     </div>
   </div>
