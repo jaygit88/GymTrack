@@ -1,14 +1,14 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import CardHead from './CardHead.jsx'
-import { Button } from './ui.jsx'
+import { Button, Segmented } from './ui.jsx'
 import { useBodyPaths } from './BodyMap.jsx'
 import { measurementChanges, regionColours, sideOfPath } from '../lib/measure-change.js'
 import { measurementUnitLabel } from '../lib/measurements.js'
 import { fmtDate, fmtNum } from '../lib/format.js'
 import { t } from '../lib/i18n.js'
 
-// Home's body change map: how each measured body part moved over the last month, on the body
+// Home's body change map: how each measured body part moved over the last 1, 3 or 6 months, on the body
 // itself. Green where it went the way you want (bigger arms, chest and legs, a smaller waist),
 // red where it went the other way, stronger for a bigger change; untouched where it held steady
 // or was not measured. The numbers follow underneath. The logic is lib/measure-change.js.
@@ -27,10 +27,17 @@ function ChangeView({ view, name, colours }) {
   </svg>
 }
 
+// The window you last picked, on this device only (a viewing preference, not your data).
+const RANGE_KEY = 'gymtrack_mchange_days'
+const RANGES = [30, 90, 180]
+const savedRange = () => { try { const n = +localStorage.getItem(RANGE_KEY); return RANGES.includes(n) ? n : 30 } catch { return 30 } }
+
 const openLog = () => import('../views/Measurements.jsx').then(m => m.measurementLogSheet())
 
-export default function MeasureChangeCard({ S, days = 30 }) {
+export default function MeasureChangeCard({ S }) {
   const nav = useNavigate()
+  const [days, setDaysState] = useState(savedRange)
+  const setDays = n => { setDaysState(n); try { localStorage.setItem(RANGE_KEY, String(n)) } catch { /* private mode: just this session */ } }
   const paths = useBodyPaths()
   const { rows, since } = useMemo(() => measurementChanges(S, days), [S.measurements, S.unit, days]) // eslint-disable-line react-hooks/exhaustive-deps
   const colours = useMemo(() => regionColours(rows), [rows])
@@ -41,6 +48,8 @@ export default function MeasureChangeCard({ S, days = 30 }) {
       sub={since ? t('Since {0}', fmtDate(since, true)) : null}
       open={{ onClick: () => nav('/measurements') }}
       action={<Button size="sm" icon="plus" onClick={openLog}>{t('Log')}</Button>} />
+    <Segmented className="seg-range mchange-range" value={days} onChange={setDays}
+      options={[{ value: 30, label: '1M' }, { value: 90, label: '3M' }, { value: 180, label: '6M' }]} />
     {rows.length ? <>
       <div className="bodymap mchange-map">
         {g ? <><ChangeView view={g.front} name="front" colours={colours} /><ChangeView view={g.back} name="back" colours={colours} /></>
