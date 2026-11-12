@@ -1940,7 +1940,7 @@ function HealthConnectCard({ S, toast, android, page = false }) {
     } catch { toast(c.failed) }
     setBusy(false)
   }
-  const reading = h.readHr || h.readWeight
+  const reading = h.readHr || h.readWeight || h.readRuns
 
   // Off can mean two things for what is already there, so it asks; closing the sheet keeps it on.
   const askOff = () => menuSheet({
@@ -1969,9 +1969,13 @@ function HealthConnectCard({ S, toast, android, page = false }) {
         subtitle={t('Your smart scale’s weigh-ins land here. One you type in yourself always wins.')}>
         <Switch checked={!!h.readWeight} disabled={busy} onChange={toggleRead('weight')} />
       </Row>
+      {!ios && <Row icon="run" iconTint="var(--orange)" title={t('Runs from your watch')}
+        subtitle={t('Runs saved by Samsung Health or another app show in your last 7 days on Home.')}>
+        <Switch checked={!!h.readRuns} disabled={busy} onChange={toggleRead('runs')} />
+      </Row>}
       {reading && h.readError === 'permission' && <Row icon="warning" iconTint="var(--orange)"
         title={t('Permission withdrawn. Tap to allow again')} accessory="chevron"
-        onClick={() => toggleRead(h.readHr ? 'hr' : 'weight')(true)} />}
+        onClick={() => toggleRead(h.readHr ? 'hr' : h.readWeight ? 'weight' : 'runs')(true)} />}
       {(h.on || reading) && <Row icon="list" iconTint="var(--blue)" title={c.open}
         accessory="chevron" onClick={() => openHealthConnect().catch(() => {})} />}
     </Section>

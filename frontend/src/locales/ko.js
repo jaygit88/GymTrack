@@ -3660,4 +3660,7 @@ export default {
   "Measurement goals": "치수 목표",
   "No progress in a month": "한 달째 진전 없음",
   "Home warns you when one of these has not improved for a month.": "이 중 하나가 한 달 동안 나아지지 않으면 홈에서 알려줘요.",
+  "Run": "달리기",
+  "Runs from your watch": "워치의 달리기 기록",
+  "Runs saved by Samsung Health or another app show in your last 7 days on Home.": "Samsung Health나 다른 앱에 저장된 달리기가 홈의 최근 7일에 표시돼요.",
 }

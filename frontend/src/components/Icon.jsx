@@ -153,6 +153,8 @@ const P = {
   vibrate: <><rect x="8" y="4.2" width="8" height="15.6" rx="2" /><path d="M4.8 9v6M19.2 9v6M2.6 10.6v2.8M21.4 10.6v2.8" /></>,
   // keep the screen on (sun stays flash and the light theme)
   phoneScreen: <><rect x="6.6" y="3.4" width="10.8" height="17.2" rx="2.4" /><path d="M10.6 5.8h2.8" /></>,
+  // a runner mid-stride: runs read in from Health Connect (GymTrack)
+  run: <><circle cx="14.6" cy="4.6" r="1.8" /><path d="M7.4 20.6l3.2-4.8 3 2.4v3.4M5.6 11.4l3-2.8h4.2l2.4 3.4h3.4M12.8 8.6l-2.2 7.2" /></>,
   ruler: <><rect x="3.4" y="8" width="17.2" height="8" rx="1.6" /><path d="M7 8v3M10.4 8v2M13.8 8v3M17.2 8v2" /></>,
   palette: <><path d="M12 3.6a8.4 8.4 0 0 0 0 16.8c1.2 0 1.8-.7 1.8-1.6 0-1.1-.9-1.4-.9-2.4 0-.9.7-1.5 1.6-1.5h2.2a3.6 3.6 0 0 0 3.6-3.6c0-4.3-3.8-7.7-8.3-7.7Z" /><circle cx="8" cy="11.2" r="1.1" /><circle cx="11" cy="7.6" r="1.1" /><circle cx="15.2" cy="8.4" r="1.1" /></>,
   // swap or replace: two opposed arrows

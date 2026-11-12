@@ -2444,6 +2444,8 @@ export const PT_BR_OVERRIDES = {
   // --- GymTrack: Home body change map ---
   "Measure at least twice to see what changed.": "Meça pelo menos duas vezes para ver o que mudou.",
   "Home warns you when one of these has not improved for a month.": "O Início avisa você quando uma delas não melhora por um mês.",
+  "Runs from your watch": "Corridas do seu relógio",
+  "Runs saved by Samsung Health or another app show in your last 7 days on Home.": "Corridas salvas pelo Samsung Health ou outro app aparecem nos seus últimos 7 dias no Início.",
 }
 
 export default { ...pt, ...PT_BR_OVERRIDES }

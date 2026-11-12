@@ -3739,4 +3739,7 @@ export default {
   "Measurement goals": "মাপের লক্ষ্য",
   "No progress in a month": "এক মাস ধরে কোনো অগ্রগতি নেই",
   "Home warns you when one of these has not improved for a month.": "এগুলোর কোনোটি এক মাস ধরে উন্নত না হলে হোম আপনাকে জানাবে।",
+  "Run": "দৌড়",
+  "Runs from your watch": "আপনার ঘড়ি থেকে দৌড়",
+  "Runs saved by Samsung Health or another app show in your last 7 days on Home.": "Samsung Health বা অন্য অ্যাপে সেভ করা দৌড় হোমে আপনার শেষ ৭ দিনে দেখাবে।",
 }

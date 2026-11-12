@@ -3671,4 +3671,7 @@ export default {
   "Measurement goals": "เป้าหมายสัดส่วน",
   "No progress in a month": "ไม่มีความคืบหน้ามาหนึ่งเดือน",
   "Home warns you when one of these has not improved for a month.": "หน้าหลักจะเตือนเมื่อค่าใดในนี้ไม่ดีขึ้นมาหนึ่งเดือน",
+  "Run": "วิ่ง",
+  "Runs from your watch": "การวิ่งจากนาฬิกาของคุณ",
+  "Runs saved by Samsung Health or another app show in your last 7 days on Home.": "การวิ่งที่บันทึกโดย Samsung Health หรือแอปอื่นจะแสดงใน 7 วันล่าสุดของคุณที่หน้าหลัก",
 }

@@ -3660,4 +3660,7 @@ export default {
   "Measurement goals": "Ölçü hedefleri",
   "No progress in a month": "Bir aydır ilerleme yok",
   "Home warns you when one of these has not improved for a month.": "Bunlardan biri bir ay boyunca iyileşmezse Ana sayfa seni uyarır.",
+  "Run": "Koşu",
+  "Runs from your watch": "Saatindeki koşular",
+  "Runs saved by Samsung Health or another app show in your last 7 days on Home.": "Samsung Health veya başka bir uygulamanın kaydettiği koşular Ana sayfada son 7 gününde görünür.",
 }

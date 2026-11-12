@@ -18,6 +18,7 @@
 // no background or history permission is asked for. What it decides is in lib/health-read.js.
 //
 // The web build never gets here (MOBILE is a build-time flag).
+import { mergeRuns } from './runs.js'
 import { mergeHeartRate, mergeWeighIns, lacksHeartRate } from './health-read.js'
 import { MOBILE, nativePlatform, readJsonFile, writeJsonFile } from './mobile.js'
 import { healthRecords, planSync, writtenIds, goneIds } from './health-connect.js'
@@ -27,7 +28,7 @@ import { EXIDX } from './exercises.js'
 import { speedUnitOf } from './speed.js'
 
 export const HEALTH_FILE = 'opengym-health.json'
-const OFF = { on: false, written: {}, at: 0, error: null, readHr: false, readWeight: false, wHistory: false, wCursor: 0, seen: {}, hrTried: {}, readError: null }
+const OFF = { on: false, written: {}, at: 0, error: null, readHr: false, readWeight: false, readRuns: false, runsAt: 0, wHistory: false, wCursor: 0, seen: {}, hrTried: {}, readError: null }
 
 // Wrapped in an object, as in rest-alert.js: a Capacitor plugin proxy answers `then`, so a
 // promise resolved with the bare proxy never settles.
@@ -245,6 +246,11 @@ const srcOf = platform => (platform === 'ios' ? 'ah' : 'hc')
 let applyRef = null
 let readRunning = null
 let lastWeightRead = 0
+let lastRunsRead = 0
+// GymTrack: runs are read for the last 30 days the first time, then from the last read on
+// (with a day's overlap, for a watch that syncs late).
+const RUNS_FIRST_MS = 30 * 86400e3
+const RUNS_OVERLAP_MS = 86400e3
 
 /**
  * Turns one of the two reads on (`kind`: 'hr' | 'weight'): asks for that read permission only,
@@ -255,16 +261,20 @@ export async function enableRead(kind, getState, { apply = null } = {}) {
   if (!p) return { ok: false, reason: 'unsupported' }
   const st = await p.HC.status().catch(() => ({ status: 'unsupported' }))
   if (st.status !== 'available') return { ok: false, reason: st.status }
-  const perm = kind === 'hr' ? 'heartRate' : 'weight'
+  // GymTrack: runs need the sessions and their distance, and are read from Health Connect only.
+  if (kind === 'runs' && p.platform === 'ios') return { ok: false, reason: 'unsupported' }
+  const perm = kind === 'hr' ? 'heartRate' : kind === 'runs' ? 'exercise' : 'weight'
   // The history permission only where Health Connect has it (status says so); Apple Health has none.
   const history = kind === 'weight' && p.platform !== 'ios' && st.history === true
-  const res = await p.HC.requestPermissions({ read: history ? [perm, 'history'] : [perm], write: [] }).catch(() => null)
+  const read = kind === 'runs' ? ['exercise', 'distance'] : history ? [perm, 'history'] : [perm]
+  const res = await p.HC.requestPermissions({ read, write: [] }).catch(() => null)
   // Apple Health never says whether reading was allowed (that it was refused is itself private):
   // `read` is then missing, and a refusal just reads nothing.
   const ok = res && (res.read ? res.read[perm] !== false : true)
   if (!ok) return { ok: false, reason: 'denied' }
   const h = await loadHealth()
-  const out = { ...h, [kind === 'hr' ? 'readHr' : 'readWeight']: true, readError: null }
+  const out = { ...h, [kind === 'hr' ? 'readHr' : kind === 'runs' ? 'readRuns' : 'readWeight']: true, readError: null }
+  if (kind === 'runs') { out.runsAt = 0; lastRunsRead = 0 }
   if (kind === 'weight') out.wHistory = history && res.read?.history === true
   await saveHealth(out)
   told(out)
@@ -276,8 +286,8 @@ export async function enableRead(kind, getState, { apply = null } = {}) {
 export async function disableRead(kind) {
   if (readRunning) await readRunning.catch(() => {})
   const h = await loadHealth()
-  const out = kind === 'hr' ? { ...h, readHr: false, hrTried: {} } : { ...h, readWeight: false }
-  if (!out.readHr && !out.readWeight) out.readError = null
+  const out = kind === 'hr' ? { ...h, readHr: false, hrTried: {} } : kind === 'runs' ? { ...h, readRuns: false } : { ...h, readWeight: false }
+  if (!out.readHr && !out.readWeight && !out.readRuns) out.readError = null
   await saveHealth(out)
   told(out)
   return out
@@ -290,7 +300,7 @@ export async function disableRead(kind) {
  * `force`). The log changes only when something new came in.
  */
 export function readHealth(getState, { force = false, now = Date.now(), apply = null } = {}) {
-  if (!MOBILE || !cached || !(cached.readHr || cached.readWeight)) return Promise.resolve(cached)
+  if (!MOBILE || !cached || !(cached.readHr || cached.readWeight || cached.readRuns)) return Promise.resolve(cached)
   if (!isOn(getState?.(), 'health')) return Promise.resolve(cached)   // paused with the Health module
   if (readRunning) return readRunning
   readRunning = readOnce(getState, force, now, apply || applyRef).finally(() => { readRunning = null })
@@ -355,6 +365,17 @@ async function readOnce(getState, force, now, applyFn) {
       h.seen = seen
       const newest = records.reduce((m, r) => Math.max(m, Number(r?.t) || 0), 0)
       if (newest > h.wCursor) h.wCursor = newest
+    } catch (e) { fail(e) }
+  }
+
+  if (h.readRuns && p.platform !== 'ios' && (force ? now - lastRunsRead >= RESUME_EVERY_MS : now - lastRunsRead >= READ_EVERY_MS)) {
+    try {
+      const since = h.runsAt > 0 ? Math.max(h.runsAt - RUNS_OVERLAP_MS, now - RUNS_FIRST_MS) : now - RUNS_FIRST_MS
+      const res = await p.HC.readSessions({ since })
+      lastRunsRead = now
+      const sessions = Array.isArray(res?.sessions) ? res.sessions : []
+      if (sessions.length) apply(probe => mergeRuns(probe, sessions, { now }) > 0, s => { mergeRuns(s, sessions, { now }) })
+      h.runsAt = now
     } catch (e) { fail(e) }
   }
 

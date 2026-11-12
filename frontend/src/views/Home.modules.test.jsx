@@ -86,3 +86,18 @@ describe('measurement goals on Home', () => {
     expect(host.querySelector('.mstall-card')).toBeNull()
   })
 })
+
+describe('runs from Health Connect in the last seven days', () => {
+  it('a run and a lift on one day are two rows, in the order they happened', () => {
+    const start = new Date(today + 'T06:30:00').getTime()
+    mountWith(undefined, { runs: [{ id: 'hc:1', d: today, start, end: start + 30 * 60e3, km: 5, title: null, type: 'running', src: 'hc' }],
+      workouts: [{ id: 'w1', d: today, start: start + 10 * 3600e3, end: start + 11 * 3600e3, entries: [] }] })
+    const rows = [...host.querySelectorAll('.recent-day')]
+    expect(rows[0].classList.contains('recent-run')).toBe(true)
+    expect(rows[0].textContent).toContain('Run')
+    expect(rows[0].textContent).toContain('5 km')
+    expect(rows[0].textContent).toContain('6:00 /km')
+    expect(rows[1].classList.contains('recent-run')).toBe(false)
+    expect(rows[2].classList.contains('rest')).toBe(true)
+  })
+})

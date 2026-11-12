@@ -3653,4 +3653,7 @@ export default {
   "Measurement goals": "圍度目標",
   "No progress in a month": "一個月沒有進展",
   "Home warns you when one of these has not improved for a month.": "其中任何一項一個月沒有改善時，首頁會提醒你。",
+  "Run": "跑步",
+  "Runs from your watch": "來自手錶的跑步",
+  "Runs saved by Samsung Health or another app show in your last 7 days on Home.": "Samsung Health 或其他應用程式儲存的跑步會顯示在首頁的最近 7 天中。",
 }

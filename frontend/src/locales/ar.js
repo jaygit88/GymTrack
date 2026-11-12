@@ -3715,4 +3715,7 @@ export default {
   "Measurement goals": "أهداف القياسات",
   "No progress in a month": "لا تقدّم منذ شهر",
   "Home warns you when one of these has not improved for a month.": "تنبّهك الصفحة الرئيسية عندما لا يتحسن أحدها لمدة شهر.",
+  "Run": "جري",
+  "Runs from your watch": "الجري من ساعتك",
+  "Runs saved by Samsung Health or another app show in your last 7 days on Home.": "يظهر الجري الذي حفظه Samsung Health أو تطبيق آخر في آخر 7 أيام على الصفحة الرئيسية.",
 }

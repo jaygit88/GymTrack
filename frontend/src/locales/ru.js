@@ -3664,4 +3664,7 @@ export default {
   "Measurement goals": "Цели по замерам",
   "No progress in a month": "Нет прогресса уже месяц",
   "Home warns you when one of these has not improved for a month.": "Главная предупредит, если один из них не улучшается месяц.",
+  "Run": "Пробежка",
+  "Runs from your watch": "Пробежки с часов",
+  "Runs saved by Samsung Health or another app show in your last 7 days on Home.": "Пробежки из Samsung Health или другого приложения появятся на главной в последних 7 днях.",
 }

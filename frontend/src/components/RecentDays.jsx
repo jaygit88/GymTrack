@@ -4,9 +4,10 @@ import Icon from './Icon.jsx'
 import { loadOfWorkouts } from '../lib/muscles.js'
 import { setsDone } from '../lib/history.js'
 import { glyphOf } from '../lib/glyphs.js'
-import { isoOf, todayISO, durPart, DAYS, DAYN } from '../lib/format.js'
+import { isoOf, todayISO, durPart, fmtNum, DAYS, DAYN } from '../lib/format.js'
 import { t, tn } from '../lib/i18n.js'
 import { tappable } from '../lib/use-sheet-keyboard.js'
+import { runsOn, runDistance, runPace } from '../lib/runs.js'
 import { workoutDetailSheet, logPastWorkoutSheet } from '../sheets.jsx'
 
 // The last seven days, today first, laid out like Plan's week: what you trained each day and
@@ -40,8 +41,26 @@ export default function RecentDays({ S, days = 7 }) {
         <span className="tag" style={{ color: 'var(--orange)', background: 'color-mix(in srgb,var(--orange) 16%,transparent)' }}>{S.active.editingWorkoutId ? t('Edit') : t('Resume')}</span>
       </div>)
     }
-    const done = S.workouts.filter(w => w.d === iso)
-    done.forEach((w, n) => {
+    // The day's workouts and runs (Health Connect, lib/runs.js) together, in the order they happened:
+    // a run in the morning and a lift at night are two rows, the run first.
+    const done = [
+      ...S.workouts.filter(w => w.d === iso).map(w => ({ kind: 'w', at: Number(w.start) || 0, w })),
+      ...runsOn(S, iso).map(r => ({ kind: 'r', at: r.start, r })),
+    ].sort((a, b) => a.at - b.at)
+    done.forEach((x, n) => {
+      if (x.kind === 'r') {
+        const r = x.r, dist = runDistance(r, S.unit), pace = runPace(r, S.unit)
+        items.push(<div key={r.id} className="item plan-day recent-day recent-run" data-tour={!items.length ? tour : undefined} aria-label={t(DAYN[d.getDay()])}>
+          {dayLabel(!items.length)}
+          <span className="lrow-i" style={{ background: 'var(--orange)' }}><Icon name="run" /></span>
+          <div className="grow">
+            <div className="tt">{r.title || t('Run')}</div>
+            <div className="ss">{[dist && fmtNum(dist.value) + ' ' + dist.unit, ...durPart(r.end - r.start), pace && pace.text + ' /' + pace.unit].filter(Boolean).join(' · ')}</div>
+          </div>
+        </div>)
+        return
+      }
+      const w = x.w
       const glyph = glyphOf((S.routines.find(r => r.id === w.routineId) || {}).emoji)
       items.push(<div key={w.id || iso + n} className="item plan-day recent-day" data-tour={!items.length ? tour : undefined}
         aria-label={t(DAYN[d.getDay()])} {...tappable(() => workoutDetailSheet(w))}>

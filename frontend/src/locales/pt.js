@@ -3660,4 +3660,7 @@ export default {
   "Measurement goals": "Objetivos de medidas",
   "No progress in a month": "Sem progresso há um mês",
   "Home warns you when one of these has not improved for a month.": "O Início avisa-te quando uma delas não melhorou durante um mês.",
+  "Run": "Corrida",
+  "Runs from your watch": "Corridas do teu relógio",
+  "Runs saved by Samsung Health or another app show in your last 7 days on Home.": "As corridas guardadas pelo Samsung Health ou outra app aparecem nos teus últimos 7 dias no Início.",
 }

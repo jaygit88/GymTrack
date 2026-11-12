@@ -4,6 +4,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import androidx.health.connect.client.records.ExerciseSessionRecord;
 import androidx.health.connect.client.records.HeartRateRecord;
 import androidx.health.connect.client.records.WeightRecord;
 import androidx.health.connect.client.records.metadata.DataOrigin;
@@ -71,5 +72,26 @@ public class HealthReadTest {
         assertEquals("android.permission.health.READ_HEALTH_DATA_HISTORY", HealthRead.readPermission("history"));
         assertEquals("android.permission.health.WRITE_EXERCISE", HealthRead.writePermission("exercise"));
         assertNull(HealthRead.readPermission("steps"));
+    }
+
+    // GymTrack: runs read back from Health Connect.
+    @Test
+    public void namesTheSessionTypesRunsNeed() {
+        assertEquals("running", HealthRead.typeName(ExerciseSessionRecord.EXERCISE_TYPE_RUNNING));
+        assertEquals("running_treadmill", HealthRead.typeName(ExerciseSessionRecord.EXERCISE_TYPE_RUNNING_TREADMILL));
+        assertEquals("other", HealthRead.typeName(ExerciseSessionRecord.EXERCISE_TYPE_YOGA));
+        assertEquals("android.permission.health.READ_EXERCISE", HealthRead.readPermission("exercise"));
+        assertEquals("android.permission.health.READ_DISTANCE", HealthRead.readPermission("distance"));
+    }
+
+    @Test
+    public void sumsOnlyTheSessionsOwnDistanceInsideIt() {
+        HealthRead.Session s = new HealthRead.Session("s", "watch", null, 1_000_000, 2_800_000, "running", null);
+        java.util.List<HealthRead.Dist> d = java.util.Arrays.asList(
+                new HealthRead.Dist(1_000_000, 1_900_000, "watch", 2500),
+                new HealthRead.Dist(1_900_000, 2_830_000, "watch", 2700),   // ends in the slack
+                new HealthRead.Dist(1_000_000, 2_800_000, "phone", 5100),   // another app: not added
+                new HealthRead.Dist(3_000_000, 3_600_000, "watch", 900));   // after the run
+        assertEquals(5200, HealthRead.metersFor(s, d), 0.001);
     }
 }

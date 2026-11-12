@@ -8,6 +8,7 @@ import androidx.activity.result.contract.ActivityResultContract;
 import androidx.health.connect.client.HealthConnectClient;
 import androidx.health.connect.client.HealthConnectFeatures;
 import androidx.health.connect.client.PermissionController;
+import androidx.health.connect.client.records.DistanceRecord;
 import androidx.health.connect.client.records.ExerciseSessionRecord;
 import androidx.health.connect.client.records.HeartRateRecord;
 import androidx.health.connect.client.records.Record;
@@ -84,6 +85,8 @@ public class HealthConnectPlugin extends Plugin {
     private static final String READ_HEART_RATE = "android.permission.health.READ_HEART_RATE";
     private static final String READ_WEIGHT = "android.permission.health.READ_WEIGHT";
     private static final String READ_HISTORY = "android.permission.health.READ_HEALTH_DATA_HISTORY";
+    private static final String READ_EXERCISE = "android.permission.health.READ_EXERCISE";
+    private static final String READ_DISTANCE = "android.permission.health.READ_DISTANCE";
     // Records per page when reading, and pages at most: a few hours of heart rate fit easily.
     private static final int PAGE = 1000;
     private static final int MAX_PAGES = 50;
@@ -314,6 +317,58 @@ public class HealthConnectPlugin extends Plugin {
         });
     }
 
+    // GymTrack: exercise sessions other apps saved since `since`, each with the distance its own app
+    // recorded inside it (without the distance permission, no distance). JS keeps the runs.
+    //   await HC.readSessions({ since });  // { sessions: [{ id, origin, clientId, start, end, type, title, meters }] }
+    @PluginMethod
+    public void readSessions(PluginCall call) {
+        if (!"available".equals(sdkStatus())) {
+            call.reject("Health Connect is not available", "unavailable");
+            return;
+        }
+        Long since = millis(call, "since");
+        if (since == null) {
+            call.reject("since is needed", "failed");
+            return;
+        }
+        worker.execute(() -> {
+            try {
+                List<HealthRead.Session> sessions = HealthRead.sessions(
+                        read(ExerciseSessionRecord.class, TimeRangeFilter.after(Instant.ofEpochMilli(since))));
+                boolean distance = granted().contains(READ_DISTANCE);
+                JSArray list = new JSArray();
+                for (HealthRead.Session s : sessions) {
+                    if (distance && !"other".equals(s.type) && !"strength_training".equals(s.type)) {
+                        List<HealthRead.Dist> dists = new ArrayList<>();
+                        for (DistanceRecord d : read(DistanceRecord.class, TimeRangeFilter.between(
+                                Instant.ofEpochMilli(s.start - 60_000), Instant.ofEpochMilli(s.end + 60_000)))) {
+                            dists.add(new HealthRead.Dist(d.getStartTime().toEpochMilli(), d.getEndTime().toEpochMilli(),
+                                    d.getMetadata().getDataOrigin().getPackageName(), d.getDistance().getMeters()));
+                        }
+                        s.meters = HealthRead.metersFor(s, dists);
+                    }
+                    JSObject o = new JSObject();
+                    o.put("id", s.id);
+                    o.put("origin", s.origin);
+                    o.put("clientId", s.clientId);
+                    o.put("start", s.start);
+                    o.put("end", s.end);
+                    o.put("type", s.type);
+                    o.put("title", s.title);
+                    o.put("meters", s.meters);
+                    list.put(o);
+                }
+                JSObject out = new JSObject();
+                out.put("sessions", list);
+                call.resolve(out);
+            } catch (SecurityException e) {
+                call.reject(e.getMessage(), "permission");
+            } catch (Exception e) {
+                call.reject(e.getMessage(), "failed");
+            }
+        });
+    }
+
     // Every page of one record type in the window, oldest first.
     @SuppressWarnings("unchecked")
     private <T extends Record> List<T> read(Class<T> type, TimeRangeFilter range) throws InterruptedException {
@@ -359,6 +414,8 @@ public class HealthConnectPlugin extends Plugin {
         r.put("heartRate", granted.contains(READ_HEART_RATE));
         r.put("weight", granted.contains(READ_WEIGHT));
         r.put("history", granted.contains(READ_HISTORY));
+        r.put("exercise", granted.contains(READ_EXERCISE));
+        r.put("distance", granted.contains(READ_DISTANCE));
         return r;
     }
 

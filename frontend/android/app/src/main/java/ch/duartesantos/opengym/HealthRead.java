@@ -1,5 +1,6 @@
 package ch.duartesantos.opengym;
 
+import androidx.health.connect.client.records.ExerciseSessionRecord;
 import androidx.health.connect.client.records.HeartRateRecord;
 import androidx.health.connect.client.records.WeightRecord;
 import androidx.health.connect.client.records.metadata.Metadata;
@@ -68,6 +69,9 @@ final class HealthRead {
             case "weight": return "android.permission.health.READ_WEIGHT";
             // Not a data type: data older than 30 days before the first grant (#801).
             case "history": return "android.permission.health.READ_HEALTH_DATA_HISTORY";
+            // GymTrack: runs other apps saved (a Galaxy Watch through Samsung Health), and their distance.
+            case "exercise": return "android.permission.health.READ_EXERCISE";
+            case "distance": return "android.permission.health.READ_DISTANCE";
             default: return null;
         }
     }
@@ -78,5 +82,68 @@ final class HealthRead {
             case "weight": return "android.permission.health.WRITE_WEIGHT";
             default: return null;
         }
+    }
+
+    // ---- GymTrack: exercise sessions other apps saved, for runs (lib/runs.js decides which) ----
+
+    /** One exercise session as JS gets it; `meters` is filled in from the distance records. */
+    static final class Session {
+        final String id, origin, clientId, type, title;
+        final long start, end;
+        double meters;
+
+        Session(String id, String origin, String clientId, long start, long end, String type, String title) {
+            this.id = id; this.origin = origin; this.clientId = clientId;
+            this.start = start; this.end = end; this.type = type; this.title = title;
+        }
+    }
+
+    /** One distance record, reduced to what the sum needs. */
+    static final class Dist {
+        final long start, end;
+        final String origin;
+        final double meters;
+
+        Dist(long start, long end, String origin, double meters) {
+            this.start = start; this.end = end; this.origin = origin; this.meters = meters;
+        }
+    }
+
+    /** The JS name of a session type; the ones lib/runs.js may want, everything else "other". */
+    static String typeName(int type) {
+        if (type == ExerciseSessionRecord.EXERCISE_TYPE_RUNNING) return "running";
+        if (type == ExerciseSessionRecord.EXERCISE_TYPE_RUNNING_TREADMILL) return "running_treadmill";
+        if (type == ExerciseSessionRecord.EXERCISE_TYPE_WALKING) return "walking";
+        if (type == ExerciseSessionRecord.EXERCISE_TYPE_HIKING) return "hiking";
+        if (type == ExerciseSessionRecord.EXERCISE_TYPE_BIKING) return "biking";
+        if (type == ExerciseSessionRecord.EXERCISE_TYPE_STRENGTH_TRAINING) return "strength_training";
+        return "other";
+    }
+
+    static List<Session> sessions(List<ExerciseSessionRecord> records) {
+        List<Session> out = new ArrayList<>();
+        for (ExerciseSessionRecord r : records) {
+            Metadata m = r.getMetadata();
+            CharSequence title = r.getTitle();
+            out.add(new Session(m.getId(), m.getDataOrigin().getPackageName(), m.getClientRecordId(),
+                    r.getStartTime().toEpochMilli(), r.getEndTime().toEpochMilli(),
+                    typeName(r.getExerciseType()), title == null ? null : title.toString()));
+        }
+        return out;
+    }
+
+    /**
+     * The distance of one session: the distance records the same app saved inside it, summed.
+     * Only the session's own app, so a phone's step distance for the same minutes is not added
+     * to the watch's. A minute of slack at either end for records that straddle the edges.
+     */
+    static double metersFor(Session s, List<Dist> distances) {
+        double sum = 0;
+        for (Dist d : distances) {
+            if (d.origin == null || !d.origin.equals(s.origin)) continue;
+            if (d.start < s.start - 60_000 || d.end > s.end + 60_000) continue;
+            if (d.meters > 0) sum += d.meters;
+        }
+        return sum;
     }
 }

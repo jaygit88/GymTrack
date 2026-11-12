@@ -3707,4 +3707,7 @@ export default {
   "Measurement goals": "Måttmål",
   "No progress in a month": "Ingen framgång på en månad",
   "Home warns you when one of these has not improved for a month.": "Hem varnar dig när något av dessa inte har förbättrats på en månad.",
+  "Run": "Löpning",
+  "Runs from your watch": "Löprundor från klockan",
+  "Runs saved by Samsung Health or another app show in your last 7 days on Home.": "Löprundor som Samsung Health eller en annan app sparat visas bland dina senaste 7 dagar på Hem.",
 }

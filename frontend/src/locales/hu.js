@@ -3663,4 +3663,7 @@ export default {
   "Measurement goals": "Méretcélok",
   "No progress in a month": "Egy hónapja nincs fejlődés",
   "Home warns you when one of these has not improved for a month.": "A Kezdőlap szól, ha ezek közül valamelyik egy hónapja nem javult.",
+  "Run": "Futás",
+  "Runs from your watch": "Futások az órádról",
+  "Runs saved by Samsung Health or another app show in your last 7 days on Home.": "A Samsung Health vagy más app által mentett futások megjelennek a Kezdőlapon az utolsó 7 napodban.",
 }
