@@ -12,6 +12,7 @@ import RecentDays from '../components/RecentDays.jsx'
 import MeasureChangeCard from '../components/MeasureChangeCard.jsx'
 import AiReviewCard, { StallCard } from '../components/AiReviewCard.jsx'
 import RunningCard from '../components/RunningCard.jsx'
+import { QuickWorkoutButton } from '../components/QuickWorkout.jsx'
 import { stalledGoals } from '../lib/measure-change.js'
 import { weekTally } from '../lib/queue.js'
 import { WeeklySetsHomeLine } from '../components/WeeklySets.jsx'
@@ -67,6 +68,7 @@ export default function Home() {
         action={<Icon name="calendar" className="chev" style={{ fontSize: 'var(--fs-title3)' }} />} />
       {(streak.best > 0 || streak.freezes > 0) && <div className="muted small card-head-indent streak-meta-line"><StreakMeta info={streak} /></div>}
       <RecentDays S={S} />
+      {!S.active && <div className="qw-home"><QuickWorkoutButton /></div>}
       <StreakParty S={S} info={streak} tally={tally} />
       {/* Settings → Look & Home → Weekly sets on Home (lib/muscle-targets.js): the muscle with
           the most room this week, one tap from the Stats card. */}
@@ -77,6 +79,7 @@ export default function Home() {
       : <div className="card wsets-solo">
         <CardHead icon="calendar" tint="var(--acc)" title={t('Last 7 days')} />
         <RecentDays S={S} />
+      {!S.active && <div className="qw-home"><QuickWorkoutButton /></div>}
         {S.homeMuscleSets === true && <WeeklySetsHomeLine S={S} onOpen={() => nav('/stats?section=lifts')} />}
       </div>}
 

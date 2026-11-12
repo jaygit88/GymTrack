@@ -1,3 +1,4 @@
+import { quickWorkoutSheet } from '../components/QuickWorkout.jsx'
 import { Fragment, useEffect, useId, useRef, useState } from 'react'
 import SwipeCards from '../components/SwipeCards.jsx'
 import SwipeRow from '../components/SwipeRow.jsx'
@@ -104,6 +105,9 @@ function StartChooser() {
         <span className="tag acc">{t('Start')}</span></div>)}</div></>}
     <div style={{ height: 14 }} />
     <Button icon="shuffle" onClick={() => startFlow([])}>{t('Freestyle workout (pick as you go)')}</Button>
+    {/* GymTrack: a workout sized to the time you have, from what your log says is most needed */}
+    <div style={{ height: 10 }} />
+    <Button icon="stopwatch" onClick={quickWorkoutSheet}>{t('Short on time?')}</Button>
     {!S.routines.length && <><div style={{ height: 10 }} /><Button variant="primary" onClick={() => nav('/plan')}>{t('Build a plan first')}</Button></>}
   </div>
 }

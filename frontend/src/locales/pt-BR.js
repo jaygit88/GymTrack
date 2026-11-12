@@ -2470,6 +2470,8 @@ export const PT_BR_OVERRIDES = {
   "Steady heart rate for the pace all the way: your aerobic base held up.": "Batimento estável para o ritmo até o fim: sua base aeróbica aguentou.",
   "Your heart worked {0}% harder for the pace in the second half. Longer easy runs build this up.": "Seu coração trabalhou {0}% mais para o ritmo na segunda metade. Corridas leves mais longas melhoram isso.",
   "A big jump this week. Keep the next runs easy.": "Um grande salto esta semana. Faça as próximas corridas leves.",
+  "How long have you got? This picks what your last week says is most needed.": "Quanto tempo você tem? Isto escolhe o que sua última semana mais precisa.",
+  "Everything is either recovering or on target. A rest day might be the best workout.": "Tudo está se recuperando ou dentro da meta. Um dia de descanso pode ser o melhor treino.",
 }
 
 export default { ...pt, ...PT_BR_OVERRIDES }

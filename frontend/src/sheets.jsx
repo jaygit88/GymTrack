@@ -3504,6 +3504,32 @@ export function repeatWorkout(w, close) {
   bwSheet({ required: true, onDone: go })
 }
 
+// GymTrack: a session from a made-up routine (the quick workout, lib/quick-workout.js): its
+// exercises built the way a routine's are (buildSessionEntries), so the weights come from your
+// history and progression as usual. The weigh-in asks first, as starting any workout does.
+export function beginCustomWorkout(name, ex, close) {
+  const st = S()
+  if (st.active) { toast(t('Finish the current workout first.')); return }
+  const entries = buildSessionEntries(st, { id: 'quick', name, ex })
+  if (!entries.length) return
+  const go = bw => {
+    if (S().active) { toast(t('Finish the current workout first.')); return }
+    update(s => {
+      s.active = {
+        id: uid(), d: todayISO(), start: Date.now(), routineIds: [],
+        name, bw: bw || null, cur: 0, entries,
+        workoutView: s.workoutView || 'cards',
+      }
+    })
+    useUI.getState().stopRest()
+    if (close) closeThenNav(close, '/workout'); else navToWorkout()
+    autoGymHere()
+  }
+  if (st.weighIn === false || !isOn(st, 'body')) { go(null); return }
+  if (close) close()
+  bwSheet({ required: true, onDone: go })
+}
+
 /* ============================ log a past workout ============================ */
 // The same screen as a live session, pointed at another day. `backfill` on the active
 // session is what tells the workout screen to drop the clock and the rest timers, and tells

@@ -3344,3 +3344,8 @@ button.wl-summary{width:100%;padding:0 0 10px;text-align:start;border-radius:var
 .run-split-bar.z5 i{background:var(--red)}
 .run-split-v{min-width:44px;text-align:end;font-variant-numeric:tabular-nums}
 .run-time{max-width:110px;text-align:end}
+/* GymTrack: quick workout (components/QuickWorkout.jsx) */
+.qw-home{display:flex;justify-content:center;margin-top:8px;position:relative;z-index:2}
+.qw-list{margin-top:12px}
+.qw-foot{margin:8px 2px 12px}
+.qw-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
