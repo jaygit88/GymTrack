@@ -3742,4 +3742,6 @@ export default {
   "Side delts": "三角肌中束",
   "Rear delts": "三角肌後束",
   "Simple pick": "簡單推薦",
+  "≈ {0} kcal": "≈ {0} 大卡",
+  "Add your year of birth in Settings, About you, to see the calories.": "在 設定 > 關於你 中填寫出生年份即可查看卡路里。",
 }

@@ -18,6 +18,7 @@ import { MEASUREMENT_FIELDS } from './measurements.js'
 import { runDistance } from './runs.js'
 import { isoOf, startOfWeek, weekStartOf } from './format.js'
 import { loadOfWorkouts } from './muscles.js'
+import { workoutCalories } from './calories.js'
 import { quickContext, minutesFor } from './quick-workout.js'
 import { runGoalOf, goalProgress, fitnessTrend, weeklyKm, loadWarning, planThisWeek, fmtPace, fmtRaceTime, RUN_KINDS } from './running.js'
 
@@ -32,7 +33,7 @@ const label = key => MEASUREMENT_FIELDS.find(f => f.key === key)?.label || key
 const nameOf = e => EXIDX[e?.id]?.n || e?.exercise?.name || e?.name || e?.id || 'exercise'
 const done = s => s && s.done && !isWarmupRow(s)
 
-function workoutLine(w, unit) {
+function workoutLine(w, unit, S) {
   const exercises = (w.entries || []).map(e => {
     const sets = (e.sets || []).filter(done)
     if (!sets.length) return null
@@ -41,7 +42,9 @@ function workoutLine(w, unit) {
     return { name: nameOf(e), sets: sets.length, ...(top ? { best: top } : {}) }
   }).filter(Boolean).slice(0, MAX_EXERCISES)
   const minutes = w.end > w.start ? Math.round((w.end - w.start) / 60000) : null
-  return { date: w.d, name: w.name || null, ...(minutes ? { minutes } : {}), sets: exercises.reduce((n, e) => n + e.sets, 0), prs: Array.isArray(w.prs) ? w.prs.length : 0, exercises }
+  const kcal = workoutCalories(S, w).kcal
+  return { date: w.d, name: w.name || null, ...(minutes ? { minutes } : {}), ...(w.hr?.avg ? { hrAvg: Math.round(w.hr.avg) } : {}), ...(kcal ? { kcal } : {}),
+    sets: exercises.reduce((n, e) => n + e.sets, 0), prs: Array.isArray(w.prs) ? w.prs.length : 0, exercises }
 }
 
 /** What the model is told about the last `days` (30), ending today. */
@@ -62,7 +65,7 @@ export function buildReviewPayload(S, { mode = 'month', now = Date.now(), days =
   const stalled = stalledGoals(S || {}, days).map(r => label(r.key))
   return {
     mode, period: { from, to, days }, unit,
-    workouts: workouts.slice(-MAX_WORKOUTS).map(w => workoutLine(w, unit)),
+    workouts: workouts.slice(-MAX_WORKOUTS).map(w => workoutLine(w, unit, S)),
     workoutCount: workouts.length, previousPeriodWorkoutCount: prevCount,
     runs,
     bodyweight: bw.length ? { first: `${bw[0].w} ${unit}`, last: `${bw[bw.length - 1].w} ${unit}` } : null,

@@ -3749,4 +3749,6 @@ export default {
   "Side delts": "Deltoïdes latéraux",
   "Rear delts": "Deltoïdes postérieurs",
   "Simple pick": "Choix simple",
+  "≈ {0} kcal": "≈ {0} kcal",
+  "Add your year of birth in Settings, About you, to see the calories.": "Ajoute ton année de naissance dans Réglages, À propos de toi, pour voir les calories.",
 }

@@ -3760,4 +3760,6 @@ export default {
   "Side delts": "ไหล่ด้านข้าง",
   "Rear delts": "ไหล่ด้านหลัง",
   "Simple pick": "ตัวเลือกแบบง่าย",
+  "≈ {0} kcal": "≈ {0} kcal",
+  "Add your year of birth in Settings, About you, to see the calories.": "เพิ่มปีเกิดใน การตั้งค่า, เกี่ยวกับคุณ เพื่อดูแคลอรี",
 }

@@ -12,6 +12,7 @@ import { RUN_KIND_LABEL } from './RunSheets.jsx'
 import { workoutDetailSheet, logPastWorkoutSheet, startFlow, dayOverrideSheet } from '../sheets.jsx'
 import MiniBodyMap from './MiniBodyMap.jsx'
 import { effectiveRoutines, setsDone } from '../lib/history.js'
+import { workoutCalories } from '../lib/calories.js'
 import { deriveSessionName } from '../lib/session-merge.js'
 import { runSheet } from './RunSheets.jsx'
 
@@ -29,6 +30,7 @@ function MiniWorkoutMap({ workouts, body }) {
 
 export default function RecentDays({ S, back = 3, ahead = 3 }) {
   const nav = useNavigate()
+  const kcalOf = w => workoutCalories(S, w).kcal
   const today = todayISO()
   const rows = []
   for (let off = -back; off <= ahead; off++) {
@@ -77,7 +79,7 @@ export default function RecentDays({ S, back = 3, ahead = 3 }) {
         <span className="lrow-i"><Icon name={glyph} /></span>
         <div className="grow">
           <div className="tt">{w.name || t('Workout done')}</div>
-          <div className="ss">{[tn('{0} set', '{0} sets', setsDone(w)), ...durPart((w.end || 0) - (w.start || 0))].join(' · ')}</div>
+          <div className="ss">{[tn('{0} set', '{0} sets', setsDone(w)), ...durPart((w.end || 0) - (w.start || 0)), ...(kcalOf(w) ? [t('≈ {0} kcal', kcalOf(w))] : [])].join(' · ')}</div>
         </div>
         <MiniWorkoutMap workouts={[w]} body={S.body} />
         <Icon name="chevronRight" className="chev" />

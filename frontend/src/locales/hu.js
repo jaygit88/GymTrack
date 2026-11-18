@@ -3752,4 +3752,6 @@ export default {
   "Side delts": "Oldalsó váll",
   "Rear delts": "Hátsó váll",
   "Simple pick": "Egyszerű választás",
+  "≈ {0} kcal": "≈ {0} kcal",
+  "Add your year of birth in Settings, About you, to see the calories.": "Add meg a születési éved a Beállítások, Rólad részben, hogy lásd a kalóriákat.",
 }

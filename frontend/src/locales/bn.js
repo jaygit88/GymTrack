@@ -3828,4 +3828,6 @@ export default {
   "Side delts": "সাইড ডেল্ট",
   "Rear delts": "রিয়ার ডেল্ট",
   "Simple pick": "সহজ বাছাই",
+  "≈ {0} kcal": "≈ {0} kcal",
+  "Add your year of birth in Settings, About you, to see the calories.": "ক্যালোরি দেখতে সেটিংস, আপনার সম্পর্কে-এ জন্মসাল যোগ করুন।",
 }

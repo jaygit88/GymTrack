@@ -3749,4 +3749,6 @@ export default {
   "Side delts": "साइड डेल्ट्स",
   "Rear delts": "रियर डेल्ट्स",
   "Simple pick": "सरल चुनाव",
+  "≈ {0} kcal": "≈ {0} kcal",
+  "Add your year of birth in Settings, About you, to see the calories.": "कैलोरी देखने के लिए सेटिंग्स, आपके बारे में में अपना जन्म वर्ष जोड़ें।",
 }

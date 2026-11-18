@@ -3804,4 +3804,6 @@ export default {
   "Side delts": "الكتف الجانبي",
   "Rear delts": "الكتف الخلفي",
   "Simple pick": "اختيار بسيط",
+  "≈ {0} kcal": "≈ {0} سعرة",
+  "Add your year of birth in Settings, About you, to see the calories.": "أضف سنة ميلادك في الإعدادات، عنك، لترى السعرات.",
 }

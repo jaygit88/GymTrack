@@ -80,6 +80,7 @@ import { warmupModeOf, ownRowsOf } from './lib/warmup-ramp.js'
 import { useSheetKeyboard, useRevealActiveChip, tappable } from './lib/use-sheet-keyboard.js'
 import { useAutoMore } from './lib/use-auto-more.js'
 import { isFav, toggleFav, sortFavouritesFirst, sortYoursFirst } from './lib/favourites.js'
+import { workoutCalories } from './lib/calories.js'
 import { buildSessionEntries, buildPlannedEntry, buildSessionEntry, plannedConfigOf } from './lib/session-start.js'
 import { finishCompare, finishCardio } from './lib/finish-compare.js'
 import { workoutFit, fitFileName } from './lib/fit-export.js'
@@ -3081,6 +3082,8 @@ function WorkoutDurationEdit({ w, onDone, close }) {
 export const workoutDurationSheet = (w, onDone) => ui().openSheet(close => <WorkoutDurationEdit w={w} onDone={onDone} close={close} />)
 
 function WorkoutDetail({ w, close }) {
+  // GymTrack: the calories this workout burned, from its heart rate (lib/calories.js)
+  const kcal = workoutCalories(S(), w)
   const noteRef = useRef(null)
   const onNoteFocus = useSheetKeyboard(noteRef)
   const st = useStore(s => s.S)
@@ -3255,7 +3258,10 @@ function WorkoutDetail({ w, close }) {
   const grouped = groups.length > 1 || (groups[0] && groups[0].rid && (w.routineIds || []).length > 1)
   return <>
     <h3>{w.name}</h3>
-    <div className="muted small" style={{ marginBottom: 12 }}>{[fmtDate(w.d, true), ...durPart(w.end - w.start), fmtVol(sessionVolume(w, st), st.unit), ...(w.bw ? [fmtNum(w.bw) + ' ' + st.unit] : [])].join(' · ')}</div>
+    <div className="muted small" style={{ marginBottom: kcal.missing === 'age' ? 4 : 12 }}>{[fmtDate(w.d, true), ...durPart(w.end - w.start), fmtVol(sessionVolume(w, st), st.unit), ...(w.bw ? [fmtNum(w.bw) + ' ' + st.unit] : []),
+      ...(w.hr?.avg ? ['♥ ' + Math.round(w.hr.avg) + ' bpm'] : []), ...(kcal.kcal ? [t('≈ {0} kcal', kcal.kcal)] : [])].join(' · ')}</div>
+    {/* GymTrack: calories need your age (Settings, About you); the heart rate is already here. */}
+    {kcal.missing === 'age' && <div className="small dim" style={{ marginBottom: 12 }}>{t('Add your year of birth in Settings, About you, to see the calories.')}</div>}
     {grouped ? groups.map(g => {
       const r = g.rid ? st.routines.find(x => x.id === g.rid) : null
       const items = g.items.map(i => w.entries[i])

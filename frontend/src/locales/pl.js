@@ -3749,4 +3749,6 @@ export default {
   "Side delts": "Boczne barki",
   "Rear delts": "Tylne barki",
   "Simple pick": "Prosty wybór",
+  "≈ {0} kcal": "≈ {0} kcal",
+  "Add your year of birth in Settings, About you, to see the calories.": "Dodaj rok urodzenia w Ustawienia, O tobie, aby zobaczyć kalorie.",
 }

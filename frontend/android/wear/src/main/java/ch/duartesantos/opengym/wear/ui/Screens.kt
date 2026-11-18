@@ -3,6 +3,7 @@ package ch.duartesantos.opengym.wear.ui
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
@@ -41,6 +42,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.input.rotary.onRotaryScrollEvent
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -57,6 +59,8 @@ import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.material3.Text
 import ch.duartesantos.opengym.wear.Entry
+import ch.duartesantos.opengym.wear.HrAsk
+import ch.duartesantos.opengym.wear.WorkoutService
 import ch.duartesantos.opengym.wear.R
 import ch.duartesantos.opengym.wear.ReadySession
 import ch.duartesantos.opengym.wear.Rest
@@ -92,6 +96,22 @@ fun WearApp(onWorkoutShown: () -> Unit = {}) {
 }
 
 /* ---------- building blocks ---------- */
+
+/**
+ * GymTrack: the heart rate, big enough to read mid-set. "♥ --" while the sensor warms up; without
+ * the permission "♥ Allow", which asks again (or opens the app's settings once asking is refused).
+ */
+@Composable
+fun HrLine(hr: Int?, size: TextUnit) {
+    val ctx = LocalContext.current
+    if (!WorkoutService.hasHrPermission(ctx)) {
+        Text("♥ " + stringResource(R.string.allow), color = Og.Red, fontSize = size, fontWeight = FontWeight.Bold,
+            modifier = Modifier.clip(RoundedCornerShape(12.dp)).clickable { HrAsk.request?.invoke() }.padding(horizontal = 6.dp, vertical = 2.dp))
+    } else {
+        Text("♥ " + (hr?.toString() ?: "--"), color = Og.Red, fontSize = size, fontWeight = FontWeight.Bold,
+            modifier = Modifier.semantics { contentDescription = hr?.toString() ?: "" })
+    }
+}
 
 /** A big rounded button: lime for the one thing to press, a dark tile for the rest. 48 dp tall at least. */
 @Composable
@@ -290,7 +310,10 @@ fun SetScreen(s: SessionState, ei: Int, hr: Int?, onOverview: () -> Unit) {
                 side == "R" -> Tag(stringResource(R.string.right), Og.Lime)
                 e.group != null -> Tag(stringResource(R.string.superset), Og.Lime)
             }
-            if (!row.warmup && total > 0) Quiet(stringResource(R.string.set_of, n, total), 11.sp, lines = 1)
+            if (!row.warmup && total > 0) Quiet(stringResource(R.string.set_of, n, total), 12.sp, lines = 1)
+            // GymTrack: the heart rate rides in this line, not a row of its own: a round screen has
+            // little height to spare between the name, the tiles and Done.
+            if (s.settings.show?.showHr != false) HrLine(hr, 14.sp)
         }
         Text(
             e.name, modifier = Modifier.padding(top = 2.dp).combinedClickable(role = Role.Button, onClick = onOverview),
@@ -315,11 +338,7 @@ fun SetScreen(s: SessionState, ei: Int, hr: Int?, onOverview: () -> Unit) {
                 ) { if (sel == f) editing = f else sel = f }
             }
         }
-        val showHr = s.settings.show?.showHr != false
-        Box(Modifier.height(18.dp), contentAlignment = Alignment.Center) {
-            if (showHr && hr != null) Text("♥ $hr", color = Og.Red, fontSize = 12.sp, fontWeight = FontWeight.Bold,
-                modifier = Modifier.semantics { contentDescription = "$hr" })
-        }
+        Spacer(Modifier.height(10.dp))
         // Done: the one lime thing on the screen. A long press skips the set instead.
         Pill(
             stringResource(R.string.done), Modifier.widthIn(min = 96.dp), primary = true,
@@ -408,7 +427,7 @@ fun RestScreen(s: SessionState, rest: Rest, hr: Int?) {
                 Quiet(stringResource(R.string.next_set, ne.name, ne.sets.take(nsi + 1).count { !it.warmup }.coerceAtLeast(1)), 11.sp,
                     Modifier.padding(horizontal = 28.dp))
             }
-            if (hr != null) Text("♥ $hr", color = Og.Red, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+            if (s.settings.show?.showHr != false) HrLine(hr, 16.sp)
             Spacer(Modifier.height(8.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Pill("+15") { WearStore.addRest(15) }

@@ -3749,4 +3749,6 @@ export default {
   "Side delts": "Yan omuz",
   "Rear delts": "Arka omuz",
   "Simple pick": "Basit seçim",
+  "≈ {0} kcal": "≈ {0} kcal",
+  "Add your year of birth in Settings, About you, to see the calories.": "Kalorileri görmek için Ayarlar, Hakkında bölümüne doğum yılını ekle.",
 }

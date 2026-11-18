@@ -3749,4 +3749,6 @@ export default {
   "Side delts": "측면 삼각근",
   "Rear delts": "후면 삼각근",
   "Simple pick": "간단 추천",
+  "≈ {0} kcal": "≈ {0}kcal",
+  "Add your year of birth in Settings, About you, to see the calories.": "칼로리를 보려면 설정, 내 정보에서 출생 연도를 입력하세요.",
 }

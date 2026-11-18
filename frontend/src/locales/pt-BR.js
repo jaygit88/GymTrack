@@ -2472,6 +2472,7 @@ export const PT_BR_OVERRIDES = {
   "A big jump this week. Keep the next runs easy.": "Um grande salto esta semana. Faça as próximas corridas leves.",
   "How long have you got? This picks what your last week says is most needed.": "Quanto tempo você tem? Isto escolhe o que sua última semana mais precisa.",
   "Everything is either recovering or on target. A rest day might be the best workout.": "Tudo está se recuperando ou dentro da meta. Um dia de descanso pode ser o melhor treino.",
+  "Add your year of birth in Settings, About you, to see the calories.": "Adicione seu ano de nascimento em Configurações, Sobre você, para ver as calorias.",
 }
 
 export default { ...pt, ...PT_BR_OVERRIDES }

@@ -3769,4 +3769,6 @@ export default {
   "Side delts": "Seitliche Schulter",
   "Rear delts": "Hintere Schulter",
   "Simple pick": "Einfache Auswahl",
+  "≈ {0} kcal": "≈ {0} kcal",
+  "Add your year of birth in Settings, About you, to see the calories.": "Trag dein Geburtsjahr unter Einstellungen, Über dich ein, um die Kalorien zu sehen.",
 }

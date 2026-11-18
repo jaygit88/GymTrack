@@ -3746,4 +3746,6 @@ export default {
   "Side delts": "Середня дельта",
   "Rear delts": "Задня дельта",
   "Simple pick": "Простий добір",
+  "≈ {0} kcal": "≈ {0} ккал",
+  "Add your year of birth in Settings, About you, to see the calories.": "Вкажи рік народження в Налаштуваннях, Про тебе, щоб бачити калорії.",
 }

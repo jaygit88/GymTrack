@@ -3796,4 +3796,6 @@ export default {
   "Side delts": "Sidodelts",
   "Rear delts": "Bakre delts",
   "Simple pick": "Enkelt val",
+  "≈ {0} kcal": "≈ {0} kcal",
+  "Add your year of birth in Settings, About you, to see the calories.": "Lägg till ditt födelseår under Inställningar, Om dig, för att se kalorierna.",
 }

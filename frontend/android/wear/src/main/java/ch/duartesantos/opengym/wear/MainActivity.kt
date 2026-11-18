@@ -1,6 +1,10 @@
 package ch.duartesantos.opengym.wear
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
+import android.view.WindowManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -17,13 +21,27 @@ import kotlinx.coroutines.launch
 
 /**
  * The watch app: one activity, the screen picked from the state (ui/Screens.kt). It speaks the
- * app's language (Lang), asks for the heart rate the first time a workout shows up, and keeps the
- * workout service running while one does.
+ * app's language (Lang), asks for the heart rate the first time a workout shows up (and again from
+ * the heart-rate line), keeps the workout service running while one does, and keeps the screen on.
  */
+/** GymTrack: how the heart-rate line on a screen asks for the permission again (set by MainActivity). */
+object HrAsk {
+    @Volatile var request: (() -> Unit)? = null
+}
+
 class MainActivity : ComponentActivity() {
     private var askedHr = false
+    private var askedFromTap = false
 
     private val askHr = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+        // Asked from the heart-rate line and still refused: Android will not show the question
+        // again, so the app's own settings page, where the permission can be switched on.
+        if (askedFromTap && !WorkoutService.hasHrPermission(this)) {
+            try {
+                startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$packageName")))
+            } catch (_: Exception) { }
+        }
+        askedFromTap = false
         WorkoutService.sync(this)
     }
 
@@ -38,6 +56,18 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launch {
             WearStore.state.map { it.settings.lang }.distinctUntilChanged().drop(1).collect { recreate() }
         }
+        HrAsk.request = {
+            askedFromTap = true
+            askHr.launch(arrayOf(WorkoutService.hrPermission(), android.Manifest.permission.POST_NOTIFICATIONS))
+        }
+        // GymTrack: the screen stays on while a workout runs, so the set and the rest are always
+        // in view; it sleeps as usual once the workout is finished or discarded.
+        lifecycleScope.launch {
+            WearStore.state.map { it.workout != null }.distinctUntilChanged().collect { on ->
+                if (on) window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                else window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            }
+        }
         setContent {
             OpenGymTheme {
                 AppScaffold(timeText = { TimeText() }) {
@@ -45,6 +75,11 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        if (HrAsk.request != null) HrAsk.request = null
+        super.onDestroy()
     }
 
     override fun onResume() {
