@@ -71,7 +71,11 @@ jobs:
 
       - name: Build the test phone and watch apps
         working-directory: frontend/android
-        run: ./gradlew --no-daemon assembleSideloadDebug :wear:assembleDebug
+        # One after the other: building both in one parallel run tripped a Gradle race
+        # (ConcurrentModificationException in checkDebugAarMetadata).
+        run: |
+          ./gradlew --no-daemon --no-parallel assembleSideloadDebug
+          ./gradlew --no-daemon --no-parallel :wear:assembleDebug
 
       - name: Sign with the release key
         env:
