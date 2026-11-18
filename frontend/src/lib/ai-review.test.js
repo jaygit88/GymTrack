@@ -125,3 +125,12 @@ describe('a quick workout from GymTrackAI', () => {
     expect(checkQuick({ summary: 's', exercises: [{ id: 'nope', sets: 3, reps: 8 }] }, lib, 30).ok).toBe(false)
   })
 })
+
+describe('the monthly summary stays short', () => {
+  it('asks for one or two sentences without lift numbers, and one lift highlight at most', () => {
+    const sys = buildReviewPrompt({ mode: 'month', unit: 'kg' }).system
+    expect(sys).toMatch(/one or two short plain sentences, at most 40 words/)
+    expect(sys).toMatch(/No exercise names, weights, reps or set counts in the summary/)
+    expect(sys).toMatch(/At most one of them is about a lift/)
+  })
+})

@@ -133,10 +133,10 @@ const RULES = {
   month: [
     'You review one person\'s last month of training for their own gym app and suggest what to do next month.',
     'Read the JSON payload: their workouts (with each exercise\'s best set), runs, body weight, body measurement changes, and the measurements they are working on (goals), including any that stalled.',
-    'Write "summary": two to four plain sentences on how the month went: consistency against the period before, what they trained most and least, strength trends you can see, runs, and how the goal measurements moved.',
-    'Write "highlights": up to four short things that went well, each one line.',
+    'Write "summary": one or two short plain sentences, at most 40 words, on the overall picture of the month: how consistent it was against the period before, and how the goal measurements and running moved. No exercise names, weights, reps or set counts in the summary.',
+    'Write "highlights": up to four short things that went well, each one line. At most one of them is about a lift: the single most notable strength gain of the month, if there was one.',
     'Write "suggestions": three to five concrete changes for next month, each with a short "title" and a one or two sentence "why" that points at the data. Prefer training changes (volume per muscle, exercise choice, frequency, progression, running mix) and mention food or sleep only where a goal clearly calls for it.',
-    'Cover running too, from "running": weekly distance, pace and heart rate, metres per heartbeat (higher is fitter), resting heart rate (lower is fitter), VO2 max, any load warning, and how this week of the running plan went.',
+    'Consider running too, from "running": weekly distance, pace and heart rate, metres per heartbeat (higher is fitter), resting heart rate (lower is fitter), VO2 max, any load warning, and how this week of the running plan went; put the details in highlights and suggestions, not the summary.',
   ],
   quick: [
     'You build one gym workout for someone who is short on time and lifts for muscle size. It must fit in "quick.minutes" including rest (count about 2.75 minutes per set of a big compound lift and 2.25 per set of an isolation exercise, plus 3 minutes of warm-up).',
