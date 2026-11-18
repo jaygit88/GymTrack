@@ -83,7 +83,7 @@ test('the admin card is told which providers hold a key, and switching never dro
     await call('POST /api/admin/coach/config', { model: 'llama3' });
     await call('POST /api/admin/coach/config', { provider: 'openai', model: 'gpt-x' });
     await call('POST /api/admin/coach/config', { provider: 'anthropic' });
-    assert.equal(cfg.modelFor(), 'claude-opus-5', 'anthropic falls back to its default');
+    assert.equal(cfg.modelFor(), 'claude-opus-5-5', 'anthropic falls back to its default');
     assert.equal(cfg.modelFor(cfg.load(), 'openai'), 'gpt-x');
     assert.equal(cfg.credentialFor('alice').auth.token, 'sk-ant-x');
     await call('POST /api/admin/coach/config', { provider: 'compatible' });

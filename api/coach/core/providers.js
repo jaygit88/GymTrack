@@ -14,7 +14,7 @@ export const HTTP_PROVIDERS = Object.freeze({
     label: 'Anthropic API', runtime: 'HTTPS', http: true,
     apiKeyEnv: 'ANTHROPIC_API_KEY', oauthEnv: null,
     defaultBase: 'https://api.anthropic.com',
-    defaultModel: 'claude-opus-5',
+    defaultModel: 'claude-opus-5-5',
     keyPlaceholder: 'sk-ant-…'
   }),
   openai: Object.freeze({
