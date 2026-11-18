@@ -2,15 +2,17 @@ import { useNavigate } from 'react-router-dom'
 import BodyMap from './BodyMap.jsx'
 import Icon from './Icon.jsx'
 import { loadOfWorkouts } from '../lib/muscles.js'
-import { setsDone } from '../lib/history.js'
 import { glyphOf } from '../lib/glyphs.js'
-import { isoOf, todayISO, durPart, fmtNum, DAYS, DAYN } from '../lib/format.js'
+import { isoOf, todayISO, durPart, fmtNum, exCount, DAYS, DAYN } from '../lib/format.js'
 import { t, tn } from '../lib/i18n.js'
 import { tappable } from '../lib/use-sheet-keyboard.js'
 import { runsOn, runDistance, runPace } from '../lib/runs.js'
 import { plannedRunsOn, distUnit, toUnit } from '../lib/running.js'
 import { RUN_KIND_LABEL } from './RunSheets.jsx'
-import { workoutDetailSheet, logPastWorkoutSheet } from '../sheets.jsx'
+import { workoutDetailSheet, logPastWorkoutSheet, startFlow, dayOverrideSheet } from '../sheets.jsx'
+import MiniBodyMap from './MiniBodyMap.jsx'
+import { effectiveRoutines, setsDone } from '../lib/history.js'
+import { deriveSessionName } from '../lib/session-merge.js'
 import { runSheet } from './RunSheets.jsx'
 
 // The week around today, in date order: the three days before, today, and the three after, laid
@@ -81,18 +83,36 @@ export default function RecentDays({ S, back = 3, ahead = 3 }) {
         <Icon name="chevronRight" className="chev" />
       </div>)
     })
-    // Days ahead: the plan's runs for them, or nothing planned.
+    // The routines planned for this day (Plan's weekdays, a day moved or pinned: effectiveRoutines).
+    // Today: those not logged yet, with Start. Ahead: what is coming, a tap to change the day.
+    const doneIds = new Set(S.workouts.filter(w => w.d === iso).flatMap(w => (Array.isArray(w.routineIds) ? w.routineIds : [w.routineId])).filter(Boolean))
+    const routines = isToday || future ? effectiveRoutines(S, iso).filter(r => !doneIds.has(r.id)) : []
+    const routineRow = () => <div key={iso + '-routine'} className={'item plan-day recent-day planned' + (future ? ' upcoming' : '')}
+      data-tour={!items.length ? tour : undefined} aria-label={t(DAYN[d.getDay()])}
+      {...tappable(() => (future ? dayOverrideSheet(iso) : startFlow(routines.map(r => r.id))))}>
+      {dayLabel(!items.length)}
+      <span className={'lrow-i' + (future ? ' rest' : '')} style={future ? undefined : { background: 'var(--acc)', color: 'var(--on-acc)' }}><Icon name={glyphOf(routines[0].emoji)} /></span>
+      <div className="grow">
+        <div className="tt">{deriveSessionName(routines.map(r => r.name))}</div>
+        <div className="ss">{exCount(routines.reduce((n, r) => n + (r.ex || []).length, 0))}</div>
+      </div>
+      <MiniBodyMap routines={routines} body={S.body} />
+      {future ? <Icon name="chevronRight" className="chev" /> : <span className="tag acc">{t('Start')}</span>}
+    </div>
+
+    // Days ahead: the planned routine and the running plan's runs, or nothing planned.
     if (future) {
+      if (routines.length) items.push(routineRow())
       const planned = plannedRunsOn(S.runPlan, iso)
       planned.forEach((p, n) => items.push(<div key={iso + '-plan' + n} className="item plan-day recent-day upcoming" aria-label={t(DAYN[d.getDay()])}>
-        {dayLabel(n === 0)}
+        {dayLabel(!items.length && n === 0)}
         <span className="lrow-i rest"><Icon name="run" /></span>
         <div className="grow">
           <div className="tt">{t(RUN_KIND_LABEL[p.kind] || p.kind)} · {fmtNum(Math.round(toUnit(p.km, S.unit) * 10) / 10)} {distUnit(S.unit)}</div>
           {p.notes && <div className="ss">{p.notes}</div>}
         </div>
       </div>))
-      if (!planned.length) items.push(<div key={iso + '-none'} className="item plan-day recent-day upcoming" aria-label={t(DAYN[d.getDay()])}>
+      if (!planned.length && !routines.length) items.push(<div key={iso + '-none'} className="item plan-day recent-day upcoming" aria-label={t(DAYN[d.getDay()])}>
         {dayLabel(true)}
         <span className="lrow-i rest" />
         <div className="grow"><div className="tt muted">{t('Nothing planned')}</div></div>
@@ -100,6 +120,8 @@ export default function RecentDays({ S, back = 3, ahead = 3 }) {
       rows.push(...items)
       continue
     }
+    // Today's planned routine, while it is still to do (a run this morning does not cover it).
+    if (isToday && !S.active && routines.length) items.push(routineRow())
     if (!items.length && isToday) {
       items.push(<div key={iso + '-today'} className="item plan-day recent-day today-open" data-tour={tour} aria-label={t('Today')} {...tappable(() => nav('/workout'))}>
         {dayLabel(true)}

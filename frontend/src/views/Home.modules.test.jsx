@@ -122,3 +122,27 @@ describe('the days ahead', () => {
     expect(rows[at + 1].textContent).toContain('chatty pace')
   })
 })
+
+describe('planned routines in the week', () => {
+  it("shows today's planned routine to start, and tomorrow's as coming up", () => {
+    const now = new Date(), tom = new Date(); tom.setDate(tom.getDate() + 1)
+    const routines = [{ id: 'push', name: 'Push Day', ex: [{ id: '0025', sets: 3, reps: 8 }] }, { id: 'legs', name: 'Leg Day', ex: [{ id: '0043', sets: 3, reps: 8 }] }]
+    mountWith(undefined, { runs: [], workouts: [], routines, week: { [now.getDay()]: ['push'], [tom.getDay()]: ['legs'] }, dayPlan: {} })
+    const rows = [...host.querySelectorAll('.recent-day')]
+    const at = rows.findIndex(r => r.getAttribute('data-tour') === 'today')
+    expect(rows[at].textContent).toContain('Push Day')
+    expect(rows[at].textContent).toContain('Start')
+    expect(rows[at + 1].textContent).toContain('Leg Day')
+    expect(rows[at + 1].classList.contains('upcoming')).toBe(true)
+  })
+
+  it('leaves out a routine already done today', () => {
+    const now = new Date()
+    const today = new Date().toISOString().slice(0, 10)
+    const routines = [{ id: 'push', name: 'Push Day', ex: [] }]
+    mountWith(undefined, { runs: [], routines, week: { [now.getDay()]: ['push'] }, dayPlan: {},
+      workouts: [{ id: 'w1', d: today, routineIds: ['push'], name: 'Push Day', start: Date.now() - 4e6, end: Date.now() - 3e6, entries: [] }] })
+    const rows = [...host.querySelectorAll('.recent-day')]
+    expect(rows.filter(r => r.classList.contains('planned')).length).toBe(0)
+  })
+})
