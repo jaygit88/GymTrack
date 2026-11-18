@@ -9,6 +9,10 @@
 # The test build says "GymTrack Test" on Home (VITE_TEST=1).
 #
 # One-time setup: repository Settings > Pages > Source: GitHub Actions.
+#
+# GitHub Pages only takes deployments from the default branch (main), so a push to `test` does not
+# deploy itself: it asks for this workflow to run again on main, which builds both sites (the test
+# one from the test branch, as always) and deploys them.
 name: Pages
 
 on:
@@ -26,7 +30,19 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  relay:
+    if: github.ref == 'refs/heads/test'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Rebuild the site from main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run pages.yml --repo "$GITHUB_REPOSITORY" --ref main
+
   build:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
