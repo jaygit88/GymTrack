@@ -72,6 +72,9 @@ see it.
   the calories burned in that day's workouts beside them.
 - **Foods:** about 2,850 generic UK foods built in (works offline), branded products from Open
   Food Facts by name or by scanning the barcode, your own foods, and quick calories.
+- **Not found?** In New food, **Photo of the nutrition label** has GymTrackAI (Claude) read the
+  table off the packet and fill in the food per 100 g. Check the numbers, save, and it is yours
+  next time (and by its barcode, if you scanned one).
 - **Recipes:** smoothies, shakes and batch cooking from ingredients, logged by the serving.
 - **Targets:** a starting point for gaining muscle from your latest weigh-in, yours to change.
 

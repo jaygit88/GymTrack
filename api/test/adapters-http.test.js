@@ -64,6 +64,15 @@ test('Anthropic: /v1/messages with the key in a header, the shared system prompt
   assert.ok(!c.url.includes('sk-ant'), 'the key is never in the URL');
 });
 
+test('Anthropic: a photo goes in as an image block before the text', async () => {
+  const f = fakeFetch([ok({ content: [{ type: 'text', text: '{}' }], stop_reason: 'end_turn' })]);
+  await anthropic.invoke({ cfg: {}, prompt: 'Read this label', images: [{ mediaType: 'image/jpeg', data: 'QUJD' }], env, model: null, fetch: f });
+  assert.deepEqual(f.calls[0].body.messages, [{ role: 'user', content: [
+    { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: 'QUJD' } },
+    { type: 'text', text: 'Read this label' },
+  ] }]);
+});
+
 test('OpenAI: chat completions in JSON mode, bearer auth, max_completion_tokens', async () => {
   const f = fakeFetch([ok({ choices: [{ message: { content: ANSWER }, finish_reason: 'stop' }] })]);
   const r = await openai.invoke({ cfg: {}, prompt: 'P', env, model: 'gpt-x', fetch: f });

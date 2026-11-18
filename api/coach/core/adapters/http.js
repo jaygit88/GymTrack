@@ -232,7 +232,7 @@ export function httpAdapter(spec) {
      * native HTTP and a test can hand in a fake.
      */
     async invoke(opts = {}) {
-      const { cfg, prompt, system, schema, env, model, timeoutMs = DEFAULT_TIMEOUT_MS, maxTokens = MAX_OUTPUT_TOKENS, fetch: fetchImpl = globalThis.fetch, signal } = opts;
+      const { cfg, prompt, system, schema, images, env, model, timeoutMs = DEFAULT_TIMEOUT_MS, maxTokens = MAX_OUTPUT_TOKENS, fetch: fetchImpl = globalThis.fetch, signal } = opts;
       const base = adapter.baseUrl(cfg);
       if (!base) return { code: -1, text: '', stderr: `no endpoint configured for ${id}`, spawnError: true };
       const key = keyOf(env);
@@ -241,7 +241,7 @@ export function httpAdapter(spec) {
       if (!asked) return { code: 1, text: '', stderr: `no model chosen for ${id} (pick one from the list the endpoint serves)` };
       let chosen = substitutes.get(substituteKey(id, base, asked)) || asked;
 
-      const build = () => spec.body({ model: chosen, prompt, system: system || null, schema: schema || null, maxTokens, base });
+      const build = () => spec.body({ model: chosen, prompt, system: system || null, schema: schema || null, images: images || null, maxTokens, base });
       let steps = spec.compat ? (compatProfiles.get(compatKey(id, base, chosen)) || []) : [];
       let body = spec.compat ? applySteps(spec, build(), steps) : build();
       let triedOtherModel = false;

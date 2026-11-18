@@ -12,6 +12,8 @@ import {
 } from '../lib/nutrition.js'
 import { loadCofid, searchFoods, searchProducts, lookupBarcode } from '../lib/food-sources.js'
 import { addExtra } from '../lib/calories.js'
+import { aiReviewReady, runLabelRead } from '../lib/ai-review-run.js'
+import { photoForModel } from '../lib/label-read.js'
 
 // GymTrack's food sheets (views/Nutrition.jsx): find a food (your own, your recipes, the built-in
 // CoFID list, Open Food Facts by name or barcode), say how much, log it; make a food the
@@ -93,12 +95,31 @@ function NewFood({ close, barcode = null, name: name0 = '', onMade }) {
   const [per, setPer] = useState('100g')
   const [serving, setServing] = useState(100)
   const [v, setV] = useState({ kcal: null, protein: null, carbs: null, fat: null })
+  // A photo of the label, read by GymTrackAI (lib/label-read.js): it fills the form per 100 g,
+  // with the label's sugars, saturates, fibre and salt kept too, for you to check and save.
+  const [reading, setReading] = useState(false)
+  const [readErr, setReadErr] = useState(null)
+  const [fromLabel, setFromLabel] = useState(null)
+  const photo = useRef(null)
+  const readLabel = async file => {
+    if (!file) return
+    setReading(true); setReadErr(null)
+    try {
+      const food = await runLabelRead(await photoForModel(file), { name })
+      if (!name.trim() && food.name) setName(food.name)
+      setPer('100g')
+      setV(food.per100)
+      setFromLabel(food)
+    } catch (e) { if (e?.code !== 'declined') setReadErr(e?.message || t('Try again')) }
+    setReading(false)
+  }
   const save = () => {
     if (!name.trim() || !(Number(v.kcal) >= 0) || v.kcal == null) { ui().toast(t('Give it a name and its calories.')); return }
     const k = per === 'serving' && Number(serving) > 0 ? 100 / Number(serving) : 1
     const per100 = pickNutrients(Object.fromEntries(Object.entries(v).map(([key, x]) => [key, x == null ? null : Math.round(Number(x) * k * 10) / 10])))
     const food = { id: 'mine:' + uid(), src: 'custom', name: name.trim().slice(0, 120), per100, ...(barcode ? { barcode } : {}),
-      ...(per === 'serving' && Number(serving) > 0 ? { serving: { g: Number(serving), label: null } } : {}) }
+      ...(per === 'serving' && Number(serving) > 0 ? { serving: { g: Number(serving), label: null } }
+        : fromLabel?.serving ? { serving: { g: fromLabel.serving.g, label: null } } : {}) }
     update(s => { if (!Array.isArray(s.foods)) s.foods = []; s.foods.push(food) })
     close()
     if (onMade) onMade(food)
@@ -106,6 +127,14 @@ function NewFood({ close, barcode = null, name: name0 = '', onMade }) {
   return <>
     <h3>{t('New food')}</h3>
     {barcode && <div className="small muted" style={{ marginBottom: 8 }}>{t('Barcode {0} is not in Open Food Facts yet. Add it once and it is yours.', barcode)}</div>}
+    {aiReviewReady() && <div className="food-label">
+      <input ref={photo} type="file" accept="image/*" capture="environment" hidden onChange={e => { readLabel(e.target.files?.[0]); e.target.value = '' }} />
+      <Button variant="tinted" icon="camera" disabled={reading} onClick={() => photo.current?.click()}>
+        {reading ? t('GymTrackAI is reading the label…') : fromLabel ? t('Read another photo') : t('Photo of the nutrition label')}
+      </Button>
+      {readErr && <div className="small ai-err">{readErr}</div>}
+      {fromLabel && !readErr && <div className="small muted">{t('Filled in from the label. Check the numbers, then save.')}</div>}
+    </div>}
     <Section>
       <Row title={t('Name')}><TextField value={name} onChange={e => setName(e.target.value)} placeholder={t('e.g. Tesco Greek yogurt')} /></Row>
     </Section>

@@ -3846,4 +3846,11 @@ export default {
   "From Samsung Health, or your heart rate": "来自 Samsung Health 或你的心率",
   "From your heart rate": "来自你的心率",
   "e.g. Padel": "例如 板式网球",
+  "Filled in from the label. Check the numbers, then save.": "已根据标签填写。请核对数字后保存。",
+  "GymTrackAI could not read the label. Try a sharper photo of just the nutrition table.": "GymTrackAI 读不出标签。请只拍营养成分表，拍清楚一点。",
+  "GymTrackAI could not read the label: {0}": "GymTrackAI 读不出标签：{0}",
+  "GymTrackAI is reading the label…": "GymTrackAI 正在读取标签…",
+  "Photo of the nutrition label": "拍营养成分表",
+  "Read another photo": "读取另一张照片",
+  "Reading a label needs Claude (Anthropic) as the AI Coach provider.": "读取标签需要 AI 教练使用 Claude（Anthropic）。",
 }

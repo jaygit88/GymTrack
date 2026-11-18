@@ -3925,4 +3925,11 @@ export default {
   "From Samsung Health, or your heart rate": "Samsung Health থেকে, বা আপনার হৃদস্পন্দন থেকে",
   "From your heart rate": "আপনার হৃদস্পন্দন থেকে",
   "e.g. Padel": "যেমন প্যাডেল",
+  "Filled in from the label. Check the numbers, then save.": "লেবেল থেকে পূরণ হয়েছে। সংখ্যাগুলো দেখে সংরক্ষণ করুন।",
+  "GymTrackAI could not read the label. Try a sharper photo of just the nutrition table.": "GymTrackAI লেবেল পড়তে পারেনি। শুধু পুষ্টি তালিকার আরও পরিষ্কার ছবি দিন।",
+  "GymTrackAI could not read the label: {0}": "GymTrackAI লেবেল পড়তে পারেনি: {0}",
+  "GymTrackAI is reading the label…": "GymTrackAI লেবেল পড়ছে…",
+  "Photo of the nutrition label": "পুষ্টি লেবেলের ছবি",
+  "Read another photo": "আরেকটি ছবি পড়ুন",
+  "Reading a label needs Claude (Anthropic) as the AI Coach provider.": "লেবেল পড়তে AI Coach-এর প্রোভাইডার Claude (Anthropic) হতে হবে।",
 }

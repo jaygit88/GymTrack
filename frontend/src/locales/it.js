@@ -3846,4 +3846,11 @@ export default {
   "From Samsung Health, or your heart rate": "Da Samsung Health, o dalla tua frequenza cardiaca",
   "From your heart rate": "Dalla tua frequenza cardiaca",
   "e.g. Padel": "es. Padel",
+  "Filled in from the label. Check the numbers, then save.": "Compilato dall'etichetta. Controlla i numeri, poi salva.",
+  "GymTrackAI could not read the label. Try a sharper photo of just the nutrition table.": "GymTrackAI non è riuscito a leggere l'etichetta. Prova una foto più nitida della sola tabella nutrizionale.",
+  "GymTrackAI could not read the label: {0}": "GymTrackAI non è riuscito a leggere l'etichetta: {0}",
+  "GymTrackAI is reading the label…": "GymTrackAI sta leggendo l'etichetta…",
+  "Photo of the nutrition label": "Foto della tabella nutrizionale",
+  "Read another photo": "Leggi un'altra foto",
+  "Reading a label needs Claude (Anthropic) as the AI Coach provider.": "Per leggere un'etichetta serve Claude (Anthropic) come fornitore del Coach IA.",
 }

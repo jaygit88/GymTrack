@@ -3846,4 +3846,11 @@ export default {
   "From Samsung Health, or your heart rate": "Samsung Health'ten veya nabzından",
   "From your heart rate": "Nabzından",
   "e.g. Padel": "örn. Padel",
+  "Filled in from the label. Check the numbers, then save.": "Etiketten dolduruldu. Sayıları kontrol et, sonra kaydet.",
+  "GymTrackAI could not read the label. Try a sharper photo of just the nutrition table.": "GymTrackAI etiketi okuyamadı. Sadece besin tablosunun daha net bir fotoğrafını dene.",
+  "GymTrackAI could not read the label: {0}": "GymTrackAI etiketi okuyamadı: {0}",
+  "GymTrackAI is reading the label…": "GymTrackAI etiketi okuyor…",
+  "Photo of the nutrition label": "Besin değerleri tablosunun fotoğrafı",
+  "Read another photo": "Başka bir fotoğraf oku",
+  "Reading a label needs Claude (Anthropic) as the AI Coach provider.": "Etiket okumak için AI Koç sağlayıcısı Claude (Anthropic) olmalı.",
 }

@@ -3849,4 +3849,11 @@ export default {
   "From Samsung Health, or your heart rate": "A Samsung Healthből vagy a pulzusodból",
   "From your heart rate": "A pulzusodból",
   "e.g. Padel": "pl. Padel",
+  "Filled in from the label. Check the numbers, then save.": "Kitöltve a címkéről. Ellenőrizd a számokat, aztán mentsd.",
+  "GymTrackAI could not read the label. Try a sharper photo of just the nutrition table.": "A GymTrackAI nem tudta elolvasni a címkét. Próbálj élesebb fotót csak a tápértéktábláról.",
+  "GymTrackAI could not read the label: {0}": "A GymTrackAI nem tudta elolvasni a címkét: {0}",
+  "GymTrackAI is reading the label…": "A GymTrackAI olvassa a címkét…",
+  "Photo of the nutrition label": "Fotó a tápértéktábláról",
+  "Read another photo": "Másik fotó olvasása",
+  "Reading a label needs Claude (Anthropic) as the AI Coach provider.": "A címke olvasásához az AI Coach szolgáltatója Claude (Anthropic) kell legyen.",
 }

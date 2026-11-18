@@ -3857,4 +3857,11 @@ export default {
   "From Samsung Health, or your heart rate": "จาก Samsung Health หรือจากอัตราการเต้นของหัวใจ",
   "From your heart rate": "จากอัตราการเต้นของหัวใจ",
   "e.g. Padel": "เช่น พาเดล",
+  "Filled in from the label. Check the numbers, then save.": "กรอกจากฉลากแล้ว ตรวจตัวเลขแล้วบันทึก",
+  "GymTrackAI could not read the label. Try a sharper photo of just the nutrition table.": "GymTrackAI อ่านฉลากไม่ได้ ลองถ่ายเฉพาะตารางโภชนาการให้ชัดขึ้น",
+  "GymTrackAI could not read the label: {0}": "GymTrackAI อ่านฉลากไม่ได้: {0}",
+  "GymTrackAI is reading the label…": "GymTrackAI กำลังอ่านฉลาก…",
+  "Photo of the nutrition label": "ถ่ายรูปฉลากโภชนาการ",
+  "Read another photo": "อ่านรูปอื่น",
+  "Reading a label needs Claude (Anthropic) as the AI Coach provider.": "การอ่านฉลากต้องใช้ Claude (Anthropic) เป็นผู้ให้บริการ AI Coach",
 }

@@ -3846,4 +3846,11 @@ export default {
   "From Samsung Health, or your heart rate": "Samsung Health 또는 심박수 기준",
   "From your heart rate": "심박수 기준",
   "e.g. Padel": "예: 파델",
+  "Filled in from the label. Check the numbers, then save.": "라벨에서 채웠어요. 숫자를 확인하고 저장하세요.",
+  "GymTrackAI could not read the label. Try a sharper photo of just the nutrition table.": "GymTrackAI가 라벨을 읽지 못했어요. 영양성분표만 더 선명하게 찍어 보세요.",
+  "GymTrackAI could not read the label: {0}": "GymTrackAI가 라벨을 읽지 못했어요: {0}",
+  "GymTrackAI is reading the label…": "GymTrackAI가 라벨을 읽는 중…",
+  "Photo of the nutrition label": "영양성분표 사진",
+  "Read another photo": "다른 사진 읽기",
+  "Reading a label needs Claude (Anthropic) as the AI Coach provider.": "라벨을 읽으려면 AI 코치 제공자가 Claude(Anthropic)여야 해요.",
 }

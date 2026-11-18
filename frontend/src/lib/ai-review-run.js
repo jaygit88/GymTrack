@@ -10,6 +10,7 @@ import { loadCoachDevice, saveCoachDevice, coachLimits } from './coach-device.js
 import { getApiKey } from './coach-secrets.js'
 import { buildReviewPayload, buildReviewPrompt, checkReview, checkRunPlan, checkQuick, planToSave, schemaFor, REVIEW_MODES } from './ai-review.js'
 import { chatContext, buildChatPrompt, checkChat, CHAT_SCHEMA } from './ai-chat.js'
+import { buildLabelPrompt, checkLabel, LABEL_SCHEMA } from './label-read.js'
 import { getLang } from './i18n-core.js'
 import { t } from './i18n.js'
 import { todayISO } from './format.js'
@@ -51,6 +52,10 @@ async function callModel(deps, build) {
   const meta = core.HTTP_PROVIDERS[d.provider]
   if (!adapter || !meta) throw fail(t('Set up the AI Coach with your own API key first: Settings, AI Coach.'), 'off')
 
+  const built = build(useStore.getState().S)
+  // Only the Anthropic adapter carries a photo; another provider would answer without seeing it.
+  if (built.images && d.provider !== 'anthropic') throw fail(t('Reading a label needs Claude (Anthropic) as the AI Coach provider.'), 'provider')
+
   // The Coach's daily cap counts these too: they are paid for the same way.
   const today = todayISO()
   const used = d.daily && d.daily.d === today ? d.daily.n : 0
@@ -58,11 +63,10 @@ async function callModel(deps, build) {
   if (limit > 0 && used >= limit) throw fail(t('The Coach is taking a breather. You’ve used today’s {0} runs on this phone.', limit), 'cap')
   await (deps.saveDevice || saveCoachDevice)({ daily: { d: today, n: used + 1 } })
 
-  const built = build(useStore.getState().S)
   const key = await (deps.getKey || getApiKey)()
   const r = await adapter.invoke({
     cfg: { provider: d.provider, providerOptions: d.baseUrl ? { [d.provider]: { baseUrl: d.baseUrl } } : {} },
-    prompt: built.user, system: built.system, schema: built.schema,
+    prompt: built.user, system: built.system, schema: built.schema, ...(built.images ? { images: built.images } : {}),
     model: d.model || meta.defaultModel, timeoutMs: local.timeoutFor(d.provider),
     env: key ? { [meta.apiKeyEnv]: key } : {}, fetch: local.guardedFetch, maxTokens: coachLimits(d).maxOutputTokens,
   })
@@ -110,4 +114,18 @@ export async function runAiChat(where, history, question, { deps = {} } = {}) {
   const checked = parsed.error ? { ok: false } : checkChat(parsed.value)
   if (!checked.ok) throw fail(t('GymTrackAI did not answer. Try again in a moment.'))
   return { answer: checked.answer, followUps: checked.followUps }
+}
+
+/**
+ * Reads a nutrition label from a photo (`image`: { mediaType, data }, lib/label-read.js
+ * photoForModel). Resolves with { name, per100, serving? } to check before saving; throws with a
+ * readable message when the label cannot be read.
+ */
+export async function runLabelRead(image, { name = '', deps = {} } = {}) {
+  const { parsed } = await callModel(deps, () => ({
+    ...buildLabelPrompt({ name, langName: langName(getLang()) }), schema: LABEL_SCHEMA, images: [image],
+  }))
+  const checked = parsed.error ? { ok: false } : checkLabel(parsed.value)
+  if (!checked.ok) throw fail(checked.problem ? t('GymTrackAI could not read the label: {0}', checked.problem) : t('GymTrackAI could not read the label. Try a sharper photo of just the nutrition table.'), 'unreadable')
+  return { name: checked.name, per100: checked.per100, ...(checked.serving ? { serving: checked.serving } : {}) }
 }

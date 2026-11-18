@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { useStore } from '../store/useStore.js'
-import { runAiReview, runAiChat } from './ai-review-run.js'
+import { runAiReview, runAiChat, runLabelRead } from './ai-review-run.js'
 
 const answer = { summary: 'A steady month.', highlights: ['Four weeks in a row'], suggestions: [{ title: 'Add a chest day', why: 'Chest has not moved.' }] }
 const deps = over => ({
@@ -87,5 +87,26 @@ describe('Ask GymTrackAI', () => {
     expect(call.schema.required).toEqual(['answer', 'followUps'])
     expect(out).toEqual(reply)
     expect(useStore.getState().S.aiReviews).toBe(before.aiReviews)
+  })
+})
+
+describe('reading a label', () => {
+  const label = { readable: true, name: 'Oat bar, Brand', per100g: { kcal: 410, protein: 9, carbs: 60, sugars: 20, fat: 14, satfat: 3, fibre: 6, salt: 0.3 }, perServing: null, servingG: 40, problem: '' }
+  it('sends the photo with the label prompt and hands back the food', async () => {
+    const d = deps({ local: { ...deps().local, ADAPTERS: { anthropic: { invoke: vi.fn(async () => ({ code: 0, text: JSON.stringify(label) })) } } } })
+    const food = await runLabelRead({ mediaType: 'image/jpeg', data: 'QUJD' }, { deps: d })
+    const call = d.local.ADAPTERS.anthropic.invoke.mock.calls[0][0]
+    expect(call.images).toEqual([{ mediaType: 'image/jpeg', data: 'QUJD' }])
+    expect(call.schema.required).toContain('per100g')
+    expect(food).toMatchObject({ name: 'Oat bar, Brand', per100: { kcal: 410, protein: 9 }, serving: { g: 40 } })
+  })
+  it('says why when the photo has no readable label', async () => {
+    const d = deps({ local: { ...deps().local, ADAPTERS: { anthropic: { invoke: async () => ({ code: 0, text: JSON.stringify({ readable: false, problem: 'Too blurry' }) }) } } } })
+    await expect(runLabelRead({ mediaType: 'image/jpeg', data: 'x' }, { deps: d })).rejects.toThrow(/Too blurry/)
+  })
+  it('needs Claude: another provider would not see the photo', async () => {
+    const d = deps({ loadDevice: async () => ({ provider: 'openai' }), local: { ...deps().local, ADAPTERS: { openai: { invoke: vi.fn() } } }, core: { HTTP_PROVIDERS: { openai: { defaultModel: 'x', apiKeyEnv: 'OPENAI_API_KEY' } }, extractJSON: JSON.parse } })
+    await expect(runLabelRead({ mediaType: 'image/jpeg', data: 'x' }, { deps: d })).rejects.toMatchObject({ code: 'provider' })
+    expect(d.local.ADAPTERS.openai.invoke).not.toHaveBeenCalled()
   })
 })
