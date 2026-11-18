@@ -11,9 +11,9 @@ beforeEach(() => { localStorage.clear(); closeTour() })
 afterEach(() => { localStorage.clear(); closeTour() })
 
 describe('steps', () => {
-  it('runs Home, Plan, Library, the workout, Stats, Settings and a closing card, in that order', () => {
+  it('runs Home, Plan, the workout, Stats, Settings and a closing card, in that order', () => {
     const routes = tourSteps({}).map(s => s.route).filter((r, i, all) => r !== all[i - 1])
-    expect(routes).toEqual(['/home', '/plan', '/library', '/workout', '/home', '/stats', '/home', '/settings', null])
+    expect(routes).toEqual(['/home', '/plan', '/workout', '/home', '/stats', '/home', '/settings', null])
     expect(tourSteps({}).at(-1)).toMatchObject({ id: 'done', anchor: null })
   })
   it('never jumps between screens: each change of screen is a stop on the real control that leads there', () => {
@@ -28,12 +28,12 @@ describe('steps', () => {
       })
     }
     // the tab bar's own buttons, the gear and the back buttons
-    expect(STEPS.filter(s => s.go).map(s => s.anchor)).toEqual(['tab-plan', 'tab-library', 'tab-stats', 'tab-home', 'settings-gear'])
+    expect(STEPS.filter(s => s.go).map(s => s.anchor)).toEqual(['tab-plan', 'tab-stats', 'tab-home', 'settings-gear'])
     // into the practice workout through the Start button, which the tour takes for itself
-    expect(STEPS.find(s => s.id === 'start')).toMatchObject({ anchor: 'start', intercept: true, route: '/library' })
+    expect(STEPS.find(s => s.id === 'start')).toMatchObject({ anchor: 'start', intercept: true, route: '/plan' })
   })
   it('the tutorials each open with a card that says what they do and end with one', () => {
-    expect(TUTORIALS).toEqual(['plan', 'custom', 'edit', 'backup'])
+    expect(TUTORIALS).toEqual(['plan', 'edit', 'backup'])
     for (const f of TUTORIALS) {
       const steps = tourSteps({}, f)
       expect(steps[0], f).toMatchObject({ anchor: null, route: null })
@@ -84,7 +84,7 @@ describe('steps', () => {
     expect(stepFrom(steps, 0, 1)).toBe(1)
     expect(stepFrom(steps, 0, -1)).toBe(-1)
     expect(stepFrom(steps, steps.length - 1, 1)).toBe(-1)
-    expect(indexOfStep(steps, 'lib-search')).toBe(steps.findIndex(s => s.id === 'lib-search'))
+    expect(indexOfStep(steps, 'plan-menu')).toBe(steps.findIndex(s => s.id === 'plan-menu'))
     // a stop this profile does not have (the record came from another one) starts from the top
     expect(indexOfStep(steps, 'plan-body')).toBe(0)
   })
@@ -162,8 +162,6 @@ describe('ways to another screen', () => {
   })
   it('is passed over when that screen is on already, or by its own rule', () => {
     const has = () => false
-    expect(passOver(step('c-go'), { path: '/library', has })).toBe(true)
-    expect(passOver(step('c-go'), { path: '/home', has })).toBe(false)
     expect(passOver(step('b-up'), { path: '/settings', has })).toBe(true)
     expect(passOver(step('b-up'), { path: '/settings/about', has })).toBe(false)
     expect(passOver(step('p-views'), { path: '/plan', has: n => n === 'plan-new' })).toBe(true)

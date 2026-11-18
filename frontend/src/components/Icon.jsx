@@ -153,6 +153,10 @@ const P = {
   vibrate: <><rect x="8" y="4.2" width="8" height="15.6" rx="2" /><path d="M4.8 9v6M19.2 9v6M2.6 10.6v2.8M21.4 10.6v2.8" /></>,
   // keep the screen on (sun stays flash and the light theme)
   phoneScreen: <><rect x="6.6" y="3.4" width="10.8" height="17.2" rx="2.4" /><path d="M10.6 5.8h2.8" /></>,
+  // a bowl with steam: food and nutrition (GymTrack)
+  food: <><path d="M3.6 11.4h16.8a8.4 6.8 0 0 1-16.8 0Z" /><path d="M8.4 20.2h7.2" /><path d="M9 3.8c-1 1.2 1 2.4 0 3.8M12.6 3.8c-1 1.2 1 2.4 0 3.8M16.2 3.8c-1 1.2 1 2.4 0 3.8" /></>,
+  // a barcode: scan a food packet (GymTrack)
+  barcode: <path d="M4.4 6v12M7.2 6v12M9.6 6v12M12.8 6v12M15.2 6v12M18 6v12M19.8 6v12" />,
   // an empty ring: a planned run not done yet (GymTrack)
   circle: <circle cx="12" cy="12" r="8" />,
   // a runner mid-stride: runs read in from Health Connect (GymTrack)

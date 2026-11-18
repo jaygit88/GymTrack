@@ -3352,3 +3352,22 @@ button.wl-summary{width:100%;padding:0 0 10px;text-align:start;border-radius:var
 .qw-ai{margin-top:12px;padding:10px 12px;border-radius:12px;background:rgba(94,92,230,.14);background:color-mix(in srgb,var(--indigo) 14%,transparent)}
 .qw-focus{display:flex;flex-wrap:wrap;gap:6px}
 .recent-day.upcoming{opacity:.75}
+
+/* GymTrack: nutrition (views/Nutrition.jsx, components/FoodSheets.jsx, components/NutritionCard.jsx) */
+.nut-day{margin-bottom:8px}
+.nut-bar{margin:8px 0}
+.nut-bar-t{display:flex;justify-content:space-between;font-size:var(--fs-footnote)}
+.nut-bar-t b{font-variant-numeric:tabular-nums}
+.nut-bar-b{height:8px;border-radius:4px;background:var(--surface-3);margin-top:4px;overflow:hidden}
+.nut-bar-b i{display:block;height:100%;border-radius:4px}
+.nut-burn{display:flex;gap:6px;align-items:center;margin-top:6px}
+.nut-meal-t{font-weight:600}
+.nut-meal .list{margin-top:8px}
+.nut-kcal{font-variant-numeric:tabular-nums}
+.nut-card .nut-bar{position:relative;z-index:2;pointer-events:none}
+.food-actions{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.food-h{margin:10px 2px 4px}
+.food-credit{margin-top:12px}
+.food-n{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:8px 0 14px}
+.food-n-i b{display:block;font-variant-numeric:tabular-nums}
+.food-amt { width: 5.5em; text-align: right; }

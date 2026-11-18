@@ -45,10 +45,9 @@ export const STEPS = [
   { id: 'plan-views', route: '/plan', anchor: 'plan-views' },
   { id: 'plan-body', route: '/plan', anchor: 'plan-body', when: c => c.plannedDays, optional: true },
   { id: 'plan-menu', route: '/plan', anchor: 'plan-menu' },
-  { id: 'go-library', route: '/plan', anchor: 'tab-library', go: '/library' },
-  { id: 'lib-search', route: '/library', anchor: 'lib-search' },
-  { id: 'lib-filters', route: '/library', anchor: 'lib-filters' },
-  { id: 'start', route: '/library', anchor: 'start', intercept: true },
+  // GymTrack: the exercise library left the tab bar (it is in Settings), so the tour goes from
+  // Plan straight to Start.
+  { id: 'start', route: '/plan', anchor: 'start', intercept: true },
   { id: 'set', route: '/workout', anchor: 'set', sandbox: 'practice' },
   { id: 'tick', route: '/workout', anchor: 'tick', sandbox: 'practice', tap: true },
   { id: 'rest', route: '/workout', anchor: 'rest', sandbox: 'practice', when: c => c.rest, optional: true },
@@ -99,7 +98,7 @@ const PLAN = [
 const madeEx = c => (c.S?.customEx?.length || 0) > (c.entry.customEx || 0)
 const CUSTOM = [
   { id: 'c-intro', route: null, anchor: null },
-  { id: 'c-go', route: null, anchor: 'tab-library', go: '/library' },
+  { id: 'c-go', route: null, anchor: null, go: '/library' },
   { id: 'c-new', route: '/library', anchor: 'lib-new', open: true, until: c => c.sheets > 0 },
   { id: 'c-name', route: '/library', anchor: 'cx-name', open: true, sheet: true, lost: c => !c.sheets, back: 'c-new' },
   { id: 'c-bp', route: '/library', anchor: 'cx-bp', open: true, sheet: true, lost: c => !c.sheets, back: 'c-new' },
@@ -152,8 +151,9 @@ const BACKUP = [
 ]
 
 /** Every flow by name: the tour, then the tutorials in the order Settings lists them. */
-export const FLOWS = { tour: STEPS, plan: PLAN, custom: CUSTOM, edit: EDIT, backup: BACKUP }
-export const TUTORIALS = ['plan', 'custom', 'edit', 'backup']
+// GymTrack: no make-your-own-exercise tutorial; the exercise library is tucked away in Settings.
+export const FLOWS = { tour: STEPS, plan: PLAN, edit: EDIT, backup: BACKUP }
+export const TUTORIALS = ['plan', 'edit', 'backup']
 // What the closing card and Settings call each tutorial (literal t() calls for check-source-strings).
 export const TUTORIAL_COPY = {
   plan: () => [t('Build your first plan'), t('Name a routine, add exercises, give it a day')],

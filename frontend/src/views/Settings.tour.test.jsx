@@ -88,11 +88,11 @@ describe('Settings: Show the tour again', () => {
 })
 
 describe('Settings: Tutorials', () => {
-  it('lists the tour and the four tutorials together, under one heading', () => {
+  it('lists the tour and the three tutorials together, under one heading', () => {
     act(() => root.render(<Settings page="about" />))
     const sect = [...host.querySelectorAll('.sect')].find(x => x.textContent.includes('Tutorials'))
     expect([...sect.querySelectorAll('.lrow-t')].map(x => x.textContent))
-      .toEqual(['Show the tour again', 'Build your first plan', 'Create your own exercise', 'Edit your data', 'Export & import'])
+      .toEqual(['Show the tour again', 'Build your first plan', 'Edit your data', 'Export & import'])
   })
   it('each runs its own tutorial, and one seen to the end says Done', () => {
     markTutorialDone('edit')
@@ -108,7 +108,7 @@ describe('Settings: Tutorials', () => {
   it('a tutorial waits for a running workout too', () => {
     mocks.S.active = { id: 'a', entries: [] }
     act(() => root.render(<Settings page="about" />))
-    act(() => row('Create your own exercise').click())
+    act(() => row('Edit your data').click())
     expect(tourState()).toBe(null)
   })
   it('the search still finds the tour by its old name, and the tutorials by theirs', () => {

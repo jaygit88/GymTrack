@@ -78,6 +78,7 @@ const Admin = lazyView(() => import('./views/Admin.jsx'))
 const CoachChat = lazyView(() => import('./views/CoachChat.jsx'))
 const Measurements = lazyView(() => import('./views/Measurements.jsx'))
 const Running = lazyView(() => import('./views/Running.jsx'))
+const Nutrition = lazyView(() => import('./views/Nutrition.jsx'))
 const CoachIntake = lazyView(() => import('./views/CoachIntake.jsx'))
 const CoachSetup = lazyView(() => import('./views/CoachSetup.jsx'))
 const StructuralBalance = lazyView(() => import('./views/StructuralBalance.jsx'))
@@ -350,6 +351,7 @@ function Shell() {
       {isOn(S, 'body') && <Route path="/progress-photos" element={<ProgressPhotos />} />}
       {isOn(S, 'body') && <Route path="/measurements" element={<Measurements />} />}
       <Route path="/running" element={<Running />} />
+      <Route path="/nutrition" element={<Nutrition />} />
       <Route path="/settings" element={<SettingsRoute />} />
       <Route path="/settings/:page" element={<SettingsRoute />} />
       {/* The Coach screens gate themselves on the instance config; the routes exist whenever the

@@ -82,7 +82,10 @@ export default function Library() {
   }
 
   return <>
-    <div className="hdr lib-hdr"><div><h1>{t('Exercises')}</h1></div>
+    <div className="hdr lib-hdr">
+      {/* GymTrack: the library lives in Settings now, so it has a way back there. */}
+      <button className="iconbtn" data-back="/settings" onClick={() => nav('/settings')} aria-label={t('Settings')}><Icon name="chevronLeft" /></button>
+      <div style={{ flex: 1, marginInlineStart: 12 }}><h1>{t('Exercises')}</h1></div>
       <Button size="sm" variant="tinted" icon="figureStrength" onClick={() => nav('/muscles')}>{t('By muscle')}</Button>
       <div className="sub lib-count">{ownCount
         ? tn('{1} animated exercises + 1 of your own', '{1} animated exercises + {0} of your own', ownCount, EXDB.length)

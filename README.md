@@ -66,11 +66,20 @@ see it.
   gradually, with hard runs kept off leg days. Shown as a weekly checklist that your runs tick
   off.
 
+### Nutrition
+- **A Nutrition tab** where Exercises used to be (the exercise library is now in Settings, Plan):
+  breakfast, lunch, dinner and snacks for each day against daily calorie and protein targets, with
+  the calories burned in that day's workouts beside them.
+- **Foods:** about 2,850 generic UK foods built in (works offline), branded products from Open
+  Food Facts by name or by scanning the barcode, your own foods, and quick calories.
+- **Recipes:** smoothies, shakes and batch cooking from ingredients, logged by the serving.
+- **Targets:** a starting point for gaining muscle from your latest weigh-in, yours to change.
+
 ### GymTrackAI
 The AI features above use openGym's AI Coach connection with your own API key, on the phone:
 no server, the key in Android's secure storage, a question before anything is sent, and a daily
 limit. Answers come from Claude (Anthropic). What is sent is a summary (workouts with each
-exercise's best set, runs, body weight, measurement changes and goals), never notes, photos or
+exercise's best set, runs, body weight, measurement changes and goals, and your average day of food when you keep the diary), never notes, photos or
 your name. Each request is a small charge on your own Anthropic account.
 
 ### The app itself
@@ -208,7 +217,7 @@ Copyright (C) 2026 Duarte Santos, and like openGym it is licensed under the
 > Makatserchyk, [Gym visual](https://gymvisual.com/), licensed for use in openGym. A
 > non-commercial fork such as this one may keep them unmodified with their notice; any other use
 > needs a licence from gymvisual.com. Details and every other third-party notice (body-map
-> geometry, exercise text, QR libraries) are in [NOTICE.md](NOTICE.md).
+> geometry, exercise text, food data, QR libraries) are in [NOTICE.md](NOTICE.md).
 
 The openGym [Contributor License Agreement](CLA.md) applies only to changes sent back to openGym
 itself.

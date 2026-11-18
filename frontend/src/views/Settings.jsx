@@ -813,6 +813,11 @@ export default function Settings({ page = null, find = null, via = null, entryKe
     </>,
 
     plan: () => <>
+      {/* GymTrack: the exercise library left the tab bar for Nutrition; it opens from here. */}
+      <Section>
+        <Row icon="dumbbell" iconTint="var(--indigo)" title={t('Exercise library')}
+          subtitle={t('Browse every exercise, and add your own.')} accessory="chevron" onClick={() => nav('/library')} />
+      </Section>
       <Section>
         {/* Fixed Week (S.week) or Rotation (the live queue, lib/queue.js + lib/rotation.js).
             Derived from the queue, never stored. */}

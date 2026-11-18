@@ -32,7 +32,7 @@ export default function TabBar({ onStart }) {
   if (!user && !isGuest) return null
   const cur = loc.pathname.split('/')[1] || 'home'
   // A screen without a tab of its own lights the tab it is opened from (Muscles from both).
-  const PARENT = { history: 'stats', 'structural-balance': 'stats', 'progress-photos': 'stats', measurements: 'stats', settings: 'home', checkin: 'home', muscles: 'library' }
+  const PARENT = { history: 'stats', 'structural-balance': 'stats', 'progress-photos': 'stats', measurements: 'stats', settings: 'home', checkin: 'home', muscles: 'home', library: 'home', running: 'home' }
   const parent = cur === 'muscles' && loc.state?.from === '/stats' ? 'stats' : PARENT[cur]
   const on = k => cur === k || parent === k
 
@@ -71,7 +71,8 @@ export default function TabBar({ onStart }) {
           : <span>{S.active ? (cur === 'workout' ? t('Workout') : S.active.editingWorkoutId ? t('Edit workout') : t('Resume')) : t('Start')}</span>}
       </button>
       <Tab active={on('stats')} icon="chart" label={t('Stats')} onClick={() => switchTab('/stats')} tour="tab-stats" />
-      <Tab active={on('library')} icon="dumbbell" label={t('Exercises')} onClick={() => switchTab('/library')} tour="tab-library" />
+      {/* GymTrack: Nutrition where Exercises was; the exercise library is in Settings. */}
+      <Tab active={on('nutrition')} icon="food" label={t('Nutrition')} onClick={() => switchTab('/nutrition')} tour="tab-nutrition" />
     </nav>
   )
 }

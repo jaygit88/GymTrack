@@ -19,6 +19,7 @@ import { runDistance } from './runs.js'
 import { isoOf, startOfWeek, weekStartOf } from './format.js'
 import { loadOfWorkouts } from './muscles.js'
 import { workoutCalories } from './calories.js'
+import { nutritionSummary } from './nutrition.js'
 import { quickContext, minutesFor } from './quick-workout.js'
 import { runGoalOf, goalProgress, fitnessTrend, weeklyKm, loadWarning, planThisWeek, fmtPace, fmtRaceTime, RUN_KINDS } from './running.js'
 
@@ -71,6 +72,7 @@ export function buildReviewPayload(S, { mode = 'month', now = Date.now(), days =
     bodyweight: bw.length ? { first: `${bw[0].w} ${unit}`, last: `${bw[bw.length - 1].w} ${unit}` } : null,
     measurementChanges: changes, goals, stalledGoals: stalled,
     running: runningContext(S, now, mode === 'runplan' ? 56 : days),
+    nutrition: nutritionSummary(S || {}, { days, now, burnedOn: iso => (S?.workouts || []).filter(w => w && w.d === iso).reduce((n, w) => n + (workoutCalories(S, w).kcal || 0), 0) }),
   }
 }
 
@@ -135,7 +137,7 @@ const RULES = {
     'Read the JSON payload: their workouts (with each exercise\'s best set), runs, body weight, body measurement changes, and the measurements they are working on (goals), including any that stalled.',
     'Write "summary": one or two short plain sentences, at most 40 words, on the overall picture of the month: how consistent it was against the period before, and how the goal measurements and running moved. No exercise names, weights, reps or set counts in the summary.',
     'Write "highlights": up to four short things that went well, each one line. At most one of them is about a lift: the single most notable strength gain of the month, if there was one.',
-    'Write "suggestions": three to five concrete changes for next month, each with a short "title" and a one or two sentence "why" that points at the data. Prefer training changes (volume per muscle, exercise choice, frequency, progression, running mix) and mention food or sleep only where a goal clearly calls for it.',
+    'Write "suggestions": three to five concrete changes for next month, each with a short "title" and a one or two sentence "why" that points at the data. Prefer training changes (volume per muscle, exercise choice, frequency, progression, running mix) and mention food or sleep only where a goal clearly calls for it. When "nutrition" is there, read the average logged day against the targets and what the workouts burned, and suggest a food change only if calories or protein are clearly short of what the goals need.',
     'Consider running too, from "running": weekly distance, pace and heart rate, metres per heartbeat (higher is fitter), resting heart rate (lower is fitter), VO2 max, any load warning, and how this week of the running plan went; put the details in highlights and suggestions, not the summary.',
   ],
   quick: [

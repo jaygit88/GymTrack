@@ -141,8 +141,8 @@ describe('the first-run question', () => {
     useStore.setState(st => ({ S: { ...st.S, modules: undefined } }))
   })
   it('the halfway card does not ask about modules again', async () => {
-    noteStep('lib-search')
-    await act(async () => { openTour({ kind: 'resume', at: 'lib-search' }) })
+    noteStep('plan-menu')
+    await act(async () => { openTour({ kind: 'resume', at: 'plan-menu' }) })
     await render()
     expect(card().querySelector('[role="radiogroup"]')).toBe(null)
   })
@@ -158,14 +158,14 @@ describe('the first-run question', () => {
     expect(tourState()).toBe(null)
   })
   it('a tour closed halfway is picked up where it was, once', async () => {
-    noteStep('lib-search')
-    await act(async () => { openTour({ kind: 'resume', at: 'lib-search' }) })
+    noteStep('plan-menu')
+    await act(async () => { openTour({ kind: 'resume', at: 'plan-menu' }) })
     await render()
     expect(card().textContent).toContain('Finish the tour?')
     expect(readTour().resumeAsked).toBe(true)
     await click(btn('Continue'))
-    expect(step()).toBe('lib-search')
-    expect(where).toBe('/library')
+    expect(step()).toBe('plan-menu')
+    expect(where).toBe('/plan')
   })
 })
 
@@ -223,7 +223,7 @@ describe('the stops', () => {
     await run('done', null, '/settings')
     expect(card().textContent).toContain('Want more?')
     expect([...card().querySelectorAll('.tour-tut')].map(b => b.querySelector('.tour-tut-t').textContent))
-      .toEqual(['Build your first plan', 'Create your own exercise', 'Edit your data', 'Export & import'])
+      .toEqual(['Build your first plan', 'Edit your data', 'Export & import'])
     expect(document.querySelector('.tour-hole')).toBe(null)
     await click(btn('Let’s go'))
     expect(tourState()).toBe(null)
@@ -483,43 +483,3 @@ describe('Edit your data', () => {
   })
 })
 
-describe('Create your own exercise', () => {
-  const toForm = async () => {
-    await run(null, 'custom')
-    await click(btn('Next'))
-    expect(step()).toBe('c-go')
-    await click(anchor('tab-library'))
-    expect(step()).toBe('c-new')
-    await click(anchor('lib-new'))
-    await settle(300)
-    expect(step()).toBe('c-name')
-  }
-  it('walks the real form, and Next past Create makes nothing', async () => {
-    await toForm()
-    for (const id of ['c-bp', 'c-eq', 'c-save']) {   // no media field in the stand-in: passed over
-      await click(btn('Next'))
-      await settle(150)
-      expect(step()).toBe(id)
-    }
-    await click(btn('Next'))
-    await settle(300)
-    expect(step()).toBe('c-done')
-    expect(useStore.getState().S.customEx).toEqual([])
-    expect(document.querySelector('.sheet')).toBe(null)
-  })
-  it('the form’s own Create makes it, and the tour follows', async () => {
-    await toForm()
-    for (let k = 0; k < 3; k++) await click(btn('Next'))
-    expect(step()).toBe('c-save')
-    await click(anchor('cx-save'))
-    await settle(300)
-    expect(useStore.getState().S.customEx.map(c => c.id)).toEqual(['cmine'])
-    expect(step()).not.toBe('c-save')
-  })
-  it('closing the form goes back to the row that opens it', async () => {
-    await toForm()
-    await act(async () => { useUI.getState().closeAll() })
-    await settle(500)
-    expect(step()).toBe('c-new')
-  })
-})

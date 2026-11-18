@@ -44,6 +44,27 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
+## Food data (GymTrack's Nutrition tab)
+
+### CoFID: UK Composition of Foods Integrated Dataset
+
+The built-in list of about 2,850 generic foods (`frontend/src/lib/food-data/cofid.json`, built by
+`scripts/nutrition/build-cofid.py`) comes from McCance and Widdowson's Composition of Foods
+Integrated Dataset 2021, published by the Office for Health Improvement and Disparities.
+
+Contains public sector information licensed under the
+[Open Government Licence v3.0](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/).
+GymTrack keeps the energy, protein, carbohydrate, fat, sugars, fibre, saturates and salt columns
+(salt worked out from sodium) and drops the rest.
+
+### Open Food Facts
+
+Branded products, by barcode and by name, are fetched from the phone at the time you search, from
+[Open Food Facts](https://world.openfoodfacts.org). Its database is available under the
+[Open Database Licence](https://opendatacommons.org/licenses/odbl/1-0/) and its individual
+contents under the [Database Contents Licence](https://opendatacommons.org/licenses/dbcl/1-0/).
+Nothing from it is bundled in the app; a product you log is kept in your own data.
+
 ## Exercise media (stills and animations)
 
 The exercise stills and animations in `catalogue/media/` (and inside the published container

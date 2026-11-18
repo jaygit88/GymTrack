@@ -12,6 +12,7 @@ import RecentDays from '../components/RecentDays.jsx'
 import MeasureChangeCard from '../components/MeasureChangeCard.jsx'
 import AiReviewCard, { StallCard } from '../components/AiReviewCard.jsx'
 import RunningCard from '../components/RunningCard.jsx'
+import NutritionCard from '../components/NutritionCard.jsx'
 import { QuickWorkoutButton } from '../components/QuickWorkout.jsx'
 import { stalledGoals } from '../lib/measure-change.js'
 import { weekTally } from '../lib/queue.js'
@@ -85,6 +86,9 @@ export default function Home() {
 
     {/* Running from the watch: this week, the plan's runs, a warning on a jump (lib/running.js). */}
     <RunningCard S={S} />
+
+    {/* Today's food against your targets (lib/nutrition.js), a tap to the Nutrition tab. */}
+    <NutritionCard S={S} />
 
     {/* What your body measurements did over the last month, on the body (lib/measure-change.js). */}
     {on('body') && <MeasureChangeCard S={S} />}

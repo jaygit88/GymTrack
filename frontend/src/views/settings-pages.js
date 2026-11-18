@@ -143,6 +143,7 @@ export const SEARCH = [
   { page: 'reminders', title: 'Gym reminder', icon: 'mapPin', tint: 'var(--green)', kw: 'gym location arrive arrival geofence place map nearby', when: c => !!c.mobile && c.gymReminder !== false },
   { page: 'reminders', title: 'Send test notification', icon: 'bell', tint: 'var(--red)', kw: 'test push notification try', when: c => !c.mobile && c.pushOK, via: PUSH },
   // Plan & schedule
+  { page: 'plan', title: 'Exercise library', icon: 'dumbbell', tint: 'var(--indigo)', kw: 'exercises library browse custom own new create add exercise catalogue' },
   { page: 'plan', title: 'How you train', icon: 'repeat', tint: 'var(--orange)', kw: 'scheduling schedule rotation fixed week split loop round cycle', opts: ['Fixed Week', 'Rotation'] },
   { page: 'plan', title: 'Workouts per week', icon: 'target', tint: 'var(--green)', kw: 'target goal sessions per week rotation left countdown remaining', when: c => c.rotation },
   { page: 'plan', title: 'Week starts on', icon: 'calendar', tint: 'var(--orange)', kw: 'monday sunday first day week', opts: ['Monday', 'Sunday'], tkw: () => t('week start') },
@@ -219,7 +220,6 @@ export const SEARCH = [
   { page: 'about', title: 'Get the Android app', icon: 'download', tint: 'var(--green)', kw: 'apk android download app', when: c => !c.mobile },
   { page: 'about', title: 'Show the tour again', icon: 'lightbulb', tint: 'var(--yellow)', kw: 'tour tutorials intro introduction tutorial walkthrough guide help onboarding how to start' },
   { page: 'about', title: 'Build your first plan', icon: 'calendar', tint: 'var(--yellow)', kw: 'tutorial guide routine plan create first help how to' },
-  { page: 'about', title: 'Create your own exercise', icon: 'plusCircle', tint: 'var(--yellow)', kw: 'tutorial guide custom exercise own new help how to' },
   { page: 'about', title: 'Edit your data', icon: 'pencil', tint: 'var(--yellow)', kw: 'tutorial guide edit fix change workout weigh-in history correct help how to' },
   { page: 'about', title: 'Export & import', icon: 'folder', tint: 'var(--yellow)', kw: 'tutorial guide export import backup restore csv strong hevy sync help how to' },
   { page: 'about', title: 'Version', icon: 'info', tint: 'var(--grey)', kw: 'version about licence license source code open source' },
