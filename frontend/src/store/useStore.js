@@ -109,7 +109,7 @@ export const DEF = {
   // GymTrack: cardio fitness readings (VO2 max, resting heart rate), the running goal and GymTrackAI's running plan (lib/running.js)
   fitness: {}, runGoal: null, runPlan: null,
   // GymTrack: the food diary, your own foods, recipes and daily targets (lib/nutrition.js)
-  foodLog: {}, exerciseLog: {}, foods: [], recipes: [], nutritionTargets: null,
+  foodLog: {}, exerciseLog: {}, runWeek: {}, foods: [], recipes: [], nutritionTargets: null,
   queue: null,   // a planner's floating week (lib/queue.js) — via the API, or by this rotation feature (below)
   // The in-app rotation's reusable definition — { id, sequence, label } (lib/rotation.js). Never
   // a live queue: it only ever feeds `queue`, and `queue.rotationId` says the pass is managed here.

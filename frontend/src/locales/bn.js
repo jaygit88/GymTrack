@@ -3932,4 +3932,13 @@ export default {
   "Photo of the nutrition label": "পুষ্টি লেবেলের ছবি",
   "Read another photo": "আরেকটি ছবি পড়ুন",
   "Reading a label needs Claude (Anthropic) as the AI Coach provider.": "লেবেল পড়তে AI Coach-এর প্রোভাইডার Claude (Anthropic) হতে হবে।",
+  "Edit planned run": "পরিকল্পিত দৌড় সম্পাদনা",
+  "Every week, on these days. A GymTrackAI running plan uses them as your run days.": "প্রতি সপ্তাহে, এই দিনগুলোতে। GymTrackAI দৌড় পরিকল্পনা এগুলোকে আপনার দৌড়ের দিন ধরে।",
+  "Kind": "ধরন",
+  "No runs planned. Add the days you run, and Home shows them on those days until your watch brings the run in.": "কোনো দৌড় পরিকল্পিত নেই। যেদিন দৌড়ান সেগুলো যোগ করুন, ঘড়ি দৌড় না আনা পর্যন্ত হোম সেদিন দেখাবে।",
+  "Plan a run": "দৌড়ের পরিকল্পনা",
+  "Planned run": "পরিকল্পিত দৌড়",
+  "Your run days this week": "এই সপ্তাহে আপনার দৌড়ের দিন",
+  "e.g. Parkrun": "যেমন Parkrun",
+  "{0}, optional": "{0}, ঐচ্ছিক",
 }

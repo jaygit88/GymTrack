@@ -3853,4 +3853,13 @@ export default {
   "Photo of the nutrition label": "Besin değerleri tablosunun fotoğrafı",
   "Read another photo": "Başka bir fotoğraf oku",
   "Reading a label needs Claude (Anthropic) as the AI Coach provider.": "Etiket okumak için AI Koç sağlayıcısı Claude (Anthropic) olmalı.",
+  "Edit planned run": "Planlı koşuyu düzenle",
+  "Every week, on these days. A GymTrackAI running plan uses them as your run days.": "Her hafta bu günlerde. GymTrackAI koşu planı bunları koşu günlerin olarak kullanır.",
+  "Kind": "Tür",
+  "No runs planned. Add the days you run, and Home shows them on those days until your watch brings the run in.": "Planlı koşu yok. Koştuğun günleri ekle, saatin koşuyu getirene kadar Ana sayfa o günlerde gösterir.",
+  "Plan a run": "Koşu planla",
+  "Planned run": "Planlı koşu",
+  "Your run days this week": "Bu haftaki koşu günlerin",
+  "e.g. Parkrun": "örn. Parkrun",
+  "{0}, optional": "{0}, isteğe bağlı",
 }

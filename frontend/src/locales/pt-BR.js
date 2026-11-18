@@ -2518,6 +2518,12 @@ export const PT_BR_OVERRIDES = {
   "Filled in from the label. Check the numbers, then save.": "Preenchido a partir do rótulo. Confira os números e salve.",
   "GymTrackAI could not read the label. Try a sharper photo of just the nutrition table.": "O GymTrackAI não conseguiu ler o rótulo. Tente uma foto mais nítida só da tabela nutricional.",
   "GymTrackAI is reading the label…": "O GymTrackAI está lendo o rótulo…",
+  "Edit planned run": "Editar corrida planejada",
+  "Every week, on these days. A GymTrackAI running plan uses them as your run days.": "Toda semana, nestes dias. Um plano de corrida do GymTrackAI usa esses dias como seus dias de corrida.",
+  "No runs planned. Add the days you run, and Home shows them on those days until your watch brings the run in.": "Nenhuma corrida planejada. Adicione os dias em que você corre, e o Início mostra nesses dias até o relógio trazer a corrida.",
+  "Plan a run": "Planejar uma corrida",
+  "Planned run": "Corrida planejada",
+  "Your run days this week": "Seus dias de corrida nesta semana",
 }
 
 export default { ...pt, ...PT_BR_OVERRIDES }

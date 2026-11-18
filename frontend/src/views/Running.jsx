@@ -48,11 +48,11 @@ export function PlanWeek({ S, compact = false }) {
   if (!week) return null
   const unit = S.unit
   return <div className="run-plan">
-    {!compact && <div className="lbl2">{t('Week {0} of {1}', week.index + 1, week.of)}</div>}
+    {!compact && <div className="lbl2">{week.own ? t('Your run days this week') : t('Week {0} of {1}', week.index + 1, week.of)}</div>}
     {week.items.map(it => <div key={it.n} className={'run-plan-i' + (it.done ? ' done' : '')}>
       <Icon name={it.done ? 'checkCircle' : 'circle'} />
       <span className="run-plan-d">{t(DAYS[WD.indexOf(it.day)] || it.day)}</span>
-      <span className="grow"><b>{t(RUN_KIND_LABEL[it.kind] || it.kind)}</b> · {fmtNum(Math.round(toUnit(it.km, unit) * 10) / 10)} {distUnit(unit)}
+      <span className="grow"><b>{t(RUN_KIND_LABEL[it.kind] || it.kind)}</b>{it.km ? ` · ${fmtNum(Math.round(toUnit(it.km, unit) * 10) / 10)} ${distUnit(unit)}` : ''}
         {!compact && it.notes && <span className="small muted run-plan-n">{it.notes}</span>}</span>
     </div>)}
     {week.extra > 0 && !compact && <div className="small muted">{t('Plus {0} other runs this week.', week.extra)}</div>}

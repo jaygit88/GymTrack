@@ -2,7 +2,9 @@ import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store/useStore.js'
 import { useUI } from '../store/useUI.js'
-import { DAYN, DAYS, weekOrder, weekStartOf, uid, exCount, routineCount, todayISO, fmtDate } from '../lib/format.js'
+import { DAYN, DAYS, weekOrder, weekStartOf, uid, exCount, routineCount, todayISO, fmtDate, fmtNum } from '../lib/format.js'
+import { hasRunWeek, runWeekOn, toUnit, distUnit } from '../lib/running.js'
+import { runDaySheet, RUN_KIND_LABEL } from '../components/RunSheets.jsx'
 import { t } from '../lib/i18n.js'
 import {
   dayAssignSheet, starterPlanSheet, confirmSheet, menuSheet,
@@ -400,6 +402,24 @@ function Schedule({ S, update, nav, mode }) {
         <p className="sect-f">{t('These count on top of the loop. Tap a day to change or clear it.')}</p>
       </>}
     </div>}
+
+    {/* Your run days: a placeholder run on the same weekday every week (lib/running.js S.runWeek). */}
+    <div className="row between plan-sec-h">
+      <h4 className="sec">{t('Runs')}</h4>
+      <Button size="sm" variant="tinted" icon="plus" onClick={() => runDaySheet({})}>{t('Add')}</Button>
+    </div>
+    {hasRunWeek(S) ? <div className="list plan-week">
+      {weekOrder(ws).flatMap(d => runWeekOn(S, d).map((p, n) => <div key={p.id} className="item plan-day" aria-label={t(DAYN[d])} {...tappable(() => runDaySheet({ wd: d, run: p }))}>
+        <span className={'plan-day-n' + (d === todayDow ? ' today' : '')} aria-hidden="true">{n === 0 ? t(DAYS[d]) : ''}</span>
+        <span className="lrow-i" style={{ background: 'var(--orange)' }}><Icon name="run" /></span>
+        <div className="grow">
+          <div className="tt">{t(RUN_KIND_LABEL[p.kind])}{p.km ? ` · ${fmtNum(Math.round(toUnit(p.km, S.unit) * 10) / 10)} ${distUnit(S.unit)}` : ''}</div>
+          {p.notes && <div className="ss">{p.notes}</div>}
+        </div>
+        <Icon name="chevronRight" className="chev" />
+      </div>))}
+    </div> : <div className="empty">{t('No runs planned. Add the days you run, and Home shows them on those days until your watch brings the run in.')}</div>}
+    {hasRunWeek(S) && <p className="sect-f">{t('Every week, on these days. A GymTrackAI running plan uses them as your run days.')}</p>}
 
     {/* Weekly muscle volume is analysis: it moved to Stats, next to Muscle balance. Stats only
         shows that card once there is a routine, so the link waits for one too. */}

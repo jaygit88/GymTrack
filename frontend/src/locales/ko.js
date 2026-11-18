@@ -3853,4 +3853,13 @@ export default {
   "Photo of the nutrition label": "영양성분표 사진",
   "Read another photo": "다른 사진 읽기",
   "Reading a label needs Claude (Anthropic) as the AI Coach provider.": "라벨을 읽으려면 AI 코치 제공자가 Claude(Anthropic)여야 해요.",
+  "Edit planned run": "계획한 달리기 편집",
+  "Every week, on these days. A GymTrackAI running plan uses them as your run days.": "매주 이 요일에. GymTrackAI 달리기 계획이 이 날들을 달리는 날로 써요.",
+  "Kind": "종류",
+  "No runs planned. Add the days you run, and Home shows them on those days until your watch brings the run in.": "계획한 달리기가 없어요. 달리는 요일을 추가하면 시계가 기록을 가져올 때까지 홈에 표시돼요.",
+  "Plan a run": "달리기 계획",
+  "Planned run": "계획한 달리기",
+  "Your run days this week": "이번 주 달리는 날",
+  "e.g. Parkrun": "예: Parkrun",
+  "{0}, optional": "{0}, 선택",
 }

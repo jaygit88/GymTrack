@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import CardHead from './CardHead.jsx'
 import Icon from './Icon.jsx'
 import { PlanWeek } from '../views/Running.jsx'
-import { weeklyKm, loadWarning, goalProgress, runGoalOf, fmtRaceTime, distUnit, toUnit } from '../lib/running.js'
+import { weeklyKm, loadWarning, goalProgress, runGoalOf, fmtRaceTime, distUnit, toUnit, hasRunWeek } from '../lib/running.js'
 import { fmtNum } from '../lib/format.js'
 import { t } from '../lib/i18n.js'
 
@@ -11,7 +11,7 @@ import { t } from '../lib/i18n.js'
 export default function RunningCard({ S }) {
   const nav = useNavigate()
   const goal = runGoalOf(S)
-  if (!(S.runs || []).length && !goal && !S.runPlan) return null
+  if (!(S.runs || []).length && !goal && !S.runPlan && !hasRunWeek(S)) return null
   const unit = S.unit, du = distUnit(unit)
   const km = n => fmtNum(Math.round(toUnit(n, unit) * 10) / 10)
   const week = weeklyKm(S, 1)[0]

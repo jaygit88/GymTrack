@@ -3853,4 +3853,13 @@ export default {
   "Photo of the nutrition label": "न्यूट्रिशन लेबल की फ़ोटो",
   "Read another photo": "दूसरी फ़ोटो पढ़ें",
   "Reading a label needs Claude (Anthropic) as the AI Coach provider.": "लेबल पढ़ने के लिए AI Coach प्रोवाइडर Claude (Anthropic) होना चाहिए।",
+  "Edit planned run": "प्लान की गई रन बदलें",
+  "Every week, on these days. A GymTrackAI running plan uses them as your run days.": "हर हफ़्ते, इन दिनों। GymTrackAI रनिंग प्लान इन्हें आपके रन के दिन मानता है।",
+  "Kind": "प्रकार",
+  "No runs planned. Add the days you run, and Home shows them on those days until your watch brings the run in.": "कोई रन प्लान नहीं। जिन दिनों दौड़ते हैं उन्हें जोड़ें, होम उन दिनों पर दिखाएगा जब तक वॉच रन न लाए।",
+  "Plan a run": "रन प्लान करें",
+  "Planned run": "प्लान की गई रन",
+  "Your run days this week": "इस हफ़्ते के आपके रन के दिन",
+  "e.g. Parkrun": "जैसे Parkrun",
+  "{0}, optional": "{0}, वैकल्पिक",
 }

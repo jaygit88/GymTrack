@@ -2,12 +2,12 @@ import { useState } from 'react'
 import { runCalories } from '../lib/calories.js'
 import Icon from './Icon.jsx'
 import DateField from './DateField.jsx'
-import { Button, Segmented, Section, Row, NumberField } from './ui.jsx'
+import { Button, Segmented, Section, Row, NumberField, TextField } from './ui.jsx'
 import { useUI } from '../store/useUI.js'
 import { useStore } from '../store/useStore.js'
 import { runDistance, runPace } from '../lib/runs.js'
-import { fmtPace, fmtRaceTime, parseRaceTime, distUnit, toUnit, KM_PER_MI, RACE_DISTANCES, runGoalOf, fmt2, splitBar } from '../lib/running.js'
-import { fmtDate, fmtNum, todayISO } from '../lib/format.js'
+import { fmtPace, fmtRaceTime, parseRaceTime, distUnit, toUnit, KM_PER_MI, RACE_DISTANCES, runGoalOf, fmt2, splitBar, RUN_KINDS, setRunDay, removeRunDay } from '../lib/running.js'
+import { fmtDate, fmtNum, todayISO, DAYS, weekOrder, weekStartOf, uid } from '../lib/format.js'
 import { t } from '../lib/i18n.js'
 
 // GymTrack: the run sheet (everything the watch saved about one run) and the running goal sheet.
@@ -122,3 +122,38 @@ function GoalSheet({ close }) {
   </>
 }
 export const runGoalSheet = () => useUI.getState().openSheet(close => <GoalSheet close={close} />)
+
+/* ---------- a run day in your plan ---------- */
+
+// A placeholder for a run on the same weekday every week (S.runWeek, lib/running.js): its kind,
+// and a distance if you want one. Home shows it on its day until a run comes in from your watch;
+// the Running card ticks it off; a GymTrackAI running plan puts its runs on these days.
+function RunDay({ close, wd: wd0, run }) {
+  const S = useStore(s => s.S)
+  const update = useStore(s => s.update)
+  const unit = S.unit
+  const [wd, setWd] = useState(wd0 ?? new Date().getDay())
+  const [kind, setKind] = useState(run?.kind || 'easy')
+  const [dist, setDist] = useState(run?.km ? Math.round(toUnit(run.km, unit) * 10) / 10 : null)
+  const [notes, setNotes] = useState(run?.notes || '')
+  const save = () => {
+    const km = Number(dist) > 0 ? (unit === 'lb' ? Number(dist) * KM_PER_MI : Number(dist)) : null
+    update(s => setRunDay(s, wd, run?.id || uid(), { kind, km, notes }))
+    close()
+  }
+  return <>
+    <h3>{run ? t('Edit planned run') : t('Plan a run')}</h3>
+    <div className="lbl2">{t('Day')}</div>
+    <div className="chips run-day-chips">{weekOrder(weekStartOf(S)).map(d => <button key={d} type="button" className={'chip' + (wd === d ? ' on' : '')} aria-pressed={wd === d} onClick={() => setWd(d)}>{t(DAYS[d])}</button>)}</div>
+    <div className="lbl2">{t('Kind')}</div>
+    <div className="chips run-day-chips">{RUN_KINDS.map(k => <button key={k} type="button" className={'chip' + (kind === k ? ' on' : '')} aria-pressed={kind === k} onClick={() => setKind(k)}>{t(RUN_KIND_LABEL[k])}</button>)}</div>
+    <Section>
+      <Row title={t('Distance')} subtitle={t('{0}, optional', distUnit(unit))}><NumberField value={dist} nullable onChange={setDist} className="food-amt" /></Row>
+      <Row title={t('Notes')}><TextField value={notes} onChange={e => setNotes(e.target.value)} placeholder={t('e.g. Parkrun')} /></Row>
+    </Section>
+    <Button variant="primary" onClick={save}>{t('Save')}</Button>
+    {run && <Button variant="plain" className="danger" style={{ marginTop: 8 }} onClick={() => { update(s => removeRunDay(s, run.id)); close() }}>{t('Remove')}</Button>}
+  </>
+}
+/** Plan a run on a weekday (`wd`, 0 = Sunday), or edit one (`run` from S.runWeek). */
+export const runDaySheet = ({ wd, run } = {}) => useUI.getState().openSheet(close => <RunDay close={close} wd={wd} run={run} />)

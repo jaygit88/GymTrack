@@ -62,6 +62,9 @@ see it.
 - **Goals:** cardio fitness at a weekly distance, or a race from 5K to the marathon with an
   optional target time and race day. Race goals get an estimate from your recent runs, and a
   month without progress is flagged.
+- **Run days in your plan:** Plan, **Runs**: an easy run on Wednesday, a long run on Saturday, with
+  a distance if you want one. Home shows them on their days until the run comes in from your
+  watch, the Running card ticks them off, and a GymTrackAI running plan puts its runs on them.
 - **GymTrackAI running plan:** four weeks of runs towards the goal, mostly easy, built up
   gradually, with hard runs kept off leg days. Shown as a weekly checklist that your runs tick
   off.

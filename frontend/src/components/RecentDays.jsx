@@ -7,7 +7,7 @@ import { isoOf, todayISO, durPart, fmtNum, exCount, DAYS, DAYN } from '../lib/fo
 import { t, tn } from '../lib/i18n.js'
 import { tappable } from '../lib/use-sheet-keyboard.js'
 import { runsOn, runDistance, runPace } from '../lib/runs.js'
-import { plannedRunsOn, distUnit, toUnit } from '../lib/running.js'
+import { runsPlannedOn, distUnit, toUnit } from '../lib/running.js'
 import { RUN_KIND_LABEL } from './RunSheets.jsx'
 import { workoutDetailSheet, logPastWorkoutSheet, startFlow, dayOverrideSheet } from '../sheets.jsx'
 import MiniBodyMap from './MiniBodyMap.jsx'
@@ -105,12 +105,12 @@ export default function RecentDays({ S, back = 3, ahead = 3 }) {
     // Days ahead: the planned routine and the running plan's runs, or nothing planned.
     if (future) {
       if (routines.length) items.push(routineRow())
-      const planned = plannedRunsOn(S.runPlan, iso)
+      const planned = runsPlannedOn(S, iso)
       planned.forEach((p, n) => items.push(<div key={iso + '-plan' + n} className="item plan-day recent-day upcoming" aria-label={t(DAYN[d.getDay()])}>
         {dayLabel(!items.length && n === 0)}
         <span className="lrow-i rest"><Icon name="run" /></span>
         <div className="grow">
-          <div className="tt">{t(RUN_KIND_LABEL[p.kind] || p.kind)} · {fmtNum(Math.round(toUnit(p.km, S.unit) * 10) / 10)} {distUnit(S.unit)}</div>
+          <div className="tt">{t(RUN_KIND_LABEL[p.kind] || p.kind)}{p.km ? ` · ${fmtNum(Math.round(toUnit(p.km, S.unit) * 10) / 10)} ${distUnit(S.unit)}` : ''}</div>
           {p.notes && <div className="ss">{p.notes}</div>}
         </div>
       </div>))
@@ -124,6 +124,16 @@ export default function RecentDays({ S, back = 3, ahead = 3 }) {
     }
     // Today's planned routine, while it is still to do (a run this morning does not cover it).
     if (isToday && !S.active && routines.length) items.push(routineRow())
+    // Today's planned runs not done yet: each run already synced today covers one.
+    if (isToday) runsPlannedOn(S, iso).slice(runsOn(S, iso).length).forEach((p, n) => items.push(<div key={iso + '-plan' + n} className="item plan-day recent-day planned" aria-label={t('Today')} {...tappable(() => nav('/running'))}>
+      {dayLabel(!items.length)}
+      <span className="lrow-i" style={{ background: 'var(--orange)' }}><Icon name="run" /></span>
+      <div className="grow">
+        <div className="tt">{t(RUN_KIND_LABEL[p.kind] || p.kind)}{p.km ? ` · ${fmtNum(Math.round(toUnit(p.km, S.unit) * 10) / 10)} ${distUnit(S.unit)}` : ''}</div>
+        <div className="ss">{p.notes || t('Planned run')}</div>
+      </div>
+      <Icon name="chevronRight" className="chev" />
+    </div>))
     if (!items.length && isToday) {
       items.push(<div key={iso + '-today'} className="item plan-day recent-day today-open" data-tour={tour} aria-label={t('Today')} {...tappable(() => nav('/workout'))}>
         {dayLabel(true)}

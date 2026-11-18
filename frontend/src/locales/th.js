@@ -3864,4 +3864,13 @@ export default {
   "Photo of the nutrition label": "ถ่ายรูปฉลากโภชนาการ",
   "Read another photo": "อ่านรูปอื่น",
   "Reading a label needs Claude (Anthropic) as the AI Coach provider.": "การอ่านฉลากต้องใช้ Claude (Anthropic) เป็นผู้ให้บริการ AI Coach",
+  "Edit planned run": "แก้ไขการวิ่งที่วางแผน",
+  "Every week, on these days. A GymTrackAI running plan uses them as your run days.": "ทุกสัปดาห์ในวันเหล่านี้ แผนวิ่ง GymTrackAI ใช้เป็นวันวิ่งของคุณ",
+  "Kind": "ประเภท",
+  "No runs planned. Add the days you run, and Home shows them on those days until your watch brings the run in.": "ยังไม่มีการวิ่งที่วางแผน เพิ่มวันที่คุณวิ่ง แล้วหน้าแรกจะแสดงในวันนั้นจนกว่านาฬิกาจะส่งข้อมูลการวิ่งมา",
+  "Plan a run": "วางแผนการวิ่ง",
+  "Planned run": "การวิ่งที่วางแผน",
+  "Your run days this week": "วันวิ่งของคุณสัปดาห์นี้",
+  "e.g. Parkrun": "เช่น Parkrun",
+  "{0}, optional": "{0}, ไม่บังคับ",
 }

@@ -3846,4 +3846,13 @@ export default {
   "Photo of the nutrition label": "拍營養標示",
   "Read another photo": "讀取另一張照片",
   "Reading a label needs Claude (Anthropic) as the AI Coach provider.": "讀取標示需要 AI 教練使用 Claude（Anthropic）。",
+  "Edit planned run": "編輯計畫跑步",
+  "Every week, on these days. A GymTrackAI running plan uses them as your run days.": "每週這幾天。GymTrackAI 跑步計畫會把它們當作你的跑步日。",
+  "Kind": "類型",
+  "No runs planned. Add the days you run, and Home shows them on those days until your watch brings the run in.": "還沒有計畫跑步。新增你跑步的日子，首頁會在那幾天顯示，直到手錶把跑步紀錄帶進來。",
+  "Plan a run": "計畫一次跑步",
+  "Planned run": "計畫的跑步",
+  "Your run days this week": "你本週的跑步日",
+  "e.g. Parkrun": "例如 Parkrun",
+  "{0}, optional": "{0}，選填",
 }

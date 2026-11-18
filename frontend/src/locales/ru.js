@@ -3857,4 +3857,13 @@ export default {
   "Photo of the nutrition label": "Фото таблицы пищевой ценности",
   "Read another photo": "Прочитать другое фото",
   "Reading a label needs Claude (Anthropic) as the AI Coach provider.": "Для чтения этикетки ИИ-тренеру нужен провайдер Claude (Anthropic).",
+  "Edit planned run": "Изменить запланированную пробежку",
+  "Every week, on these days. A GymTrackAI running plan uses them as your run days.": "Каждую неделю в эти дни. План бега GymTrackAI берёт их как ваши дни для бега.",
+  "Kind": "Тип",
+  "No runs planned. Add the days you run, and Home shows them on those days until your watch brings the run in.": "Пробежек не запланировано. Добавьте дни, когда бегаете, и Главная покажет их в эти дни, пока часы не пришлют пробежку.",
+  "Plan a run": "Запланировать пробежку",
+  "Planned run": "Запланированная пробежка",
+  "Your run days this week": "Ваши беговые дни на этой неделе",
+  "e.g. Parkrun": "напр. Parkrun",
+  "{0}, optional": "{0}, необязательно",
 }

@@ -3900,4 +3900,13 @@ export default {
   "Photo of the nutrition label": "Foto av näringsdeklarationen",
   "Read another photo": "Läs ett annat foto",
   "Reading a label needs Claude (Anthropic) as the AI Coach provider.": "Att läsa en etikett kräver Claude (Anthropic) som AI-coachens leverantör.",
+  "Edit planned run": "Redigera planerad löprunda",
+  "Every week, on these days. A GymTrackAI running plan uses them as your run days.": "Varje vecka, dessa dagar. En GymTrackAI-löpplan använder dem som dina löpdagar.",
+  "Kind": "Typ",
+  "No runs planned. Add the days you run, and Home shows them on those days until your watch brings the run in.": "Inga löprundor planerade. Lägg till dagarna du springer, så visar Hem dem de dagarna tills klockan för in rundan.",
+  "Plan a run": "Planera en löprunda",
+  "Planned run": "Planerad löprunda",
+  "Your run days this week": "Dina löpdagar den här veckan",
+  "e.g. Parkrun": "t.ex. Parkrun",
+  "{0}, optional": "{0}, valfritt",
 }

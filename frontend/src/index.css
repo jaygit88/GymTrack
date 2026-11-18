@@ -3391,3 +3391,4 @@ button.wl-summary{width:100%;padding:0 0 10px;text-align:start;border-radius:var
 .ai-chat-note { margin-top: 8px; }
 .food-label { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
 .food-label .btn { width: 100%; justify-content: center; }
+.run-day-chips { flex-wrap: wrap; margin: 4px 0 12px; }

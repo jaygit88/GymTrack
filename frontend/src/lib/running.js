@@ -261,27 +261,95 @@ export function planWeekIndex(plan, now = Date.now()) {
 }
 
 /**
- * This week's planned runs, each with the run that did it, if any. Days are a suggestion: a run
- * anywhere in the week ticks a planned run within 35 % of its distance, the closest pairs first.
+ * This week's planned runs, each with the run that did it, if any. The GymTrackAI plan's week
+ * when it has one for now; else your own run days (S.runWeek) for this week. Days are a
+ * suggestion: a run anywhere in the week ticks a planned run within 35 % of its distance, the
+ * closest pairs first; a planned run without a distance is ticked by any run on its day.
+ * `own` is set for your run days (no plan weeks to count).
  */
 export function planThisWeek(S, plan, now = Date.now()) {
   const i = planWeekIndex(plan, now)
-  if (i < 0) return null
-  const from = new Date(plan.startsOn + 'T00:00:00').getTime() + i * 7 * DAY
+  if (i >= 0) {
+    const from = new Date(plan.startsOn + 'T00:00:00').getTime() + i * 7 * DAY
+    return matchWeek(S, from, plan.weeks[i].runs.map((p, n) => ({ ...p, n, done: null })), { index: i, of: plan.weeks.length })
+  }
+  if (!hasRunWeek(S)) return null
+  const start = startOfWeek(isoOf(new Date(now)), weekStartOf(S))
+  start.setHours(0, 0, 0, 0)
+  const items = []
+  for (let k = 0; k < 7; k++) {
+    const wd = (start.getDay() + k) % 7
+    for (const p of runWeekOn(S, wd)) items.push({ day: WEEKDAY[wd], kind: p.kind, km: p.km, ...(p.notes ? { notes: p.notes } : {}), id: p.id, n: items.length, done: null })
+  }
+  return matchWeek(S, start.getTime(), items, { own: true })
+}
+
+function matchWeek(S, from, items, extra) {
   const runs = runsIn(S, from, from + 7 * DAY).filter(r => r.km > 0)
-  const items = plan.weeks[i].runs.map((p, n) => ({ ...p, n, done: null }))
   const used = new Set(), taken = new Set()
   const pairs = []
   for (const it of items) for (const r of runs) {
-    const off = Math.abs(r.km - (it.km || 0)) / Math.max(1, it.km || 1)
-    if (off <= 0.35) pairs.push({ it, r, off })
+    if (it.km > 0) {
+      const off = Math.abs(r.km - it.km) / Math.max(1, it.km)
+      if (off <= 0.35) pairs.push({ it, r, off })
+    } else if (WEEKDAY[new Date(r.start).getDay()] === it.day) pairs.push({ it, r, off: 1 })
   }
   pairs.sort((a, b) => a.off - b.off)
   for (const { it, r } of pairs) {
     if (used.has(r.id) || taken.has(it.n)) continue
     used.add(r.id); taken.add(it.n); it.done = r.id
   }
-  return { index: i, of: plan.weeks.length, from: isoOf(new Date(from + 12 * 3600e3)), items, extra: runs.filter(r => !used.has(r.id)).length }
+  return { ...extra, from: isoOf(new Date(from + 12 * 3600e3)), items, extra: runs.filter(r => !used.has(r.id)).length }
+}
+
+/* ---------- your own run days ---------- */
+
+// S.runWeek: { '0' (Sunday) .. '6': [{ id, kind, km, notes }] }: placeholders for runs on the
+// same weekdays every week, set in Plan. `km` may be null ("a run"). A GymTrackAI plan, while it
+// lasts, says what the runs are; it reads these as the days you like to run.
+
+/** Your planned runs on weekday `wd` (0 = Sunday). */
+export const runWeekOn = (S, wd) => (S?.runWeek?.[wd] || []).filter(p => p && RUN_KINDS.includes(p.kind))
+export const hasRunWeek = S => [0, 1, 2, 3, 4, 5, 6].some(wd => runWeekOn(S, wd).length)
+
+const cleanRunDay = (id, p) => {
+  const km = Number(p?.km)
+  return { id, kind: RUN_KINDS.includes(p?.kind) ? p.kind : 'easy', km: km > 0 && km <= 100 ? Math.round(km * 10) / 10 : null,
+    ...(p?.notes && String(p.notes).trim() ? { notes: String(p.notes).trim().slice(0, 80) } : {}) }
+}
+/** Adds a run on weekday `wd`, or replaces the one with this id (moving it if `wd` changed). Mutates S. */
+export function setRunDay(S, wd, id, p) {
+  if (!S.runWeek || typeof S.runWeek !== 'object') S.runWeek = {}
+  for (const k of Object.keys(S.runWeek)) {
+    S.runWeek[k] = (S.runWeek[k] || []).filter(x => x && x.id !== id)
+    if (!S.runWeek[k].length) delete S.runWeek[k]
+  }
+  S.runWeek[wd] = [...(S.runWeek[wd] || []), cleanRunDay(id, p)]
+}
+export function removeRunDay(S, id) {
+  if (!S.runWeek) return
+  for (const k of Object.keys(S.runWeek)) {
+    S.runWeek[k] = (S.runWeek[k] || []).filter(x => x && x.id !== id)
+    if (!S.runWeek[k].length) delete S.runWeek[k]
+  }
+}
+
+/** The runs planned for a date: the GymTrackAI plan's when it covers that week, else your run days. */
+export function runsPlannedOn(S, iso) {
+  const at = new Date(iso + 'T12:00:00')
+  if (planWeekIndex(S?.runPlan, at.getTime()) >= 0) return plannedRunsOn(S.runPlan, iso)
+  return runWeekOn(S, at.getDay()).map(p => ({ day: WEEKDAY[at.getDay()], kind: p.kind, km: p.km, ...(p.notes ? { notes: p.notes } : {}), own: true }))
+}
+
+/** Your run days for GymTrackAI: { Mon: ['easy 5 km'], ... }, or null. */
+export function runDaysForModel(S) {
+  if (!hasRunWeek(S)) return null
+  const out = {}
+  for (let wd = 0; wd < 7; wd++) {
+    const list = runWeekOn(S, wd)
+    if (list.length) out[WEEKDAY[wd]] = list.map(p => p.kind + (p.km ? ' ' + p.km + ' km' : ''))
+  }
+  return out
 }
 
 /* ---------- fitness readings ---------- */

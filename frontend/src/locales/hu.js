@@ -3856,4 +3856,13 @@ export default {
   "Photo of the nutrition label": "Fotó a tápértéktábláról",
   "Read another photo": "Másik fotó olvasása",
   "Reading a label needs Claude (Anthropic) as the AI Coach provider.": "A címke olvasásához az AI Coach szolgáltatója Claude (Anthropic) kell legyen.",
+  "Edit planned run": "Tervezett futás szerkesztése",
+  "Every week, on these days. A GymTrackAI running plan uses them as your run days.": "Minden héten ezeken a napokon. A GymTrackAI futóterve ezeket veszi a futónapjaidnak.",
+  "Kind": "Típus",
+  "No runs planned. Add the days you run, and Home shows them on those days until your watch brings the run in.": "Nincs tervezett futás. Add hozzá a futónapjaidat, és a Kezdőlap azokon a napokon mutatja őket, amíg az órád be nem hozza a futást.",
+  "Plan a run": "Futás tervezése",
+  "Planned run": "Tervezett futás",
+  "Your run days this week": "A futónapjaid ezen a héten",
+  "e.g. Parkrun": "pl. Parkrun",
+  "{0}, optional": "{0}, nem kötelező",
 }

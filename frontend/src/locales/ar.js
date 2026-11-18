@@ -3908,4 +3908,13 @@ export default {
   "Photo of the nutrition label": "صورة جدول القيم الغذائية",
   "Read another photo": "قراءة صورة أخرى",
   "Reading a label needs Claude (Anthropic) as the AI Coach provider.": "قراءة الملصق تتطلب Claude (Anthropic) مزوّدًا لمدرّب الذكاء الاصطناعي.",
+  "Edit planned run": "تعديل الجري المخطط",
+  "Every week, on these days. A GymTrackAI running plan uses them as your run days.": "كل أسبوع في هذه الأيام. خطة الجري من GymTrackAI تعتبرها أيام جريك.",
+  "Kind": "النوع",
+  "No runs planned. Add the days you run, and Home shows them on those days until your watch brings the run in.": "لا جري مخطط. أضف الأيام التي تجري فيها، وستعرضها الرئيسية في تلك الأيام حتى تجلب ساعتك الجري.",
+  "Plan a run": "خطط لجري",
+  "Planned run": "جري مخطط",
+  "Your run days this week": "أيام جريك هذا الأسبوع",
+  "e.g. Parkrun": "مثل: Parkrun",
+  "{0}, optional": "{0}، اختياري",
 }

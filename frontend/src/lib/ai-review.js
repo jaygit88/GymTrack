@@ -21,7 +21,7 @@ import { loadOfWorkouts } from './muscles.js'
 import { workoutCalories, burnedOn } from './calories.js'
 import { nutritionSummary } from './nutrition.js'
 import { quickContext, minutesFor } from './quick-workout.js'
-import { runGoalOf, goalProgress, fitnessTrend, weeklyKm, loadWarning, planThisWeek, fmtPace, fmtRaceTime, RUN_KINDS } from './running.js'
+import { runGoalOf, goalProgress, fitnessTrend, weeklyKm, loadWarning, planThisWeek, fmtPace, fmtRaceTime, RUN_KINDS, runDaysForModel } from './running.js'
 
 export const REVIEW_MODES = ['month', 'stall', 'runplan', 'quick']
 const LEG_MUSCLES = ['quadriceps', 'hamstring', 'gluteal', 'adductors', 'calves']
@@ -107,6 +107,7 @@ function runningContext(S, now, days) {
     if (LEG_MUSCLES.reduce((n, m) => n + (load[m] || 0), 0) >= 4) legDays[wd] = (legDays[wd] || 0) + 1
   }
   const week = S?.runPlan ? planThisWeek(S, S.runPlan, now) : null
+  const runDays = runDaysForModel(S)
   const recent = (S?.runs || []).filter(r => r && r.start > now - days * DAY).map(r => runLine(r, S))
   return {
     goal: goal ? {
@@ -126,6 +127,7 @@ function runningContext(S, now, days) {
       restingHr: trend.rhr, vo2max: trend.vo2,
     },
     liftingWeekdays: liftDays, legDayWeekdays: legDays,
+    ...(runDays ? { yourRunDays: runDays } : {}),
     ...(days > 30 ? { runs: recent } : {}),
     ...(week ? { planThisWeek: week.items.map(i => ({ day: i.day, kind: i.kind, km: i.km, done: !!i.done })) } : {}),
   }
@@ -151,6 +153,7 @@ const RULES = {
     'You write a running plan for one person who also lifts weights for muscle size. Their app shows it as a weekly checklist.',
     'Read "running" in the JSON payload: their goal (kind "fitness": cardio fitness at a weekly distance while gaining muscle; kind "race": a race distance, maybe a target time and date), recent runs with pace and heart rate, weekly distance, fitness trend, and the weekdays they lift and train legs.',
     'Plan the next four weeks. Start near their current weekly distance and add no more than about 10 % a week; make week 4 an easier week. Keep most running easy (conversational, low heart rate). For a fitness goal: two or three runs a week, at most one hard session, nothing that eats into leg recovery. For a race goal: build towards the distance with one long run and one quality session a week.',
+    'If "running.yourRunDays" is there, those are the days they set aside for runs in their plan: put the runs on those days, as many runs a week as they have days, and keep any kind or distance they chose unless the goal clearly needs otherwise.',
     'Put each run on a weekday ("Mon" to "Sun"). Keep hard runs (tempo, intervals) and long runs off leg days and off the day before them; easy runs may go on lifting days.',
     'Write "summary": two or three plain sentences on the idea of the plan and why it fits them. Write "weeks": four objects, each {"runs": [...]} with two to five runs; each run {"day", "kind" (one of easy, long, tempo, intervals, recovery), "km" (a number), "notes" (one short line: pace or heart-rate guidance, or the interval set)}.',
   ],

@@ -3873,4 +3873,13 @@ export default {
   "Photo of the nutrition label": "Foto der Nährwerttabelle",
   "Read another photo": "Anderes Foto lesen",
   "Reading a label needs Claude (Anthropic) as the AI Coach provider.": "Zum Lesen eines Etiketts braucht der AI Coach Claude (Anthropic) als Anbieter.",
+  "Edit planned run": "Geplanten Lauf bearbeiten",
+  "Every week, on these days. A GymTrackAI running plan uses them as your run days.": "Jede Woche an diesen Tagen. Ein GymTrackAI-Laufplan nimmt sie als deine Lauftage.",
+  "Kind": "Art",
+  "No runs planned. Add the days you run, and Home shows them on those days until your watch brings the run in.": "Keine Läufe geplant. Trag die Tage ein, an denen du läufst, dann zeigt Home sie an diesen Tagen, bis deine Uhr den Lauf liefert.",
+  "Plan a run": "Lauf planen",
+  "Planned run": "Geplanter Lauf",
+  "Your run days this week": "Deine Lauftage diese Woche",
+  "e.g. Parkrun": "z. B. Parkrun",
+  "{0}, optional": "{0}, optional",
 }

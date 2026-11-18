@@ -3850,4 +3850,13 @@ export default {
   "Photo of the nutrition label": "Фото таблиці поживної цінності",
   "Read another photo": "Прочитати інше фото",
   "Reading a label needs Claude (Anthropic) as the AI Coach provider.": "Для читання етикетки ШІ-тренеру потрібен провайдер Claude (Anthropic).",
+  "Edit planned run": "Редагувати заплановану пробіжку",
+  "Every week, on these days. A GymTrackAI running plan uses them as your run days.": "Щотижня в ці дні. План бігу GymTrackAI бере їх як твої дні для бігу.",
+  "Kind": "Тип",
+  "No runs planned. Add the days you run, and Home shows them on those days until your watch brings the run in.": "Пробіжок не заплановано. Додай дні, коли бігаєш, і Головна покаже їх у ці дні, доки годинник не принесе пробіжку.",
+  "Plan a run": "Запланувати пробіжку",
+  "Planned run": "Запланована пробіжка",
+  "Your run days this week": "Твої бігові дні цього тижня",
+  "e.g. Parkrun": "напр. Parkrun",
+  "{0}, optional": "{0}, необов’язково",
 }

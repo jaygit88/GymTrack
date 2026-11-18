@@ -3853,4 +3853,13 @@ export default {
   "Photo of the nutrition label": "Photo du tableau nutritionnel",
   "Read another photo": "Lire une autre photo",
   "Reading a label needs Claude (Anthropic) as the AI Coach provider.": "Lire une étiquette nécessite Claude (Anthropic) comme fournisseur du Coach IA.",
+  "Edit planned run": "Modifier la course prévue",
+  "Every week, on these days. A GymTrackAI running plan uses them as your run days.": "Chaque semaine, ces jours-là. Un plan de course GymTrackAI les prend comme tes jours de course.",
+  "Kind": "Type",
+  "No runs planned. Add the days you run, and Home shows them on those days until your watch brings the run in.": "Aucune course prévue. Ajoute les jours où tu cours, et l'accueil les affiche ces jours-là jusqu'à ce que ta montre apporte la course.",
+  "Plan a run": "Prévoir une course",
+  "Planned run": "Course prévue",
+  "Your run days this week": "Tes jours de course cette semaine",
+  "e.g. Parkrun": "ex. Parkrun",
+  "{0}, optional": "{0}, facultatif",
 }
