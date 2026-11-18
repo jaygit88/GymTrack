@@ -20,6 +20,18 @@ import org.junit.Test
 class CodecTest {
     private fun resource(name: String) = javaClass.classLoader!!.getResource(name)!!.readText()
 
+    @Test fun readsTheTilesDayAndKeepsIt() {
+        val snap = Snapshot.parse("""{"v":1,"tile":{"iso":"2026-11-18","run":"Easy · 5 km","kcal":"1,900","kcalLine":"kcal left","protein":"90 g protein to go","fresh":{"kcal":"2,900","kcalLine":"kcal left"}}}""")!!
+        val t = snap.tile!!
+        assertEquals("Easy · 5 km", t.run)
+        assertEquals("1,900", t.kcal)
+        assertEquals("2,900", t.fresh!!.kcal)
+        val s = SessionCore.applySnapshot(SessionState(), snap)
+        assertEquals("90 g protein to go", s.tile!!.protein)
+        // A snapshot without one clears it: nothing to show any more.
+        assertNull(SessionCore.applySnapshot(s, Snapshot.parse("""{"v":1}""")!!).tile)
+    }
+
     @Test fun readsThePhonesSnapshot() {
         val snap = Snapshot.parse(resource("snapshot.json"))
         assertNotNull(snap)

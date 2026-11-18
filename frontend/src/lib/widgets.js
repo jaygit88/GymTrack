@@ -33,13 +33,14 @@ import { todayISO, isoOf, fmtNum, weekStartOf, startOfWeek, weekKey, exerciseNam
 import { accentPair, accentValue } from './accent.js'
 import { speedUnitOf } from './speed.js'
 import { isOn } from './modules.js'
+import { dayBudget, dayTotals, targetsOf } from './nutrition.js'
 import { viewTarget, exUnitOf, shownWeight } from './ex-unit.js'
 
 export const WIDGET_SNAPSHOT_VERSION = 2
 // What the weight goal's little curve draws: the last weigh-ins.
 export const WIDGET_TREND_POINTS = 7
 // What a configurable widget can show, in the order its menu lists them.
-export const WIDGET_KINDS = ['streak', 'weight', 'week', 'next', 'records', 'volume', 'challenges']
+export const WIDGET_KINDS = ['streak', 'weight', 'week', 'next', 'records', 'volume', 'challenges', 'food']
 // Today and the week after it: enough for "next workout" to still be right a few days on.
 export const WIDGET_DAYS = 8
 // What the large widget lists of today's plan.
@@ -183,6 +184,28 @@ function volumeOf (S, today) {
   }
 }
 
+// GymTrack: today's calories and protein left against the day's budget (lib/nutrition.js, with
+// the share of exercise you eat back). `fresh` is what a new day starts from, for the widget to
+// show after midnight before the app has run. Null without a calorie target.
+function foodOfWidget (S, today) {
+  try {
+    const b = dayBudget(S, today)
+    if (!b) return null
+    const tg = targetsOf(S)
+    const tot = dayTotals(S, today)
+    const left = b.total - tot.kcal
+    const pLeft = tg.protein ? Math.round(tg.protein - tot.protein) : null
+    const kcalLine = n => (n >= 0 ? t('{0} kcal left', fmtNum(n)) : t('{0} kcal over', fmtNum(-n)))
+    const pLine = n => (n == null ? null : n > 0 ? t('{0} g protein to go', fmtNum(n)) : t('Protein done'))
+    return {
+      iso: today,
+      value: fmtNum(Math.abs(left)),
+      line: [kcalLine(left), pLine(pLeft)].filter(Boolean).join(' · '),
+      fresh: { value: fmtNum(tg.kcal), line: [kcalLine(tg.kcal), pLine(tg.protein || null)].filter(Boolean).join(' · ') },
+    }
+  } catch { return null }
+}
+
 // The month's challenges: how many are done, each with its words and how far, and the first one
 // still open as the line a small widget has room for.
 function challengesOfWidget (S, today) {
@@ -242,6 +265,7 @@ export function buildWidgetSnapshot (S, { today = todayISO() } = {}) {
     records: recordsOf(st, today),
     volume: volumeOf(st, today),
     challenges: challengesOfWidget(st, today),
+    food: foodOfWidget(st, today),
     // Points to the next level: not built yet. Stays null until it is; the widgets skip it then.
     level: null,
     labels: {
@@ -259,6 +283,7 @@ export function buildWidgetSnapshot (S, { today = todayISO() } = {}) {
       records: t('Records'),
       volume: t('Volume'),
       challenges: t('Challenges'),
+      food: t('Nutrition'),
       freezes: t('Streak freezes'),
       nothingPlanned: t('Nothing planned'),
       noWeighIn: t('No weigh-ins yet'),
@@ -266,7 +291,7 @@ export function buildWidgetSnapshot (S, { today = todayISO() } = {}) {
       // Android's "What to show" screen, in the app's language (OpenGymWidgetConfigure.java).
       whatToShow: t('What to show'),
       secondThing: t('And beside it'),
-      kinds: { streak: t('Week streak'), weight: t('Weight goal'), week: t('This week'), next: t('Next workout'), records: t('Records'), volume: t('Volume'), challenges: t('Challenges') },
+      kinds: { streak: t('Week streak'), weight: t('Weight goal'), week: t('This week'), next: t('Next workout'), records: t('Records'), volume: t('Volume'), challenges: t('Challenges'), food: t('Nutrition') },
     },
   }
 }

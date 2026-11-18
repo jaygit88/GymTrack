@@ -2,6 +2,7 @@
 //
 //   opengym://home          Home
 //   opengym://stats         Stats (the streak, the records, the volume)
+//   opengym://nutrition     Nutrition (GymTrack: calories and protein left today)
 //   opengym://weigh-in      Home with the weigh-in sheet open
 //   opengym://start?r=a,b   starts the next planned workout (those routines), or goes back to
 //                           the one already running
@@ -31,6 +32,7 @@ export function parseWidgetLink (url) {
   switch (what) {
     case 'home': return { to: '/' }
     case 'stats': return { to: '/stats' }
+    case 'nutrition': return { to: '/nutrition' }
     case 'weigh-in': {
       const w = parseSpokenWeight(q.get('w') || '')
       if (!w) return { action: 'weigh-in' }

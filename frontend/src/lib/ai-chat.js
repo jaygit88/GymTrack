@@ -19,7 +19,7 @@ import { goalKeys } from './measure-change.js'
 import { MEASUREMENT_FIELDS } from './measurements.js'
 import { runGoalOf } from './running.js'
 import { runDistance } from './runs.js'
-import { MEALS, dayEntries, dayTotals, mealTotals, averages, targetsOf, recipeNutrients, recentFoods, nutritionSummary } from './nutrition.js'
+import { MEALS, dayEntries, dayTotals, mealTotals, averages, targetsOf, recipeNutrients, recentFoods, nutritionSummary, dayBudget } from './nutrition.js'
 import { isoOf } from './format.js'
 
 export const CHAT_SCREENS = ['nutrition', 'exercise', 'general']
@@ -44,7 +44,7 @@ function you(S) {
 }
 
 function nutritionContext(S, iso) {
-  const tot = dayTotals(S, iso), tg = targetsOf(S)
+  const tot = dayTotals(S, iso), tg = targetsOf(S), budget = dayBudget(S, iso)
   const meals = {}
   for (const m of MEALS) {
     const list = dayEntries(S, iso).filter(e => e.meal === m)
@@ -57,8 +57,9 @@ function nutritionContext(S, iso) {
     date: iso,
     eaten: { kcal: tot.kcal, proteinG: tot.protein, carbsG: tot.carbs, fatG: tot.fat },
     meals,
-    ...(tg ? { targets: { kcal: tg.kcal, ...(tg.protein ? { proteinG: tg.protein } : {}) },
-      left: { kcal: tg.kcal - tot.kcal, ...(tg.protein ? { proteinG: Math.round(tg.protein - tot.protein) } : {}) } } : {}),
+    ...(tg ? { targets: { kcal: tg.kcal, ...(tg.protein ? { proteinG: tg.protein } : {}),
+        ...(budget.earned ? { addedForExerciseKcal: budget.earned, note: `${Math.round(tg.earnBack * 100)}% of what exercise burned goes back on the target` } : {}) },
+      left: { kcal: budget.total - tot.kcal, ...(tg.protein ? { proteinG: Math.round(tg.protein - tot.protein) } : {}) } } : {}),
     burnedInExerciseKcal: burnedDay(S, iso),
     trainedToday: [...workoutsToday, ...runsToday, ...extraOn(S, iso).map(x => `${x.name} (${x.kcal} kcal, added by hand)`)],
     recipes: (S?.recipes || []).slice(0, 15).map(r => { const n = recipeNutrients(r).perServing; return `${r.name} (${n.kcal} kcal, ${n.protein} g protein a serving)` }),

@@ -45,6 +45,8 @@ data class SessionState(
     val skipped: List<String> = emptyList(),
     /** The week streak and whether anything at all came from the phone yet. */
     val streak: Streak? = null,
+    /** GymTrack: today's runs and calories left, for the Tile. */
+    val tile: TileInfo? = null,
     val synced: Boolean = false,
 )
 
@@ -75,6 +77,8 @@ object SessionCore {
         snap.restSec?.let { if (it > 0) s = s.copy(restSec = it) }
         snap.settings?.let { s = s.copy(settings = it) }
         snap.streak?.let { s = s.copy(streak = it) }
+        // Each snapshot says it afresh: none means nothing to show (no target, no runs planned).
+        s = s.copy(tile = snap.tile)
 
         val wid = s.workout?.id
         val droppedThere = wid != null && snap.discarded?.contains(wid) == true

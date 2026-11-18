@@ -31,11 +31,27 @@ data class Snapshot(
     val discarded: List<String>? = null,
     /** The week streak (lib/streak.js), for the Tile and the complication. Wear OS only so far. */
     val streak: Streak? = null,
+    /** GymTrack: today's runs and calories left, for the Tile (lib/watch-sync.js tileFor). */
+    val tile: TileInfo? = null,
 ) {
     companion object {
         fun parse(json: String): Snapshot? = try { WireJson.decodeFromString(serializer(), json) } catch (_: Exception) { null }
     }
 }
+
+/** Words the phone wrote in the app's language; `fresh` is a new day's start, for after midnight. */
+@Serializable
+data class TileInfo(
+    val iso: String? = null,
+    val run: String? = null,
+    val kcal: String? = null,
+    val kcalLine: String? = null,
+    val protein: String? = null,
+    val fresh: TileFresh? = null,
+)
+
+@Serializable
+data class TileFresh(val kcal: String? = null, val kcalLine: String? = null, val protein: String? = null)
 
 @Serializable
 data class Streak(val weeks: Int = 0, val thisWeekDone: Boolean = false)

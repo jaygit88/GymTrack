@@ -2524,6 +2524,13 @@ export const PT_BR_OVERRIDES = {
   "Plan a run": "Planejar uma corrida",
   "Planned run": "Corrida planejada",
   "Your run days this week": "Seus dias de corrida nesta semana",
+  "Only on days you log food, and only when you are 15 g or more short.": "Só nos dias em que você registra comida, e só quando faltam 15 g ou mais.",
+  "Open Nutrition to see what is left today.": "Abra a Nutrição para ver o que falta hoje.",
+  "{0} of 7 days logged": "{0} de 7 dias registrados",
+  "{0} of {1} planned runs": "{0} de {1} corridas planejadas",
+  "{0} on the week before": "{0} em relação à semana anterior",
+  "{0} would help. Open Nutrition to log it.": "{0} ajudaria. Abra a Nutrição para registrar.",
+  "kcal left": "kcal restantes",
 }
 
 export default { ...pt, ...PT_BR_OVERRIDES }

@@ -146,6 +146,7 @@ public class OpenGymWidgetProvider extends AppWidgetProvider {
             case TROPHY: return R.drawable.ic_widget_trophy;
             case CHART: return R.drawable.ic_widget_chart;
             case MEDAL: return R.drawable.ic_widget_medal;
+            case FOOD: return R.drawable.ic_widget_food;
             default: return R.drawable.ic_widget_flame;
         }
     }

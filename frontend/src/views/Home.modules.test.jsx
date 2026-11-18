@@ -34,11 +34,11 @@ const mountWith = (modules, extra = {}) => {
 const heads = () => [...host.querySelectorAll('.card-head-title')].map(el => el.textContent)
 
 describe('Home follows the modules', () => {
-  it('Everything: the streak with the last seven days, and the body change map', () => {
+  it('Everything: the streak with the five days around today, and the body change map', () => {
     mountWith(undefined)
     expect(heads().some(h => /week streak/.test(h))).toBe(true)
     expect(heads()).toContain('Body measurements')
-    expect(host.querySelectorAll('.recent-days .recent-day').length).toBeGreaterThanOrEqual(7)
+    expect(host.querySelectorAll('.recent-days .recent-day').length).toBeGreaterThanOrEqual(5)
     // GymTrack: no planned week, no check-in and no body weight card on Home
     expect(host.querySelector('.week')).toBeNull()
     expect(heads()).not.toContain('Check in')
@@ -63,13 +63,13 @@ describe('Home follows the modules', () => {
   it("today's workout is on today's row, and a day without one is a rest day", () => {
     mountWith(undefined)
     const rows = [...host.querySelectorAll('.recent-day')]
-    // three days back, today, three ahead, in date order
+    // two days back, today, two ahead, in date order
     const today = rows.findIndex(r => r.getAttribute('data-tour') === 'today')
-    expect(today).toBe(3)
+    expect(today).toBe(2)
     expect(rows[today].classList.contains('rest')).toBe(false)
     expect(rows[today - 1].classList.contains('rest')).toBe(true)
     expect(rows.slice(today + 1).every(r => r.classList.contains('upcoming'))).toBe(true)
-    expect(rows).toHaveLength(7)
+    expect(rows).toHaveLength(5)
   })
 })
 

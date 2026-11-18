@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Icon from './Icon.jsx'
-import { Button, Section, Row, NumberField, SearchField, TextField, Segmented } from './ui.jsx'
+import { Button, Section, Row, NumberField, SearchField, TextField, Segmented, Switch } from './ui.jsx'
 import { useUI } from '../store/useUI.js'
 import { useStore } from '../store/useStore.js'
 import { MOBILE } from '../lib/mobile.js'
@@ -8,7 +8,7 @@ import { uid, fmtNum } from '../lib/format.js'
 import { t } from '../lib/i18n.js'
 import {
   MEALS, NUTRIENTS, nutrientsFor, makeEntry, addEntry, removeEntry, updateAmount, recipeNutrients,
-  cleanRecipe, recentFoods, suggestTargets, targetsOf, pickNutrients,
+  cleanRecipe, recentFoods, suggestTargets, targetsOf, pickNutrients, earnBackOf, EARN_BACK, isFav, toggleFav, proteinNudgeOf,
 } from '../lib/nutrition.js'
 import { loadCofid, searchFoods, searchProducts, lookupBarcode } from '../lib/food-sources.js'
 import { addExtra } from '../lib/calories.js'
@@ -55,6 +55,11 @@ function Amount({ close, food, recipe, meal, iso, entry, onPick }) {
       return Object.fromEntries(NUTRIENTS.map(k => [k, (per[k] || 0) * (Number(amount) || 0)])) })()
     : nutrientsFor(per100, amount)
   const name = entry?.name || recipe?.name || food?.name
+  // What a star is for: the food or recipe itself (an entry carries its ref), never quick calories.
+  const favItem = entry ? (entry.src === 'quick' ? null : { src: entry.src, ref: entry.ref, name: entry.name, per100: entry.per100, kind: entry.src === 'recipe' ? 'recipe' : undefined })
+    : recipe ? { ...recipe, kind: 'recipe' } : food
+  const S = useStore(st => st.S)
+  const starred = favItem ? isFav(S, favItem) : false
   const save = () => {
     if (!(Number(amount) > 0)) return
     if (onPick) { onPick({ food, grams: Number(amount) }); close(); return }
@@ -71,7 +76,11 @@ function Amount({ close, food, recipe, meal, iso, entry, onPick }) {
     close()
   }
   return <>
-    <h3>{name}</h3>
+    <div className="row between food-amt-h">
+      <h3>{name}</h3>
+      {favItem && <button className="iconbtn" aria-pressed={starred} aria-label={starred ? t('Remove from favourites') : t('Add to favourites')}
+        onClick={() => update(st => toggleFav(st, favItem))}><Icon name={starred ? 'starFill' : 'star'} style={starred ? { color: 'var(--yellow)' } : undefined} /></button>}
+    </div>
     {!onPick && <Segmented value={m} onChange={setMeal} options={MEALS.map(x => ({ value: x, label: t(MEAL_LABEL[x]) }))} />}
     <Section>
       <Row title={isRecipe ? t('Servings') : t('Amount')} subtitle={isRecipe ? null : 'g'}>
@@ -232,7 +241,11 @@ function FindFood({ close, meal, iso, pick }) {
       else newFoodSheet({ barcode: code.value, onMade: f => amountSheet({ food: f, meal, iso, onPick: pick }) })
     } catch (e) { ui().toast(e?.message === 'unsupported' ? t('This phone cannot scan barcodes.') : t('Could not scan. Try again, or search by name.')) }
   }
-  const recent = q.trim() ? [] : recentFoods(S, 20)
+  // Your starred foods and recipes first, then what you logged lately (without the starred ones).
+  const favs = q.trim() ? [] : (S.foodFavs || []).map(f => (f.kind === 'recipe'
+    ? ((S.recipes || []).find(r => r.id === f.id) && { ...(S.recipes || []).find(r => r.id === f.id), kind: 'recipe' })
+    : { id: f.id, src: f.src, name: f.name, per100: f.per100, serving: f.serving })).filter(x => x && (!pick || x.kind !== 'recipe'))
+  const recent = q.trim() ? [] : recentFoods(S, 20).filter(e => !isFav(S, e))
   const row = (item, key, sub) => <div key={key} className="item" {...{ role: 'button', tabIndex: 0, onClick: () => chosen(item) }}>
     <span className="lrow-i" style={{ width: 32, height: 32 }}><Icon name={item.kind === 'recipe' ? 'list' : item.src === 'off' ? 'barcode' : 'food'} /></span>
     <div className="grow"><div className="tt">{item.name}</div><div className="ss">{sub}</div></div>
@@ -247,6 +260,8 @@ function FindFood({ close, meal, iso, pick }) {
       <Button size="sm" variant="ghost" icon="plus" onClick={() => { close(); newFoodSheet({ name: q, onMade: f => amountSheet({ food: f, meal, iso, onPick: pick }) }) }}>{t('New food')}</Button>
     </div>
     <div className="list food-list">
+      {favs.length > 0 && <div className="lbl2 food-h">{t('Favourites')}</div>}
+      {favs.map(f => row(f, 'f' + f.id, f.kind === 'recipe' ? t('Recipe, {0} kcal a serving', recipeNutrients(f).perServing.kcal) : sub100(f)))}
       {recent.length > 0 && <div className="lbl2 food-h">{t('Recent')}</div>}
       {recent.map(e => {
         const item = e.src === 'recipe' ? (S.recipes || []).find(r => r.id === e.ref) && { ...(S.recipes || []).find(r => r.id === e.ref), kind: 'recipe' }
@@ -309,6 +324,8 @@ function Targets({ close }) {
   const cur = targetsOf(S) || {}
   const sug = suggestTargets(S)
   const [v, setV] = useState({ kcal: cur.kcal || null, protein: cur.protein || null, carbs: cur.carbs || null, fat: cur.fat || null })
+  const [earn, setEarn] = useState(earnBackOf(S))
+  const [nudge, setNudge] = useState(proteinNudgeOf(S))
   return <>
     <h3>{t('Daily targets')}</h3>
     {sug && <div className="small muted" style={{ marginBottom: 8 }}>{t('For gaining muscle at your weight: about {0} kcal and {1} g protein a day. Adjust by what the scale does over a few weeks.', sug.kcal, sug.protein)}</div>}
@@ -317,8 +334,20 @@ function Targets({ close }) {
         <NumberField value={v[key]} nullable onChange={x => setV(o => ({ ...o, [key]: x }))} className="food-amt" decimal={false} />
       </Row>)}
     </Section>
+    <div className="lbl2">{t('Eat back exercise calories')}</div>
+    <Segmented value={earn} onChange={setEarn} options={EARN_BACK.map(x => ({ value: x, label: x === 0 ? t('None') : Math.round(x * 100) + '%' }))} />
+    <div className="small muted" style={{ margin: '4px 0 12px' }}>{t('Watches tend to overestimate calories burned, so half is a safe start.')}</div>
+    {MOBILE && <Section footer={t('Only on days you log food, and only when you are 15 g or more short.')}>
+      <Row title={t('Evening protein reminder')}><Switch aria-label={t('Evening protein reminder')} checked={nudge.on} onChange={on => setNudge(n => ({ ...n, on }))} /></Row>
+      {nudge.on && <Row title={t('Time')}><input type="time" className="food-time" value={nudge.time} onChange={e => setNudge(n => ({ ...n, time: e.target.value || '19:00' }))} /></Row>}
+    </Section>}
     {sug && <><Button variant="tinted" onClick={() => setV(o => ({ ...o, kcal: sug.kcal, protein: sug.protein }))}>{t('Use the suggestion')}</Button><div style={{ height: 8 }} /></>}
-    <Button variant="primary" onClick={() => { update(s => { s.nutritionTargets = v.kcal > 0 ? v : null }); close() }}>{t('Save')}</Button>
+    <Button variant="primary" onClick={() => {
+      update(s => { s.nutritionTargets = v.kcal > 0 ? { ...v, earnBack: earn } : null; s.proteinNudge = nudge })
+      // Turning the reminder on asks for notifications now, while the tap is fresh.
+      if (nudge.on && MOBILE) import('../lib/mobile.js').then(m => m.syncReminder(useStore.getState().S, true)).catch(() => {})
+      close()
+    }}>{t('Save')}</Button>
   </>
 }
 export const targetsSheet = () => ui().openSheet(close => <Targets close={close} />)

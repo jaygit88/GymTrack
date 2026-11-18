@@ -13,6 +13,8 @@
 // A recipe: { id, name, servings, items: [{ name, src, ref, grams, per100 }] }, eaten by servings.
 // Nutrients: { kcal, protein, carbs, fat, sugars, fibre, satfat, salt } in kcal and grams.
 
+import { burnedOn } from './calories.js'
+
 export const MEALS = ['breakfast', 'lunch', 'dinner', 'snacks']
 export const NUTRIENTS = ['kcal', 'protein', 'carbs', 'fat', 'sugars', 'fibre', 'satfat', 'salt']
 const LB_PER_KG = 2.2046226218
@@ -167,7 +169,25 @@ export function suggestTargets(S) {
 export function targetsOf(S) {
   const t = S?.nutritionTargets
   if (!t || !(t.kcal > 0)) return null
-  return { kcal: Math.round(t.kcal), protein: t.protein > 0 ? Math.round(t.protein) : null, carbs: t.carbs > 0 ? Math.round(t.carbs) : null, fat: t.fat > 0 ? Math.round(t.fat) : null }
+  return { kcal: Math.round(t.kcal), protein: t.protein > 0 ? Math.round(t.protein) : null, carbs: t.carbs > 0 ? Math.round(t.carbs) : null, fat: t.fat > 0 ? Math.round(t.fat) : null,
+    earnBack: earnBackOf(S) }
+}
+
+// How much of the day's exercise goes back on the calorie target. Half by default: a watch's
+// calories run high, and the target already counts an active person's day.
+export const EARN_BACK = [0, 0.25, 0.5, 0.75, 1]
+export const earnBackOf = S => (EARN_BACK.includes(S?.nutritionTargets?.earnBack) ? S.nutritionTargets.earnBack : 0.5)
+
+/**
+ * A day's calorie budget: the target, plus the share of that day's exercise you eat back
+ * ({ base, burned, earned, total }), rounded to 10. Null without a calorie target.
+ */
+export function dayBudget(S, iso) {
+  const tg = targetsOf(S)
+  if (!tg) return null
+  const burned = burnedOn(S, iso).total
+  const earned = Math.round(burned * tg.earnBack / 10) * 10
+  return { base: tg.kcal, burned, earned, total: tg.kcal + earned }
 }
 
 /**
@@ -192,4 +212,58 @@ export function nutritionSummary(S, { days = 30, now = Date.now(), burnedOn = ()
     ...(tg ? { targets: { kcal: tg.kcal, ...(tg.protein ? { proteinG: tg.protein } : {}) } } : {}),
     ...(burned > 0 ? { averageBurnedInWorkoutsKcal: Math.round(burned / logged) } : {}),
   }
+}
+
+/* ---------- faster logging ---------- */
+
+/** The meal `meal` of `fromIso` copied onto `toIso` (mutates S): new ids, fresh times. Returns how many. */
+export function copyMeal(S, fromIso, toIso, meal, newId, at = Date.now()) {
+  const list = dayEntries(S, fromIso).filter(e => e.meal === meal)
+  for (const [i, e] of list.entries()) addEntry(S, toIso, { ...e, id: newId(), n: { ...e.n }, at: at + i })
+  return list.length
+}
+
+// Favourites (S.foodFavs): foods and recipes starred to sit at the top of the food search. Each
+// keeps a copy of what search needs, so a starred product from Open Food Facts works offline.
+export const favKey = item => (item?.kind === 'recipe' || item?.src === 'recipe' ? 'recipe:' + (item.ref || item.id) : (item?.src || 'custom') + ':' + (item?.ref || item?.id))
+export const isFav = (S, item) => (S?.foodFavs || []).some(f => f && f.key === favKey(item))
+/** Stars or unstars a food or recipe (mutates S). */
+export function toggleFav(S, item) {
+  const key = favKey(item)
+  const list = Array.isArray(S.foodFavs) ? S.foodFavs.filter(f => f && f.key) : []
+  if (list.some(f => f.key === key)) { S.foodFavs = list.filter(f => f.key !== key); return false }
+  const recipe = item.kind === 'recipe' || item.src === 'recipe'
+  S.foodFavs = [...list, recipe
+    ? { key, kind: 'recipe', id: item.ref || item.id, name: item.name }
+    : { key, id: item.ref || item.id, src: item.src || 'custom', name: item.name, per100: pickNutrients(item.per100), ...(item.serving ? { serving: item.serving } : {}) }]
+  return true
+}
+
+/* ---------- the evening protein reminder ---------- */
+
+/** The reminder's setting (S.proteinNudge): { on, time } with a sensible default time. */
+export const proteinNudgeOf = S => ({ on: S?.proteinNudge?.on === true, time: /^\d{2}:\d{2}$/.test(S?.proteinNudge?.time || '') ? S.proteinNudge.time : '19:00' })
+
+/**
+ * What the evening reminder says for `iso`, or null when there is nothing to say: no protein
+ * target, nothing logged that day yet (the diary is not in use that day), or less than 15 g to go.
+ * It names up to two things you eat that would cover a good part of it: your recipes by the
+ * serving, then favourites and recent foods by their usual amount.
+ */
+export function proteinNudge(S, iso) {
+  const tg = targetsOf(S)
+  if (!tg?.protein || !dayEntries(S, iso).length) return null
+  const need = Math.round(tg.protein - dayTotals(S, iso).protein)
+  if (need < 15) return null
+  const options = []
+  for (const r of S?.recipes || []) { const p = recipeNutrients(r).perServing.protein; if (p >= 10) options.push({ name: r.name, p }) }
+  const seen = new Set(options.map(o => o.name))
+  for (const f of [...(S?.foodFavs || []), ...recentFoods(S, 30)]) {
+    if (!f || f.kind === 'recipe' || f.src === 'recipe' || seen.has(f.name)) continue
+    const g = f.grams || f.serving?.g || 100
+    const p = (Number(f.per100?.protein) || 0) * g / 100
+    if (p >= 10) { options.push({ name: f.name, p }); seen.add(f.name) }
+  }
+  options.sort((a, b) => Math.abs(a.p - need) - Math.abs(b.p - need))
+  return { need, ideas: options.slice(0, 2).map(o => o.name.split(',')[0]) }
 }

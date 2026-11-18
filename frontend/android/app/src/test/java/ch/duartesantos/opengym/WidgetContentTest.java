@@ -20,6 +20,7 @@ public class WidgetContentTest {
                 + "\"records\":{\"month\":3,\"monthLine\":\"3 PRs this month\",\"last\":{\"name\":\"Squat\",\"value\":\"120 kg\"}},"
                 + "\"volume\":{\"nowText\":\"12.4k kg\",\"line\":\"+20% vs last week\"},\"level\":null,"
                 + "\"challenges\":{\"month\":\"2026-10\",\"done\":1,\"total\":3,\"line\":\"1 of 3 done\",\"next\":\"14 workouts this month · 7 / 14\"},"
+                + "\"food\":{\"iso\":\"2026-10-14\",\"value\":\"1,240\",\"line\":\"1,240 kcal left · 62 g protein to go\",\"fresh\":{\"value\":\"2,900\",\"line\":\"2,900 kcal left · 150 g protein to go\"}},"
                 + "\"labels\":{\"weekStreak\":\"Wochen-Serie\",\"nextWorkout\":\"Nächstes Training\",\"today\":\"Heute\"}}");
     }
 
@@ -82,5 +83,14 @@ public class WidgetContentTest {
         assertEquals("streak", WidgetContent.of("nonsense", snap(), TODAY, "").kind);
         assertEquals("week", WidgetContent.defaultSecond("streak"));
         assertEquals("streak", WidgetContent.defaultSecond("week"));
+    }
+
+    @Test
+    public void foodShowsTodayAndStartsANewDayFromTheTarget() throws Exception {
+        WidgetContent c = WidgetContent.of("food", snap(), TODAY, "empty");
+        assertEquals("1,240", c.value);
+        assertEquals("1,240 kcal left · 62 g protein to go", c.caption);
+        assertEquals("opengym://nutrition", c.link);
+        assertEquals("2,900", WidgetContent.of("food", snap(), "2026-10-15", "").value);
     }
 }

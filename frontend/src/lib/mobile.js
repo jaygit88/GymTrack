@@ -15,6 +15,7 @@ import { effectiveRoutineIds } from './history.js'
 import { NUDGE_COPY, lineIndex, nudgeFor, nudgeMinute, toneOf } from './nudge.js'
 import { excusedOn } from './day-notes.js'
 import { stateJson } from './state-json.js'
+import { proteinNudge, proteinNudgeOf } from './nutrition.js'
 
 export const MOBILE = import.meta.env.VITE_MOBILE === '1'
 
@@ -229,6 +230,40 @@ export function buildNudgeNotifications(S, now = new Date()) {
   return notifications
 }
 
+// GymTrack: the evening protein reminder (lib/nutrition.js proteinNudge), today only. Every save
+// resyncs, so it always says what is left right now, and logging enough drops it.
+const PROTEIN_ID = 3000
+export function buildProteinNotification(S, now = new Date()) {
+  const p = proteinNudgeOf(S)
+  if (!p.on) return []
+  const iso = isoOf(now)
+  const n = proteinNudge(S, iso)
+  if (!n) return []
+  const [h, m] = p.time.split(':').map(Number)
+  const at = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0, 0)
+  if (at <= now) return []
+  return [{
+    id: PROTEIN_ID,
+    title: t('{0} g protein to go', n.need),
+    body: n.ideas.length ? t('{0} would help. Open Nutrition to log it.', n.ideas.length > 1 ? t('{0} or {1}', n.ideas[0], n.ideas[1]) : n.ideas[0]) : t('Open Nutrition to see what is left today.'),
+    schedule: { at, allowWhileIdle: true },
+    extra: { link: 'opengym://nutrition' },
+  }]
+}
+
+/** Calls cb() when the protein reminder is tapped. Returns a function that stops listening. */
+export function onProteinNotificationOpen(cb) {
+  if (!MOBILE) return () => {}
+  let handle = null, gone = false
+  import('@capacitor/local-notifications').then(({ LocalNotifications }) =>
+    Promise.resolve(LocalNotifications.addListener('localNotificationActionPerformed', e => {
+      if (e?.actionId === 'dismiss' || e?.notification?.id !== PROTEIN_ID) return
+      cb()
+    })).then(h => { if (gone) h?.remove?.(); else handle = h })
+  ).catch(() => {})
+  return () => { gone = true; try { handle?.remove?.() } catch (e) { /* gone already */ } }
+}
+
 // (Re)schedule the workout-day reminder: one one-off notification per future calendar date in
 // the bounded window. Cheap enough to run after any state change — the plan or the reminder time
 // may just have been edited. `interactive` gates the OS permission prompt to the Settings toggle;
@@ -243,7 +278,15 @@ export async function syncReminder(S, interactive = false) {
       ...LEGACY_REMINDER_IDS,
       ...Array.from({ length: REMINDER_WINDOW_DAYS }, (_, d) => ({ id: REMINDER_ID_BASE + d })),
       ...Array.from({ length: NUDGE_WINDOW_DAYS }, (_, d) => ({ id: NUDGE_ID_BASE + d })),
+      { id: PROTEIN_ID },
     ] }).catch(() => {})
+    // The protein reminder has its own switch, apart from the workout reminder.
+    const protein = buildProteinNotification(S)
+    if (protein.length) {
+      let pp = await LocalNotifications.checkPermissions()
+      if (pp.display !== 'granted' && interactive) pp = await LocalNotifications.requestPermissions()
+      if (pp.display === 'granted') await LocalNotifications.schedule({ notifications: protein }).catch(() => {})
+    }
     const r = S.reminder
     // The background check (lib/nudge-check.js) follows what is scheduled: nothing, nothing to check.
     const check = notifications => import('./nudge-check.js').then(m => m.armNudgeCheck(S, notifications)).catch(() => {})

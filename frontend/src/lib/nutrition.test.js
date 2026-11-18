@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   nutrientsFor, sum, recipeNutrients, cleanRecipe, makeEntry, addEntry, removeEntry, updateAmount,
-  dayTotals, mealTotals, averages, recentFoods, suggestTargets, targetsOf, nutritionSummary,
+  dayTotals, mealTotals, averages, recentFoods, suggestTargets, targetsOf, nutritionSummary, dayBudget, copyMeal, toggleFav, isFav, proteinNudge, proteinNudgeOf,
 } from './nutrition.js'
 
 const oats = { id: 'cofid:oats', src: 'cofid', name: 'Oats', per100: { kcal: 375, protein: 11, carbs: 66, fat: 8, sugars: 1, fibre: 9, satfat: 1.5, salt: 0 } }
@@ -86,7 +86,7 @@ describe('targets', () => {
     expect(suggestTargets({})).toBeNull()
   })
   it('reads the saved targets', () => {
-    expect(targetsOf({ nutritionTargets: { kcal: 2900, protein: 160 } })).toEqual({ kcal: 2900, protein: 160, carbs: null, fat: null })
+    expect(targetsOf({ nutritionTargets: { kcal: 2900, protein: 160 } })).toEqual({ kcal: 2900, protein: 160, carbs: null, fat: null, earnBack: 0.5 })
     expect(targetsOf({})).toBeNull()
   })
 })
@@ -108,5 +108,62 @@ describe('nutritionSummary', () => {
       targets: { kcal: 2900, proteinG: 160 },
       averageBurnedInWorkoutsKcal: 200,
     })
+  })
+})
+
+describe('dayBudget', () => {
+  const S = over => ({ nutritionTargets: { kcal: 2900, protein: 150 }, exerciseLog: { '2026-11-18': [{ id: 'a', name: 'Padel', kcal: 437 }] }, ...over })
+  it('adds back half of the day\'s exercise by default, rounded to 10', () => {
+    expect(dayBudget(S(), '2026-11-18')).toEqual({ base: 2900, burned: 437, earned: 220, total: 3120 })
+    expect(dayBudget(S(), '2026-11-17')).toEqual({ base: 2900, burned: 0, earned: 0, total: 2900 })
+  })
+  it('follows the share you chose, and needs a calorie target', () => {
+    expect(dayBudget(S({ nutritionTargets: { kcal: 2900, earnBack: 0 } }), '2026-11-18').total).toBe(2900)
+    expect(dayBudget(S({ nutritionTargets: { kcal: 2900, earnBack: 1 } }), '2026-11-18').earned).toBe(440)
+    expect(dayBudget(S({ nutritionTargets: { kcal: 2900, earnBack: 0.4 } }), '2026-11-18').earned).toBe(220)
+    expect(dayBudget({}, '2026-11-18')).toBeNull()
+  })
+})
+
+describe('faster logging', () => {
+  it('copies a meal onto another day with new ids', () => {
+    const S = { foodLog: { '2026-11-17': [{ id: 'a', meal: 'breakfast', name: 'Porridge', n: { kcal: 400, protein: 15 } }, { id: 'b', meal: 'lunch', name: 'Wrap', n: { kcal: 600 } }] } }
+    let n = 0
+    expect(copyMeal(S, '2026-11-17', '2026-11-18', 'breakfast', () => 'x' + (++n), 1000)).toBe(1)
+    expect(S.foodLog['2026-11-18']).toEqual([{ id: 'x1', meal: 'breakfast', name: 'Porridge', n: { kcal: 400, protein: 15 }, at: 1000 }])
+    S.foodLog['2026-11-18'][0].n.kcal = 1
+    expect(S.foodLog['2026-11-17'][0].n.kcal).toBe(400)                // a copy, not the same object
+    expect(copyMeal(S, '2026-11-17', '2026-11-18', 'dinner', () => 'y')).toBe(0)
+  })
+  it('stars and unstars foods and recipes, a logged entry finding the same star', () => {
+    const S = {}
+    const food = { id: 'off:123', src: 'off', name: 'Skyr, Arla', per100: { kcal: 63, protein: 11 } }
+    expect(toggleFav(S, food)).toBe(true)
+    expect(isFav(S, { src: 'off', ref: 'off:123', name: 'Skyr, Arla' })).toBe(true)
+    expect(S.foodFavs[0]).toMatchObject({ key: 'off:off:123', src: 'off', name: 'Skyr, Arla' })
+    toggleFav(S, { kind: 'recipe', id: 'r1', name: 'Smoothie' })
+    expect(isFav(S, { src: 'recipe', ref: 'r1' })).toBe(true)
+    expect(toggleFav(S, food)).toBe(false)
+    expect(S.foodFavs.map(f => f.key)).toEqual(['recipe:r1'])
+  })
+})
+
+describe('proteinNudge', () => {
+  const base = {
+    nutritionTargets: { kcal: 2900, protein: 150 },
+    recipes: [{ id: 'r1', name: 'Recovery smoothie', servings: 1, items: [{ name: 'Whey', grams: 30, per100: { kcal: 400, protein: 80 } }] }],
+    foodLog: { '2026-11-18': [{ id: 'a', meal: 'lunch', name: 'Skyr, Arla', src: 'off', ref: 'off:1', grams: 150, per100: { kcal: 63, protein: 11 }, n: { kcal: 95, protein: 16.5 }, at: 1 }] },
+  }
+  it('says how much is left and names things you eat that cover it', () => {
+    expect(proteinNudge(base, '2026-11-18')).toEqual({ need: 134, ideas: ['Recovery smoothie', 'Skyr'] })
+  })
+  it('stays quiet with nothing logged, no target, or nearly there', () => {
+    expect(proteinNudge(base, '2026-11-19')).toBeNull()
+    expect(proteinNudge({ ...base, nutritionTargets: { kcal: 2900 } }, '2026-11-18')).toBeNull()
+    expect(proteinNudge({ ...base, nutritionTargets: { kcal: 2900, protein: 30 } }, '2026-11-18')).toBeNull()
+  })
+  it('defaults to off at 7 pm', () => {
+    expect(proteinNudgeOf({})).toEqual({ on: false, time: '19:00' })
+    expect(proteinNudgeOf({ proteinNudge: { on: true, time: '20:30' } })).toEqual({ on: true, time: '20:30' })
   })
 })

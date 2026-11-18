@@ -285,3 +285,18 @@ describe('patching a saved workout', () => {
     expect(s.workouts[0].vol).toBe(1)
   })
 })
+
+describe('tileFor (GymTrack: the Wear OS Tile)', () => {
+  it('today’s open runs and what is left to eat, with a fresh day to fall back on', async () => {
+    const { tileFor } = await import('./watch-sync.js')
+    const S = { unit: 'kg', nutritionTargets: { kcal: 2900, protein: 150 }, runWeek: { 3: [{ id: 'a', kind: 'easy', km: 5 }] },
+      foodLog: { '2026-11-18': [{ id: 'x', meal: 'lunch', n: { kcal: 1000, protein: 60 } }] }, runs: [], workouts: [] }
+    expect(tileFor(S, '2026-11-18')).toEqual({
+      iso: '2026-11-18', run: 'Easy · 5 km', kcal: '1,900', kcalLine: 'kcal left', protein: '90 g protein to go',
+      fresh: { kcal: '2,900', kcalLine: 'kcal left', protein: '150 g protein to go' },
+    })
+    S.runs.push({ id: 'r', d: '2026-11-18' })
+    expect(tileFor(S, '2026-11-18').run).toBeUndefined()
+    expect(tileFor({ runs: [], workouts: [] }, '2026-11-18')).toBeNull()
+  })
+})

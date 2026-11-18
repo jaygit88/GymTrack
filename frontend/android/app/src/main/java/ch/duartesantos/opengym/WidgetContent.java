@@ -13,11 +13,11 @@ import org.json.JSONObject;
  * start?r=<routine ids>. Keep the three in step.
  */
 final class WidgetContent {
-    static final String[] KINDS = {"streak", "weight", "week", "next", "records", "volume", "challenges"};
+    static final String[] KINDS = {"streak", "weight", "week", "next", "records", "volume", "challenges", "food"};
     static final String DEFAULT_KIND = "streak";
 
     /** The drawable each kind shows (res/drawable/ic_widget_*). */
-    enum Icon { FLAME, SCALE, CALENDAR, DUMBBELL, TROPHY, CHART, MEDAL }
+    enum Icon { FLAME, SCALE, CALENDAR, DUMBBELL, TROPHY, CHART, MEDAL, FOOD }
 
     final String kind;
     final Icon icon;
@@ -122,6 +122,16 @@ final class WidgetContent {
                 String value = c == null ? "–" : c.optInt("done", 0) + " / " + c.optInt("total", 0);
                 String caption = c == null ? null : (str(c, "next") != null ? str(c, "next") : str(c, "line"));
                 return new WidgetContent(kind, Icon.MEDAL, label(labels, "challenges", "Challenges"), value, caption, "opengym://home", null, 0);
+            }
+            case "food": {
+                // GymTrack: calories left today (lib/widgets.js foodOfWidget). After midnight, before
+                // the app has run, a new day starts from the whole target ("fresh").
+                JSONObject f = snap.optJSONObject("food");
+                String title = label(labels, "food", "Nutrition");
+                if (f == null) return new WidgetContent(kind, Icon.FOOD, title, "–", null, "opengym://nutrition", null, 0);
+                JSONObject use = today.equals(f.optString("iso")) ? f : f.optJSONObject("fresh");
+                if (use == null) use = f;
+                return new WidgetContent(kind, Icon.FOOD, title, str(use, "value"), str(use, "line"), "opengym://nutrition", null, 0);
             }
             default: {
                 JSONObject st = snap.optJSONObject("streakInfo");

@@ -26,14 +26,16 @@ import { MOBILE, nativePlatform } from './mobile.js'
 import { EXIDX, gifSrc, figureOf, isAssisted } from './exercises.js'
 import { packId, packDrawingId } from './anim-quality.js'
 import { getState as animPacks } from './anim-packs.js'
-import { getLang, baseLang, onLangChange } from './i18n.js'
+import { getLang, baseLang, onLangChange, t } from './i18n.js'
 import { modeOf, setLabel, lastEntryFor, effectiveRoutineIds, isBw, isPerSide, EFFORT, effortOf } from './history.js'
 import { isWarmupRow, isSideSet, syncSideAggregate } from './workout-model.js'
 import { bestSetFor } from './exercise-history.js'
 import { weightIncrement } from './progression.js'
 import { sessionHistory } from './backfill.js'
 import { buildCombinedEntries, deriveSessionName } from './session-merge.js'
-import { todayISO, exerciseNameText } from './format.js'
+import { todayISO, exerciseNameText, fmtNum } from './format.js'
+import { runsPlannedOn, toUnit, distUnit } from './running.js'
+import { dayBudget, dayTotals, targetsOf } from './nutrition.js'
 import { sanitizeHr } from './heart-rate.js'
 import { readWatchPrefs, settingsForWatch, writeWatchStatus, readWatchStatus, onWatchPrefs, writeGarminLink } from './watch-settings.js'
 import { garminSnapshot } from './garmin-snapshot.js'
@@ -629,6 +631,32 @@ export function streakFor (S, today = todayISO()) {
   } catch { return { weeks: 0, thisWeekDone: false } }
 }
 
+/**
+ * GymTrack: what the Wear OS Tile shows besides a workout: today's planned runs and the day's
+ * calories and protein left (lib/nutrition.js dayBudget), as words ready to draw in the app's
+ * language. `fresh` is a new day's start, for the Tile after midnight before the phone has sent
+ * again. Null fields are left out; null when there is nothing to show.
+ */
+export function tileFor (S, today = todayISO()) {
+  try {
+    const out = { iso: today }
+    const runs = runsPlannedOn(S, today).slice((S.runs || []).filter(r => r && r.d === today).length)
+    if (runs.length) out.run = runs.map(p => t(RUN_LABEL[p.kind] || p.kind) + (p.km ? ' · ' + fmtNum(Math.round(toUnit(p.km, S.unit) * 10) / 10) + ' ' + distUnit(S.unit) : '')).join(', ')
+    const b = dayBudget(S, today)
+    if (b) {
+      const tg = targetsOf(S)
+      const tot = dayTotals(S, today)
+      const left = b.total - tot.kcal
+      out.kcal = fmtNum(Math.abs(left))
+      out.kcalLine = left >= 0 ? t('kcal left') : t('kcal over')
+      if (tg.protein) { const p = Math.round(tg.protein - tot.protein); out.protein = p > 0 ? t('{0} g protein to go', fmtNum(p)) : t('Protein done') }
+      out.fresh = { kcal: fmtNum(tg.kcal), kcalLine: t('kcal left'), ...(tg.protein ? { protein: t('{0} g protein to go', fmtNum(tg.protein)) } : {}) }
+    }
+    return out.run || out.kcal ? out : null
+  } catch { return null }
+}
+const RUN_LABEL = { easy: 'Easy', long: 'Long run', tempo: 'Tempo', intervals: 'Intervals', recovery: 'Recovery' }
+
 export async function startWatchSync ({ useStore, useUI }) {
   const p = await watchPlugin()
   if (!p) return () => {}
@@ -704,6 +732,7 @@ async function runLink (p, { useStore, useUI }, { health = true, clips: withClip
       const hOn = healthOn && isOn(S, 'health')
       snap.settings = { ...settingsForWatch(prefs, hOn), ...watchExtras(S) }
       if (prefs.enabled && isOn(S, 'motivation')) snap.streak = streakFor(S)
+      if (prefs.enabled) { const tile = tileFor(S); if (tile) snap.tile = tile }
       // Discarded here: the watch drops its Apple Health workout instead of saving it (#776).
       const discarded = discardedFor(Date.now(), S)
       if (discarded.length) snap.discarded = discarded

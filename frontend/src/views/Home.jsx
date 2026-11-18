@@ -12,6 +12,7 @@ import RecentDays from '../components/RecentDays.jsx'
 import MeasureChangeCard from '../components/MeasureChangeCard.jsx'
 import AiReviewCard, { StallCard } from '../components/AiReviewCard.jsx'
 import RunningCard from '../components/RunningCard.jsx'
+import WeekSummaryCard from '../components/WeekSummaryCard.jsx'
 import NutritionCard from '../components/NutritionCard.jsx'
 import { QuickWorkoutButton } from '../components/QuickWorkout.jsx'
 import { stalledGoals } from '../lib/measure-change.js'
@@ -56,7 +57,13 @@ export default function Home() {
       <button className="iconbtn" data-tour="settings-gear" onClick={() => nav('/settings')} aria-label={trouble ? t('Settings') + ', ' + t('Connection problem') : t('Settings')}><Icon name="gear" />{trouble && <span className="tab-dot" aria-hidden="true" />}</button>
     </div>
 
+    {/* Today's food against your targets (lib/nutrition.js), a tap to the Nutrition tab. */}
+    <NutritionCard S={S} />
+
     {stalled.length > 0 && <StallCard S={S} stalled={stalled} />}
+
+    {/* The week in four lines, from its last day until two days into the next (lib/week-summary.js). */}
+    <WeekSummaryCard S={S} />
 
     {/* The streak opens its calendar from its text (CardHead open); the last seven days, the
         weekly-sets line and the party banner are buttons of their own inside it. */}
@@ -68,7 +75,7 @@ export default function Home() {
         sub={<>{doneThisWeek}{plannedPerWeek ? ' / ' + plannedPerWeek : ''} {t('this week')} · {tn('{0} workout total', '{0} workouts total', S.workouts.length)}</>}
         action={<Icon name="calendar" className="chev" style={{ fontSize: 'var(--fs-title3)' }} />} />
       {(streak.best > 0 || streak.freezes > 0) && <div className="muted small card-head-indent streak-meta-line"><StreakMeta info={streak} /></div>}
-      <RecentDays S={S} />
+      <RecentDays S={S} back={2} ahead={2} />
       {!S.active && <div className="qw-home"><QuickWorkoutButton /></div>}
       <StreakParty S={S} info={streak} tally={tally} />
       {/* Settings → Look & Home → Weekly sets on Home (lib/muscle-targets.js): the muscle with
@@ -79,16 +86,13 @@ export default function Home() {
       // Motivation off: no streak, but the last seven days and the weekly sets line keep a card.
       : <div className="card wsets-solo">
         <CardHead icon="calendar" tint="var(--acc)" title={t('Your week')} />
-        <RecentDays S={S} />
+        <RecentDays S={S} back={2} ahead={2} />
       {!S.active && <div className="qw-home"><QuickWorkoutButton /></div>}
         {S.homeMuscleSets === true && <WeeklySetsHomeLine S={S} onOpen={() => nav('/stats?section=lifts')} />}
       </div>}
 
     {/* Running from the watch: this week, the plan's runs, a warning on a jump (lib/running.js). */}
     <RunningCard S={S} />
-
-    {/* Today's food against your targets (lib/nutrition.js), a tap to the Nutrition tab. */}
-    <NutritionCard S={S} />
 
     {/* What your body measurements did over the last month, on the body (lib/measure-change.js). */}
     {on('body') && <MeasureChangeCard S={S} />}

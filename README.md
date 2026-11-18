@@ -78,8 +78,19 @@ see it.
 - **Not found?** In New food, **Photo of the nutrition label** has GymTrackAI (Claude) read the
   table off the packet and fill in the food per 100 g. Check the numbers, save, and it is yours
   next time (and by its barcode, if you scanned one).
+- **Exercise eaten back:** the calorie bar adds half of the day's exercise to your target (shown as
+  the striped end of the bar); choose none to all of it in the targets. Exercise sits at the bottom.
+- **Faster logging:** star a food to keep it at the top of search, and an empty meal offers the
+  same as the day before in one tap. An evening protein reminder, if you want one, says how much
+  is left and names something you usually eat that covers it.
+- **Widget:** the Android home-screen widget can show calories left and protein to go.
 - **Recipes:** smoothies, shakes and batch cooking from ingredients, logged by the serving.
 - **Targets:** a starting point for gaining muscle from your latest weigh-in, yours to change.
+
+### Your week
+A short summary on Home from the week's last day until two days into the next: workouts, sets
+and the muscles with room for more, runs and distance against your planned runs, the average
+day of food against your budget, and your average weight against the week before.
 
 ### GymTrackAI
 - **Ask GymTrackAI:** a short chat about what is on screen. On Nutrition it knows the day's food,

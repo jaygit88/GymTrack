@@ -16,7 +16,7 @@ import { workoutCalories, runCalories } from '../lib/calories.js'
 import { deriveSessionName } from '../lib/session-merge.js'
 import { runSheet } from './RunSheets.jsx'
 
-// The week around today, in date order: the three days before, today, and the three after, laid
+// The days around today, in date order (Home: the two before, today, and the two after), laid
 // out like Plan's week. Past days show what you trained and which muscles it hit, so what is due
 // next reads straight off it; a day without a workout is a rest day, and tapping it logs a session
 // you forgot. Today offers Start until something is logged. Days ahead show the runs your

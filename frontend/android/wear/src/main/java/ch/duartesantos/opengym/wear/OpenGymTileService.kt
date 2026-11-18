@@ -19,8 +19,9 @@ import com.google.common.util.concurrent.ListenableFuture
 
 /**
  * The Tile: one swipe from the watch face, readable at a glance.
- *   no workout   the week streak, big, and today's plan (its name and how many exercises), or a
- *                rest day; a tap starts the app on its start screen
+ *   no workout   today's plan (the routine, the runs planned) and, with a calorie target, the
+ *                calories left today big with the protein to go under it (else the week
+ *                streak); a tap starts the app on its start screen
  *   workout      its name, the sets so far as a ring, the set up next; a tap goes back in
  * Plain text and numbers, no media. Refreshed by the app whenever its state changes.
  */
@@ -101,16 +102,37 @@ class OpenGymTileService : TileService() {
                 }
                 box.addContent(track).addContent(ring).addContent(col.build())
             } else {
-                val weeks = s.streak?.weeks ?: 0
                 val today = s.ready?.today
-                col.addContent(text(c.getString(R.string.week_streak), 13f, QUIET))
-                    .addContent(text(weeks.toString(), 44f, if (s.streak?.thisWeekDone == true) ACCENT else TEXT, bold = true))
-                    .addContent(spacer(6f))
+                // GymTrack: today's plan and what is left to eat (lib/watch-sync.js tileFor). A Tile
+                // from yesterday drops its runs and starts the food from the whole target.
+                val info = s.tile
+                val fresh = info?.iso == null || info.iso == java.time.LocalDate.now().toString()
+                val run = if (fresh) info?.run else null
+                val kcal = if (fresh) info?.kcal else info?.fresh?.kcal
+                val kcalLine = if (fresh) info?.kcalLine else info?.fresh?.kcalLine
+                val protein = if (fresh) info?.protein else info?.fresh?.protein
                 when {
                     !s.synced -> col.addContent(text(c.getString(R.string.not_synced), 14f, QUIET, maxLines = 2))
-                    today != null -> col.addContent(text(c.getString(R.string.today), 13f, QUIET))
-                        .addContent(text(today.name, 16f, ACCENT, bold = true, maxLines = 2))
-                    else -> col.addContent(text(c.getString(R.string.rest_day), 14f, QUIET, maxLines = 2))
+                    else -> {
+                        col.addContent(text(c.getString(R.string.today), 13f, QUIET))
+                        when {
+                            today != null -> col.addContent(text(today.name, 16f, ACCENT, bold = true))
+                            run == null -> col.addContent(text(c.getString(R.string.rest_day), 15f, TEXT))
+                        }
+                        if (run != null) col.addContent(text(run, 14f, if (today == null) ACCENT else TEXT, bold = today == null))
+                        if (kcal != null) {
+                            col.addContent(spacer(6f))
+                                .addContent(text(kcal, 34f, TEXT, bold = true))
+                                .addContent(text(kcalLine ?: "kcal", 12f, QUIET))
+                            if (protein != null) col.addContent(text(protein, 12f, QUIET))
+                        } else {
+                            // No calorie target: the week streak, as before.
+                            val weeks = s.streak?.weeks ?: 0
+                            col.addContent(spacer(6f))
+                                .addContent(text(weeks.toString(), 34f, if (s.streak?.thisWeekDone == true) ACCENT else TEXT, bold = true))
+                                .addContent(text(c.getString(R.string.week_streak), 12f, QUIET))
+                        }
+                    }
                 }
                 box.addContent(col.build())
             }
