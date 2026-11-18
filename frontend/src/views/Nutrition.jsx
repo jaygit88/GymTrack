@@ -9,6 +9,7 @@ import { workoutCalories } from '../lib/calories.js'
 import { todayISO, isoOf, fmtDate, fmtNum } from '../lib/format.js'
 import { t } from '../lib/i18n.js'
 import { tappable } from '../lib/use-sheet-keyboard.js'
+import { aiChatSheet } from '../components/AiChatSheet.jsx'
 
 // GymTrack's Nutrition tab: the day's food by meal against your targets, calories burned in that
 // day's workouts beside what you ate, your recipes, and a week's average. lib/nutrition.js holds
@@ -37,7 +38,10 @@ export default function Nutrition() {
   return <div className="narrow">
     <div className="hdr">
       <h1>{t('Nutrition')}</h1>
-      <button className="iconbtn" onClick={targetsSheet} aria-label={t('Daily targets')}><Icon name="target" /></button>
+      <div className="row" style={{ gap: 8 }}>
+        <button className="iconbtn" onClick={() => aiChatSheet({ screen: 'nutrition', iso })} aria-label={t('Ask GymTrackAI')}><Icon name="sparkles" /></button>
+        <button className="iconbtn" onClick={targetsSheet} aria-label={t('Daily targets')}><Icon name="target" /></button>
+      </div>
     </div>
 
     <div className="card">

@@ -34,7 +34,7 @@ const label = key => MEASUREMENT_FIELDS.find(f => f.key === key)?.label || key
 const nameOf = e => EXIDX[e?.id]?.n || e?.exercise?.name || e?.name || e?.id || 'exercise'
 const done = s => s && s.done && !isWarmupRow(s)
 
-function workoutLine(w, unit, S) {
+export function workoutLine(w, unit, S) {
   const exercises = (w.entries || []).map(e => {
     const sets = (e.sets || []).filter(done)
     if (!sets.length) return null

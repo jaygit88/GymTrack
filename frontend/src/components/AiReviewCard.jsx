@@ -8,6 +8,7 @@ import { storedReview } from '../lib/ai-review.js'
 import { aiReviewReady, runAiReview } from '../lib/ai-review-run.js'
 import { fmtDate, isoOf } from '../lib/format.js'
 import { isOn } from '../lib/modules.js'
+import { aiChatSheet } from './AiChatSheet.jsx'
 import { t } from '../lib/i18n.js'
 import { goalsSheet } from './MeasureChangeCard.jsx'
 
@@ -62,6 +63,7 @@ export default function AiReviewCard({ S }) {
       <Button size="sm" variant={saved ? 'ghost' : 'tinted'} icon="sparkles" disabled={busy} onClick={ask}>
         {!ready ? t('Set up the AI Coach') : busy ? t('GymTrackAI is thinking…') : saved ? t('Review again') : t('Review my month')}
       </Button>
+      {ready && <Button size="sm" variant="ghost" icon="sparkles" onClick={() => aiChatSheet({ screen: 'general' })}>{t('Ask GymTrackAI')}</Button>}
     </div>
   </div>
 }

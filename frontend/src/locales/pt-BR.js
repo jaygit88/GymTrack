@@ -2498,6 +2498,19 @@ export const PT_BR_OVERRIDES = {
   "{0} servings": "{0} porções",
   "{0} servings last time": "{0} porções da última vez",
   "Average of the {0} days you logged": "Média dos {0} dias registrados",
+  "About today’s food": "Sobre o que você comeu hoje",
+  "About your training": "Sobre o seu treino",
+  "Am I eating enough protein today?": "Estou comendo proteína suficiente hoje?",
+  "Am I recovering well enough?": "Estou me recuperando bem?",
+  "Answers use what is on this screen and your data, and are not kept.": "As respostas usam o que está nesta tela e seus dados, e não ficam salvas.",
+  "Ask anything": "Pergunte o que quiser",
+  "Form cues and how to get more from it": "Dicas de execução e como aproveitar mais",
+  "GymTrackAI answers with Claude, using the AI Coach connection and your own API key.": "O GymTrackAI responde com o Claude, usando a conexão do Treinador IA e a sua chave de API.",
+  "How do I get the most out of this?": "Como aproveito ao máximo este exercício?",
+  "Should I go heavier today?": "Devo colocar mais peso hoje?",
+  "What is a good snack after training?": "Qual é um bom lanche depois do treino?",
+  "What should I have for dinner?": "O que devo comer no jantar?",
+  "Where should I feel it?": "Onde devo sentir?",
 }
 
 export default { ...pt, ...PT_BR_OVERRIDES }

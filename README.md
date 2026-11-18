@@ -76,6 +76,12 @@ see it.
 - **Targets:** a starting point for gaining muscle from your latest weigh-in, yours to change.
 
 ### GymTrackAI
+- **Ask GymTrackAI:** a short chat about what is on screen. On Nutrition it knows the day's food,
+  what is left of your targets, what you burned and your recipes ("What should I have for
+  dinner?"). On an exercise in a workout (its menu, **Tips from GymTrackAI**) it knows the muscles,
+  today's sets and your last sessions ("How do I get the most out of this?"). From Home it reads
+  your last two weeks. Nothing from the chat is kept.
+
 The AI features above use openGym's AI Coach connection with your own API key, on the phone:
 no server, the key in Android's secure storage, a question before anything is sent, and a daily
 limit. Answers come from Claude (Anthropic). What is sent is a summary (workouts with each

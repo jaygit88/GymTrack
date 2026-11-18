@@ -3371,3 +3371,21 @@ button.wl-summary{width:100%;padding:0 0 10px;text-align:start;border-radius:var
 .food-n{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:8px 0 14px}
 .food-n-i b{display:block;font-variant-numeric:tabular-nums}
 .food-amt { width: 5.5em; text-align: right; }
+
+/* Ask GymTrackAI (components/AiChatSheet.jsx) */
+.ai-chat-about { margin: -6px 0 12px; }
+.ai-chat { display: flex; flex-direction: column; gap: 8px; max-height: 52vh; overflow-y: auto; margin-bottom: 10px; }
+.ai-chat:empty { display: none; }
+.ai-msg { padding: 10px 13px; border-radius: 16px; font-size: 15px; line-height: 1.4; max-width: 88%; white-space: pre-wrap; }
+.ai-msg.you { align-self: flex-end; background: var(--acc); color: var(--on-acc); border-bottom-right-radius: 5px; }
+.ai-msg.ai { align-self: flex-start; background: var(--surface-2); border-bottom-left-radius: 5px; white-space: normal; }
+.ai-msg p { margin: 0 0 6px; }
+.ai-msg p:last-child, .ai-msg ul:last-child { margin-bottom: 0; }
+.ai-msg ul { margin: 0 0 6px; padding-left: 18px; }
+.ai-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.ai-chip { border: 1px solid var(--raised-line); background: transparent; color: var(--acc); border-radius: 999px; padding: 7px 12px; font: inherit; font-size: 14px; text-align: left; cursor: pointer; }
+.ai-compose { display: flex; gap: 8px; align-items: flex-end; }
+.ai-compose textarea { flex: 1; resize: none; min-height: 42px; max-height: 120px; padding: 10px 12px; border-radius: 14px; border: 1px solid var(--raised-line); background: var(--surface-2); color: inherit; font: inherit; font-size: 16px; }
+.ai-send { background: var(--acc); color: var(--on-acc); }
+.ai-send:disabled { opacity: .4; }
+.ai-chat-note { margin-top: 8px; }

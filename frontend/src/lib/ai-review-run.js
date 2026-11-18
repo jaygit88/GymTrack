@@ -9,6 +9,7 @@ import { ensureAiConsent } from './coach-api.js'
 import { loadCoachDevice, saveCoachDevice, coachLimits } from './coach-device.js'
 import { getApiKey } from './coach-secrets.js'
 import { buildReviewPayload, buildReviewPrompt, checkReview, checkRunPlan, checkQuick, planToSave, schemaFor, REVIEW_MODES } from './ai-review.js'
+import { chatContext, buildChatPrompt, checkChat, CHAT_SCHEMA } from './ai-chat.js'
 import { getLang } from './i18n-core.js'
 import { t } from './i18n.js'
 import { todayISO } from './format.js'
@@ -32,8 +33,12 @@ export function runAiReview(mode, { deps = {}, minutes = 30 } = {}) {
   return running
 }
 
-async function run(mode, deps, opts = {}) {
-  if (!REVIEW_MODES.includes(mode)) throw fail('unknown review')
+/**
+ * One call to the model through the Coach's connection: ready, consent, the daily cap, then the
+ * prompt `build(S)` makes ({ system, user, schema }). Resolves with the parsed JSON ({ error } or
+ * { value }) and whatever `build` returned.
+ */
+async function callModel(deps, build) {
   if (!(deps.ready || aiReviewReady)()) throw fail(t('Set up the AI Coach with your own API key first: Settings, AI Coach.'), 'off')
   await (deps.consent || ensureAiConsent)()
   const local = deps.local || await import('./coach-local.js')
@@ -53,19 +58,25 @@ async function run(mode, deps, opts = {}) {
   if (limit > 0 && used >= limit) throw fail(t('The Coach is taking a breather. You’ve used today’s {0} runs on this phone.', limit), 'cap')
   await (deps.saveDevice || saveCoachDevice)({ daily: { d: today, n: used + 1 } })
 
-  const S = useStore.getState().S
-  const payload = buildReviewPayload(S, { mode, minutes: opts.minutes })
-  const { system, user } = buildReviewPrompt(payload, langName(getLang()))
+  const built = build(useStore.getState().S)
   const key = await (deps.getKey || getApiKey)()
   const r = await adapter.invoke({
     cfg: { provider: d.provider, providerOptions: d.baseUrl ? { [d.provider]: { baseUrl: d.baseUrl } } : {} },
-    prompt: user, system, schema: schemaFor(mode),
+    prompt: built.user, system: built.system, schema: built.schema,
     model: d.model || meta.defaultModel, timeoutMs: local.timeoutFor(d.provider),
     env: key ? { [meta.apiKeyEnv]: key } : {}, fetch: local.guardedFetch, maxTokens: coachLimits(d).maxOutputTokens,
   })
   if (r.timedOut) throw fail(t('GymTrackAI did not answer in time. Try again in a moment.'))
   if (r.code !== 0) throw fail(t('GymTrackAI did not answer. Try again in a moment.') + (r.stderr ? ' (' + String(r.stderr).slice(0, 160) + ')' : ''))
-  const parsed = core.extractJSON(r.text)
+  return { parsed: core.extractJSON(r.text), built }
+}
+
+async function run(mode, deps, opts = {}) {
+  if (!REVIEW_MODES.includes(mode)) throw fail('unknown review')
+  const { parsed, built: { payload } } = await callModel(deps, S => {
+    const payload = buildReviewPayload(S, { mode, minutes: opts.minutes })
+    return { ...buildReviewPrompt(payload, langName(getLang())), schema: schemaFor(mode), payload }
+  })
   // A quick workout is for right now: handed back to the sheet, never saved.
   if (mode === 'quick') {
     const checked = parsed.error ? { ok: false } : checkQuick(parsed.value, payload.quick.library, payload.quick.minutes)
@@ -85,4 +96,18 @@ async function run(mode, deps, opts = {}) {
   const entry = { at: Date.now(), period: payload.period, review: checked.review, ...(mode === 'stall' ? { goals: payload.stalledGoals } : {}) }
   useStore.getState().update(s => { s.aiReviews = { ...(s.aiReviews || {}), [mode]: entry } })
   return entry
+}
+
+/**
+ * One question in an "Ask GymTrackAI" chat (lib/ai-chat.js): `where` is the screen
+ * ({ screen, iso?, exId? }), `history` the chat so far. Resolves with { answer, followUps };
+ * nothing is saved.
+ */
+export async function runAiChat(where, history, question, { deps = {} } = {}) {
+  const { parsed } = await callModel(deps, S => ({
+    ...buildChatPrompt(chatContext(S, where), history, question, langName(getLang())), schema: CHAT_SCHEMA,
+  }))
+  const checked = parsed.error ? { ok: false } : checkChat(parsed.value)
+  if (!checked.ok) throw fail(t('GymTrackAI did not answer. Try again in a moment.'))
+  return { answer: checked.answer, followUps: checked.followUps }
 }

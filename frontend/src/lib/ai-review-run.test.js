@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { useStore } from '../store/useStore.js'
-import { runAiReview } from './ai-review-run.js'
+import { runAiReview, runAiChat } from './ai-review-run.js'
 
 const answer = { summary: 'A steady month.', highlights: ['Four weeks in a row'], suggestions: [{ title: 'Add a chest day', why: 'Chest has not moved.' }] }
 const deps = over => ({
@@ -70,5 +70,22 @@ describe('a quick workout', () => {
     expect(call.prompt).toContain('"minutes":20')
     expect(plan.items[0]).toMatchObject({ id: '0314', sets: 3 })
     expect(useStore.getState().S.aiReviews.quick).toBeUndefined()
+  })
+})
+
+describe('Ask GymTrackAI', () => {
+  it('sends the screen and the chat so far, and hands the answer back without saving it', async () => {
+    const reply = { answer: 'Salmon, rice and greens, about 700 kcal and 45 g protein.', followUps: ['Something quicker?'] }
+    const d = deps({ local: { ...deps().local, ADAPTERS: { anthropic: { invoke: vi.fn(async () => ({ code: 0, text: JSON.stringify(reply) })) } } } })
+    const before = useStore.getState().S
+    const out = await runAiChat({ screen: 'nutrition' }, [{ role: 'you', text: 'hi' }, { role: 'ai', text: 'hello' }], 'What for dinner?', { deps: d })
+    const call = d.local.ADAPTERS.anthropic.invoke.mock.calls[0][0]
+    const user = JSON.parse(call.prompt)
+    expect(user.context.screen).toBe('nutrition')
+    expect(user.earlierInThisChat).toEqual([{ you: 'hi' }, { gymtrackai: 'hello' }])
+    expect(user.question).toBe('What for dinner?')
+    expect(call.schema.required).toEqual(['answer', 'followUps'])
+    expect(out).toEqual(reply)
+    expect(useStore.getState().S.aiReviews).toBe(before.aiReviews)
   })
 })

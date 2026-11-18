@@ -52,6 +52,8 @@ import { useCoachGate } from '../lib/use-coach-gate.js'
 // Opened in the same tick as the menu closes, like every other sheet from that menu: a sheet that
 // opened a moment later (after a dynamic import) took the menu's history entry with it on close.
 import { workoutCoachSheet } from '../components/WorkoutCoachSheet.jsx'
+import { aiChatSheet } from '../components/AiChatSheet.jsx'
+import { aiReviewReady } from '../lib/ai-review-run.js'
 import { hasConsent } from '../lib/coach.js'
 import { sessionNoProg, setSessionNoProg, setEntryNoProg, joinSessionNoProg } from '../lib/session-noprog.js'
 import { glyphOf } from '../lib/glyphs.js'
@@ -498,6 +500,8 @@ function ExerciseBlock({ entryIdx, compact, dense, editing, onToggle, onToggleSi
         onKeepWarmups && { icon: 'sunrise', label: t('Keep these warm-ups'), sub: t('Saved in the routine, scaled to your work weight'), onClick: onKeepWarmups },
         onRest && { icon: 'timer', label: t('Rest timer'), sub: restSub, onClick: onRest },
         { icon: 'history', label: t('History'), sub: last ? t('Last time') + ' ' + fmtDate(last.d) : undefined, onClick: () => exerciseHistorySheet(entry.id) },
+        // GymTrackAI on this exercise: form cues, the squeeze, whether to go heavier (components/AiChatSheet.jsx).
+        aiReviewReady() && { icon: 'sparkles', label: t('Tips from GymTrackAI'), sub: t('Form cues and how to get more from it'), onClick: () => aiChatSheet({ screen: 'exercise', exId: entry.id, name: exerciseNameText(ex) }) },
         // The Coach on this exercise, for the rest of this workout (components/WorkoutCoachSheet.jsx).
         onAskCoach && { icon: 'sparkles', label: t('Ask the Coach'), sub: t('It hurts, it’s taken, no time, feeling great'), onClick: onAskCoach },
       ] },
