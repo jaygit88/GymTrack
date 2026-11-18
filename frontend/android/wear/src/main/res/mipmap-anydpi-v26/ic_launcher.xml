@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- GymTrack: the same picture as the phone app's icon (app/src/main/res/mipmap-*/ic_launcher_background.png),
+     inset like the phone's so the watch's round mask shows the same crop. -->
 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
-    <background android:drawable="@color/launcher_bg" />
-    <foreground android:drawable="@drawable/ic_launcher_foreground" />
-    <monochrome android:drawable="@drawable/ic_launcher_foreground" />
+    <background>
+        <inset android:drawable="@mipmap/ic_launcher_art" android:inset="16.7%" />
+    </background>
+    <foreground android:drawable="@android:color/transparent" />
 </adaptive-icon>

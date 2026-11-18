@@ -157,3 +157,15 @@ describe('display helpers', async () => {
     expect(splitBar(600, 300)).toBe(20)
   })
 })
+
+describe('plannedRunsOn', async () => {
+  const { plannedRunsOn } = await import('./running.js')
+  const plan = { startsOn: '2026-11-09', weeks: [{ runs: [{ day: 'Tue', kind: 'easy', km: 5 }, { day: 'Sun', kind: 'long', km: 8 }] }, { runs: [{ day: 'Tue', kind: 'easy', km: 6 }] }] }
+  it('finds the runs set for a date, in the right week', () => {
+    expect(plannedRunsOn(plan, '2026-11-10')).toEqual([{ day: 'Tue', kind: 'easy', km: 5 }])
+    expect(plannedRunsOn(plan, '2026-11-15')[0].kind).toBe('long')
+    expect(plannedRunsOn(plan, '2026-11-17')[0].km).toBe(6)
+    expect(plannedRunsOn(plan, '2026-11-24')).toEqual([])
+    expect(plannedRunsOn(null, '2026-11-10')).toEqual([])
+  })
+})

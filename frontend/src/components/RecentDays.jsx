@@ -8,13 +8,16 @@ import { isoOf, todayISO, durPart, fmtNum, DAYS, DAYN } from '../lib/format.js'
 import { t, tn } from '../lib/i18n.js'
 import { tappable } from '../lib/use-sheet-keyboard.js'
 import { runsOn, runDistance, runPace } from '../lib/runs.js'
+import { plannedRunsOn, distUnit, toUnit } from '../lib/running.js'
+import { RUN_KIND_LABEL } from './RunSheets.jsx'
 import { workoutDetailSheet, logPastWorkoutSheet } from '../sheets.jsx'
 import { runSheet } from './RunSheets.jsx'
 
-// The last seven days, today first, laid out like Plan's week: what you trained each day and
-// which muscles it hit, so what is due next reads straight off it. A day without a workout is a
-// rest day; tapping one logs a session you forgot (today: opens Start). Replaces Home's planned
-// week for people who train by feel rather than by plan.
+// The week around today, in date order: the three days before, today, and the three after, laid
+// out like Plan's week. Past days show what you trained and which muscles it hit, so what is due
+// next reads straight off it; a day without a workout is a rest day, and tapping it logs a session
+// you forgot. Today offers Start until something is logged. Days ahead show the runs your
+// GymTrackAI running plan set for them (lib/running.js plannedRunsOn), else nothing planned.
 
 function MiniWorkoutMap({ workouts, body }) {
   const load = loadOfWorkouts(workouts)
@@ -22,14 +25,15 @@ function MiniWorkoutMap({ workouts, body }) {
   return <span className="bm-mini-wrap" aria-hidden="true"><BodyMap className="bm-mini" load={load} body={body} /></span>
 }
 
-export default function RecentDays({ S, days = 7 }) {
+export default function RecentDays({ S, back = 3, ahead = 3 }) {
   const nav = useNavigate()
   const today = todayISO()
   const rows = []
-  for (let i = 0; i < days; i++) {
-    const d = new Date(today + 'T12:00:00'); d.setDate(d.getDate() - i)
+  for (let off = -back; off <= ahead; off++) {
+    const d = new Date(today + 'T12:00:00'); d.setDate(d.getDate() + off)
     const iso = isoOf(d)
     const isToday = iso === today
+    const future = off > 0
     const dayLabel = first => <span className={'plan-day-n' + (isToday ? ' today' : '')} aria-hidden="true">{first ? t(DAYS[d.getDay()]) : ''}</span>
     const tour = isToday ? 'today' : undefined
     const items = []
@@ -77,9 +81,36 @@ export default function RecentDays({ S, days = 7 }) {
         <Icon name="chevronRight" className="chev" />
       </div>)
     })
+    // Days ahead: the plan's runs for them, or nothing planned.
+    if (future) {
+      const planned = plannedRunsOn(S.runPlan, iso)
+      planned.forEach((p, n) => items.push(<div key={iso + '-plan' + n} className="item plan-day recent-day upcoming" aria-label={t(DAYN[d.getDay()])}>
+        {dayLabel(n === 0)}
+        <span className="lrow-i rest"><Icon name="run" /></span>
+        <div className="grow">
+          <div className="tt">{t(RUN_KIND_LABEL[p.kind] || p.kind)} · {fmtNum(Math.round(toUnit(p.km, S.unit) * 10) / 10)} {distUnit(S.unit)}</div>
+          {p.notes && <div className="ss">{p.notes}</div>}
+        </div>
+      </div>))
+      if (!planned.length) items.push(<div key={iso + '-none'} className="item plan-day recent-day upcoming" aria-label={t(DAYN[d.getDay()])}>
+        {dayLabel(true)}
+        <span className="lrow-i rest" />
+        <div className="grow"><div className="tt muted">{t('Nothing planned')}</div></div>
+      </div>)
+      rows.push(...items)
+      continue
+    }
+    if (!items.length && isToday) {
+      items.push(<div key={iso + '-today'} className="item plan-day recent-day today-open" data-tour={tour} aria-label={t('Today')} {...tappable(() => nav('/workout'))}>
+        {dayLabel(true)}
+        <span className="lrow-i" style={{ background: 'var(--acc)', color: 'var(--on-acc)' }}><Icon name="play" /></span>
+        <div className="grow"><div className="tt">{t('Nothing yet')}</div></div>
+        <span className="tag acc">{t('Start workout')}</span>
+      </div>)
+    }
     if (!items.length) {
       items.push(<div key={iso + '-rest'} className="item plan-day recent-day rest" data-tour={tour} aria-label={t(DAYN[d.getDay()])}
-        {...tappable(() => (isToday ? nav('/workout') : logPastWorkoutSheet({ iso })))}>
+        {...tappable(() => logPastWorkoutSheet({ iso }))}>
         {dayLabel(true)}
         <span className="lrow-i rest"><Icon name="moon" /></span>
         <div className="grow"><div className="tt">{t('Rest')}</div></div>

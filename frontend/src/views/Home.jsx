@@ -77,7 +77,7 @@ export default function Home() {
     </div>
       // Motivation off: no streak, but the last seven days and the weekly sets line keep a card.
       : <div className="card wsets-solo">
-        <CardHead icon="calendar" tint="var(--acc)" title={t('Last 7 days')} />
+        <CardHead icon="calendar" tint="var(--acc)" title={t('Your week')} />
         <RecentDays S={S} />
       {!S.active && <div className="qw-home"><QuickWorkoutButton /></div>}
         {S.homeMuscleSets === true && <WeeklySetsHomeLine S={S} onOpen={() => nav('/stats?section=lifts')} />}

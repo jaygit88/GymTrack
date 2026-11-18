@@ -69,7 +69,7 @@ final class WidgetContent {
      */
     static WidgetContent of(String kindIn, JSONObject snap, String today, String emptyText) {
         String kind = validKind(kindIn);
-        if (snap == null) return new WidgetContent(kind, Icon.DUMBBELL, "openGym", "", emptyText, "opengym://home", null, 0);
+        if (snap == null) return new WidgetContent(kind, Icon.DUMBBELL, "GymTrack", "", emptyText, "opengym://home", null, 0);
         JSONObject labels = snap.optJSONObject("labels");
         switch (kind) {
             case "weight": {

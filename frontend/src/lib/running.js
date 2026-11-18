@@ -305,3 +305,14 @@ export function mergeFitness(S, { vo2max = [], restingHr = [] } = {}, now = Date
   put('rhr', restingHr, 'bpm', v => v >= 25 && v <= 150)
   return changed
 }
+
+const WEEKDAY = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+/** The plan's runs set for one date ('YYYY-MM-DD'): its week's runs on that weekday, or []. */
+export function plannedRunsOn(plan, iso) {
+  if (!plan?.startsOn || !Array.isArray(plan.weeks)) return []
+  const at = new Date(iso + 'T12:00:00').getTime()
+  const i = Math.floor((at - new Date(plan.startsOn + 'T00:00:00').getTime()) / (7 * DAY))
+  if (i < 0 || i >= plan.weeks.length) return []
+  const wd = WEEKDAY[new Date(iso + 'T12:00:00').getDay()]
+  return (plan.weeks[i].runs || []).filter(r => r.day === wd)
+}

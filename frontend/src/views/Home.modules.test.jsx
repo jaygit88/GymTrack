@@ -49,7 +49,7 @@ describe('Home follows the modules', () => {
     mountWith(presetModules('training'))
     expect(heads().some(h => /week streak/.test(h))).toBe(false)
     expect(heads()).not.toContain('Body measurements')
-    expect(heads()).toContain('Last 7 days')
+    expect(heads()).toContain('Your week')
     expect(host.querySelector('[data-tour="today"]')).toBeTruthy()
   })
 
@@ -63,9 +63,13 @@ describe('Home follows the modules', () => {
   it("today's workout is on today's row, and a day without one is a rest day", () => {
     mountWith(undefined)
     const rows = [...host.querySelectorAll('.recent-day')]
-    expect(rows[0].getAttribute('data-tour')).toBe('today')
-    expect(rows[0].classList.contains('rest')).toBe(false)
-    expect(rows[1].classList.contains('rest')).toBe(true)
+    // three days back, today, three ahead, in date order
+    const today = rows.findIndex(r => r.getAttribute('data-tour') === 'today')
+    expect(today).toBe(3)
+    expect(rows[today].classList.contains('rest')).toBe(false)
+    expect(rows[today - 1].classList.contains('rest')).toBe(true)
+    expect(rows.slice(today + 1).every(r => r.classList.contains('upcoming'))).toBe(true)
+    expect(rows).toHaveLength(7)
   })
 })
 
@@ -93,11 +97,28 @@ describe('runs from Health Connect in the last seven days', () => {
     mountWith(undefined, { runs: [{ id: 'hc:1', d: today, start, end: start + 30 * 60e3, km: 5, title: null, type: 'running', src: 'hc' }],
       workouts: [{ id: 'w1', d: today, start: start + 10 * 3600e3, end: start + 11 * 3600e3, entries: [] }] })
     const rows = [...host.querySelectorAll('.recent-day')]
-    expect(rows[0].classList.contains('recent-run')).toBe(true)
-    expect(rows[0].textContent).toContain('Run')
-    expect(rows[0].textContent).toContain('5 km')
-    expect(rows[0].textContent).toContain('6:00 /km')
-    expect(rows[1].classList.contains('recent-run')).toBe(false)
-    expect(rows[2].classList.contains('rest')).toBe(true)
+    const at = rows.findIndex(r => r.getAttribute('data-tour') === 'today')
+    expect(rows[at].classList.contains('recent-run')).toBe(true)
+    expect(rows[at].textContent).toContain('Run')
+    expect(rows[at].textContent).toContain('5 km')
+    expect(rows[at].textContent).toContain('6:00 /km')
+    expect(rows[at + 1].classList.contains('recent-run')).toBe(false)
+    expect(rows[at + 1].classList.contains('upcoming')).toBe(false)
+    expect(rows[at - 1].classList.contains('rest')).toBe(true)
+  })
+})
+
+describe('the days ahead', () => {
+  it('show the runs the running plan set for them', () => {
+    const mon = new Date(); mon.setHours(12, 0, 0, 0); mon.setDate(mon.getDate() - ((mon.getDay() + 6) % 7))
+    const iso = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0')
+    const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1)
+    const wd = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][tomorrow.getDay()]
+    const week = { runs: [{ day: wd, kind: 'easy', km: 5, notes: 'chatty pace' }] }
+    mountWith(undefined, { runs: [], runPlan: { startsOn: iso(mon), weeks: [week, week] } })
+    const rows = [...host.querySelectorAll('.recent-day')]
+    const at = rows.findIndex(r => r.getAttribute('data-tour') === 'today')
+    expect(rows[at + 1].textContent).toContain('Easy')
+    expect(rows[at + 1].textContent).toContain('chatty pace')
   })
 })
