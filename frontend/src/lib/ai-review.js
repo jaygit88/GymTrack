@@ -18,7 +18,7 @@ import { MEASUREMENT_FIELDS } from './measurements.js'
 import { runDistance } from './runs.js'
 import { isoOf, startOfWeek, weekStartOf } from './format.js'
 import { loadOfWorkouts } from './muscles.js'
-import { workoutCalories } from './calories.js'
+import { workoutCalories, burnedOn } from './calories.js'
 import { nutritionSummary } from './nutrition.js'
 import { quickContext, minutesFor } from './quick-workout.js'
 import { runGoalOf, goalProgress, fitnessTrend, weeklyKm, loadWarning, planThisWeek, fmtPace, fmtRaceTime, RUN_KINDS } from './running.js'
@@ -72,7 +72,7 @@ export function buildReviewPayload(S, { mode = 'month', now = Date.now(), days =
     bodyweight: bw.length ? { first: `${bw[0].w} ${unit}`, last: `${bw[bw.length - 1].w} ${unit}` } : null,
     measurementChanges: changes, goals, stalledGoals: stalled,
     running: runningContext(S, now, mode === 'runplan' ? 56 : days),
-    nutrition: nutritionSummary(S || {}, { days, now, burnedOn: iso => (S?.workouts || []).filter(w => w && w.d === iso).reduce((n, w) => n + (workoutCalories(S, w).kcal || 0), 0) }),
+    nutrition: nutritionSummary(S || {}, { days, now, burnedOn: iso => burnedOn(S || {}, iso).total }),
   }
 }
 

@@ -3843,4 +3843,11 @@ export default {
   "What should I train today?": "Что мне сегодня тренировать?",
   "Where should I feel it?": "Где я должен это чувствовать?",
   "this exercise": "это упражнение",
+  "About {0} kcal burned": "Около {0} ккал сожжено",
+  "Added by you": "Добавлено вами",
+  "Calories burned": "Сожжённые калории",
+  "For exercise your watch and workouts did not record. Use the calories your watch or the machine showed, or a fair guess.": "Для нагрузки, которую не записали часы и тренировки. Укажите калории с часов или тренажёра, или разумную оценку.",
+  "From Samsung Health, or your heart rate": "Из Samsung Health или по пульсу",
+  "From your heart rate": "По вашему пульсу",
+  "e.g. Padel": "напр. Падел",
 }

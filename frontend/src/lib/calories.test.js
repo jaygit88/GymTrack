@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { workoutCalories, weightKgFor } from './calories.js'
+import { workoutCalories, weightKgFor, runCalories, burnedOn, addExtra, removeExtra, extraOn } from './calories.js'
 
 const w = (over = {}) => ({ d: '2026-11-18', start: 0, end: 60 * 60e3, hr: { avg: 125, max: 160 }, ...over })
 const S = (over = {}) => ({ unit: 'kg', sex: 'male', birthYear: 1988, bodyweight: [{ d: '2026-11-10', w: 85 }], ...over })
@@ -31,5 +31,29 @@ describe('workoutCalories', () => {
 
   it('takes the latest weigh-in on or before the day', () => {
     expect(weightKgFor(S({ bodyweight: [{ d: '2026-11-01', w: 84 }, { d: '2026-11-17', w: 86 }, { d: '2026-11-20', w: 90 }] }), w())).toBe(86)
+  })
+
+  it('falls back to the first weigh-in after the day, however far', () => {
+    expect(weightKgFor(S({ bodyweight: [{ d: '2027-03-01', w: 85 }, { d: '2027-04-01', w: 87 }] }), w())).toBe(85)
+    expect(weightKgFor(S({ bodyweight: [] }), w())).toBeNull()
+  })
+})
+
+describe('runs and exercise added by hand', () => {
+  it('a run uses the watch\'s calories, else its heart rate', () => {
+    expect(runCalories(S(), { d: '2026-11-18', kcal: 512.4 })).toBe(510)
+    expect(runCalories(S(), { d: '2026-11-18', start: 0, end: 60 * 60e3, hr: { avg: 125 } })).toBe(695)
+    expect(runCalories(S(), { d: '2026-11-18', start: 0, end: 60 * 60e3 })).toBeNull()
+  })
+
+  it('a day adds up workouts, runs and what you added', () => {
+    const st = S({ workouts: [w()], runs: [{ d: '2026-11-18', kcal: 300 }, { d: '2026-11-17', kcal: 999 }] })
+    addExtra(st, '2026-11-18', { id: 'x', name: ' Padel ', kcal: 450 })
+    addExtra(st, '2026-11-18', { id: 'y', name: '', kcal: 0 })            // nothing burned, not added
+    expect(extraOn(st, '2026-11-18')).toEqual([expect.objectContaining({ id: 'x', name: 'Padel', kcal: 450 })])
+    expect(burnedOn(st, '2026-11-18')).toEqual({ workouts: 695, runs: 300, other: 450, total: 1445 })
+    removeExtra(st, '2026-11-18', 'x')
+    expect(st.exerciseLog['2026-11-18']).toBeUndefined()
+    expect(burnedOn({}, '2026-11-18').total).toBe(0)
   })
 })

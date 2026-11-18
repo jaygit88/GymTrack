@@ -3886,4 +3886,11 @@ export default {
   "What should I train today?": "Vad ska jag träna idag?",
   "Where should I feel it?": "Var ska jag känna det?",
   "this exercise": "den här övningen",
+  "About {0} kcal burned": "Cirka {0} kcal förbrända",
+  "Added by you": "Tillagt av dig",
+  "Calories burned": "Förbrända kalorier",
+  "For exercise your watch and workouts did not record. Use the calories your watch or the machine showed, or a fair guess.": "För träning som klockan och passen inte fick med. Ange kalorierna klockan eller maskinen visade, eller en rimlig gissning.",
+  "From Samsung Health, or your heart rate": "Från Samsung Health, eller din puls",
+  "From your heart rate": "Från din puls",
+  "e.g. Padel": "t.ex. Padel",
 }

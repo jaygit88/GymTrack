@@ -11,6 +11,7 @@ import {
   cleanRecipe, recentFoods, suggestTargets, targetsOf, pickNutrients,
 } from '../lib/nutrition.js'
 import { loadCofid, searchFoods, searchProducts, lookupBarcode } from '../lib/food-sources.js'
+import { addExtra } from '../lib/calories.js'
 
 // GymTrack's food sheets (views/Nutrition.jsx): find a food (your own, your recipes, the built-in
 // CoFID list, Open Food Facts by name or barcode), say how much, log it; make a food the
@@ -140,6 +141,28 @@ function QuickAdd({ close, meal, iso }) {
     }}>{t('Add')}</Button>
   </>
 }
+
+/* ---------- exercise added by hand ---------- */
+
+// For what the watch and the gym log do not catch (padel, a long walk, a class): a name and its
+// calories, counted with that day's workouts and runs (lib/calories.js burnedOn).
+function ExtraBurn({ close, iso }) {
+  const [name, setName] = useState('')
+  const [kcal, setKcal] = useState(null)
+  return <>
+    <h3>{t('Add exercise')}</h3>
+    <p className="small muted">{t('For exercise your watch and workouts did not record. Use the calories your watch or the machine showed, or a fair guess.')}</p>
+    <Section>
+      <Row title={t('Name')}><TextField value={name} onChange={e => setName(e.target.value)} placeholder={t('e.g. Padel')} /></Row>
+      <Row title={t('Calories burned')} subtitle="kcal"><NumberField value={kcal} nullable decimal={false} onChange={setKcal} className="food-amt" /></Row>
+    </Section>
+    <Button variant="primary" disabled={!(Number(kcal) > 0)} onClick={() => {
+      update(s => addExtra(s, iso, { id: uid(), name: name.trim() || t('Exercise'), kcal }))
+      close()
+    }}>{t('Add')}</Button>
+  </>
+}
+export const extraBurnSheet = iso => ui().openSheet(close => <ExtraBurn close={close} iso={iso} />)
 
 /* ---------- finding a food ---------- */
 

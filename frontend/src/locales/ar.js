@@ -3894,4 +3894,11 @@ export default {
   "What should I train today?": "ماذا أتمرّن اليوم؟",
   "Where should I feel it?": "أين يجب أن أشعر به؟",
   "this exercise": "هذا التمرين",
+  "About {0} kcal burned": "نحو {0} سعرة محروقة",
+  "Added by you": "أضفته أنت",
+  "Calories burned": "السعرات المحروقة",
+  "For exercise your watch and workouts did not record. Use the calories your watch or the machine showed, or a fair guess.": "للتمارين التي لم يسجّلها ساعتك أو تمارينك. استخدم السعرات التي أظهرتها الساعة أو الجهاز، أو تقديرًا معقولًا.",
+  "From Samsung Health, or your heart rate": "من Samsung Health أو من نبضك",
+  "From your heart rate": "من نبضك",
+  "e.g. Padel": "مثل: بادل",
 }

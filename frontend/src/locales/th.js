@@ -3850,4 +3850,11 @@ export default {
   "What should I train today?": "วันนี้ควรฝึกอะไร",
   "Where should I feel it?": "ควรรู้สึกที่ตรงไหน",
   "this exercise": "ท่านี้",
+  "About {0} kcal burned": "เผาผลาญประมาณ {0} kcal",
+  "Added by you": "คุณเพิ่มเอง",
+  "Calories burned": "แคลอรีที่เผาผลาญ",
+  "For exercise your watch and workouts did not record. Use the calories your watch or the machine showed, or a fair guess.": "สำหรับการออกกำลังกายที่นาฬิกาและการฝึกไม่ได้บันทึก ใส่แคลอรีที่นาฬิกาหรือเครื่องแสดง หรือค่าประมาณที่สมเหตุสมผล",
+  "From Samsung Health, or your heart rate": "จาก Samsung Health หรือจากอัตราการเต้นของหัวใจ",
+  "From your heart rate": "จากอัตราการเต้นของหัวใจ",
+  "e.g. Padel": "เช่น พาเดล",
 }

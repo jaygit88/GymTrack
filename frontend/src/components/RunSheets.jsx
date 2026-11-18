@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { runCalories } from '../lib/calories.js'
 import Icon from './Icon.jsx'
 import DateField from './DateField.jsx'
 import { Button, Segmented, Section, Row, NumberField } from './ui.jsx'
@@ -56,7 +57,7 @@ function RunSheet({ run, close }) {
       <Stat label={t('Max heart rate')} value={run.hr && `${run.hr.max} bpm`} />
       <Stat label={t('Cadence')} value={run.cadence && `${run.cadence} spm`} />
       <Stat label={t('Climb')} value={run.elevM != null ? `${run.elevM} m` : null} />
-      <Stat label={t('Energy')} value={run.kcal && `${run.kcal} kcal`} />
+      <Stat label={t('Energy')} value={runCalories(S, run) && (run.kcal > 0 ? '' : '≈ ') + runCalories(S, run) + ' kcal'} />
       <Stat label={t('Metres per heartbeat')} value={run.eff && fmt2(run.eff)} />
     </div>
     {run.dec != null && <div className="small muted run-note">

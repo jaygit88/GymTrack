@@ -3832,4 +3832,11 @@ export default {
   "What should I train today?": "今天該練什麼？",
   "Where should I feel it?": "應該在哪裡感覺到發力？",
   "this exercise": "這個動作",
+  "About {0} kcal burned": "約消耗 {0} 大卡",
+  "Added by you": "你手動新增",
+  "Calories burned": "消耗的熱量",
+  "For exercise your watch and workouts did not record. Use the calories your watch or the machine showed, or a fair guess.": "用於手錶和訓練沒有記錄的運動。填寫手錶或器材顯示的熱量，或一個合理的估計。",
+  "From Samsung Health, or your heart rate": "來自 Samsung Health 或你的心率",
+  "From your heart rate": "來自你的心率",
+  "e.g. Padel": "例如 板式網球",
 }

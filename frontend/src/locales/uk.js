@@ -3836,4 +3836,11 @@ export default {
   "What should I train today?": "Що мені сьогодні тренувати?",
   "Where should I feel it?": "Де я маю це відчувати?",
   "this exercise": "ця вправа",
+  "About {0} kcal burned": "Близько {0} ккал спалено",
+  "Added by you": "Додано тобою",
+  "Calories burned": "Спалені калорії",
+  "For exercise your watch and workouts did not record. Use the calories your watch or the machine showed, or a fair guess.": "Для активності, яку не записали годинник і тренування. Вкажи калорії з годинника чи тренажера або розумну оцінку.",
+  "From Samsung Health, or your heart rate": "Із Samsung Health або за пульсом",
+  "From your heart rate": "За твоїм пульсом",
+  "e.g. Padel": "напр. Падел",
 }

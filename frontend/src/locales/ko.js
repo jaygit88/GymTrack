@@ -3839,4 +3839,11 @@ export default {
   "What should I train today?": "오늘은 뭘 운동할까요?",
   "Where should I feel it?": "어디에 자극이 와야 하나요?",
   "this exercise": "이 운동",
+  "About {0} kcal burned": "약 {0}kcal 소모",
+  "Added by you": "직접 추가함",
+  "Calories burned": "소모 칼로리",
+  "For exercise your watch and workouts did not record. Use the calories your watch or the machine showed, or a fair guess.": "시계와 운동 기록에 남지 않은 운동용이에요. 시계나 기구에 표시된 칼로리, 또는 적당한 추정치를 넣으세요.",
+  "From Samsung Health, or your heart rate": "Samsung Health 또는 심박수 기준",
+  "From your heart rate": "심박수 기준",
+  "e.g. Padel": "예: 파델",
 }

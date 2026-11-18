@@ -3,9 +3,9 @@ import { useStore } from '../store/useStore.js'
 import Icon from '../components/Icon.jsx'
 import CardHead from '../components/CardHead.jsx'
 import { Button } from '../components/ui.jsx'
-import { findFoodSheet, amountSheet, recipeSheet, targetsSheet, macroLine, MEAL_LABEL } from '../components/FoodSheets.jsx'
+import { findFoodSheet, amountSheet, recipeSheet, targetsSheet, extraBurnSheet, macroLine, MEAL_LABEL } from '../components/FoodSheets.jsx'
 import { MEALS, dayEntries, dayTotals, mealTotals, averages, targetsOf, recipeNutrients } from '../lib/nutrition.js'
-import { workoutCalories } from '../lib/calories.js'
+import { burnedOn, extraOn, removeExtra } from '../lib/calories.js'
 import { todayISO, isoOf, fmtDate, fmtNum } from '../lib/format.js'
 import { t } from '../lib/i18n.js'
 import { tappable } from '../lib/use-sheet-keyboard.js'
@@ -32,7 +32,9 @@ export default function Nutrition() {
   const today = todayISO()
   const tot = dayTotals(S, iso)
   const tg = targetsOf(S)
-  const burned = S.workouts.filter(w => w.d === iso).reduce((n, w) => n + (workoutCalories(S, w).kcal || 0), 0)
+  const burned = burnedOn(S, iso)
+  const extras = extraOn(S, iso)
+  const update = useStore(s => s.update)
   const week = averages(S, 7)
   const label = iso === today ? t('Today') : iso === shift(today, -1) ? t('Yesterday') : fmtDate(iso, true)
   return <div className="narrow">
@@ -54,8 +56,23 @@ export default function Nutrition() {
       <TargetBar label={t('Protein')} value={tot.protein} target={tg?.protein} unit="g" color="var(--acc)" />
       <TargetBar label={t('Carbs')} value={tot.carbs} target={tg?.carbs} unit="g" color="var(--blue)" />
       <TargetBar label={t('Fat')} value={tot.fat} target={tg?.fat} unit="g" color="var(--teal)" />
-      {burned > 0 && <div className="small muted nut-burn"><Icon name="flame" />{t('Burned in workouts: about {0} kcal', burned)}</div>}
       {!tg && <div className="ai-actions"><Button size="sm" variant="tinted" icon="target" onClick={targetsSheet}>{t('Set daily targets')}</Button></div>}
+    </div>
+
+    <div className="card nut-meal">
+      <div className="row between">
+        <div><div className="nut-meal-t">{t('Exercise')}</div>{burned.total > 0 && <div className="small muted">{t('About {0} kcal burned', burned.total)}</div>}</div>
+        <Button size="sm" variant="tinted" icon="plus" onClick={() => extraBurnSheet(iso)}>{t('Add')}</Button>
+      </div>
+      {burned.total > 0 && <div className="list">
+        {burned.workouts > 0 && <div className="item"><div className="grow"><div className="tt">{t('Workouts')}</div><div className="ss">{t('From your heart rate')}</div></div><b className="nut-kcal">{burned.workouts}</b></div>}
+        {burned.runs > 0 && <div className="item"><div className="grow"><div className="tt">{t('Runs')}</div><div className="ss">{t('From Samsung Health, or your heart rate')}</div></div><b className="nut-kcal">{burned.runs}</b></div>}
+        {extras.map(x => <div key={x.id} className="item">
+          <div className="grow"><div className="tt">{x.name}</div><div className="ss">{t('Added by you')}</div></div>
+          <b className="nut-kcal">{x.kcal}</b>
+          <button className="iconbtn" aria-label={t('Remove')} onClick={() => update(s => removeExtra(s, iso, x.id))}><Icon name="xmark" /></button>
+        </div>)}
+      </div>}
     </div>
 
     {MEALS.map(meal => {

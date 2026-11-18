@@ -3839,4 +3839,11 @@ export default {
   "What should I train today?": "Bugün neyi çalışmalıyım?",
   "Where should I feel it?": "Nerede hissetmeliyim?",
   "this exercise": "bu egzersiz",
+  "About {0} kcal burned": "Yaklaşık {0} kcal yakıldı",
+  "Added by you": "Senin eklediğin",
+  "Calories burned": "Yakılan kalori",
+  "For exercise your watch and workouts did not record. Use the calories your watch or the machine showed, or a fair guess.": "Saatinin ve antrenmanlarının kaydetmediği egzersizler için. Saatin ya da makinenin gösterdiği kaloriyi veya makul bir tahmini gir.",
+  "From Samsung Health, or your heart rate": "Samsung Health'ten veya nabzından",
+  "From your heart rate": "Nabzından",
+  "e.g. Padel": "örn. Padel",
 }

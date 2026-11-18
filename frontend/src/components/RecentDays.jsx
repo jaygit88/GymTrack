@@ -12,7 +12,7 @@ import { RUN_KIND_LABEL } from './RunSheets.jsx'
 import { workoutDetailSheet, logPastWorkoutSheet, startFlow, dayOverrideSheet } from '../sheets.jsx'
 import MiniBodyMap from './MiniBodyMap.jsx'
 import { effectiveRoutines, setsDone } from '../lib/history.js'
-import { workoutCalories } from '../lib/calories.js'
+import { workoutCalories, runCalories } from '../lib/calories.js'
 import { deriveSessionName } from '../lib/session-merge.js'
 import { runSheet } from './RunSheets.jsx'
 
@@ -65,7 +65,7 @@ export default function RecentDays({ S, back = 3, ahead = 3 }) {
           <span className="lrow-i" style={{ background: 'var(--orange)' }}><Icon name="run" /></span>
           <div className="grow">
             <div className="tt">{r.title || t('Run')}</div>
-            <div className="ss">{[dist && fmtNum(dist.value) + ' ' + dist.unit, ...durPart(r.end - r.start), pace && pace.text + ' /' + pace.unit, r.hr && r.hr.avg + ' bpm'].filter(Boolean).join(' · ')}</div>
+            <div className="ss">{[dist && fmtNum(dist.value) + ' ' + dist.unit, ...durPart(r.end - r.start), pace && pace.text + ' /' + pace.unit, r.hr && r.hr.avg + ' bpm', runCalories(S, r) && t('≈ {0} kcal', runCalories(S, r))].filter(Boolean).join(' · ')}</div>
           </div>
           <Icon name="chevronRight" className="chev" />
         </div>)

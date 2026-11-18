@@ -2511,6 +2511,10 @@ export const PT_BR_OVERRIDES = {
   "What is a good snack after training?": "Qual é um bom lanche depois do treino?",
   "What should I have for dinner?": "O que devo comer no jantar?",
   "Where should I feel it?": "Onde devo sentir?",
+  "Added by you": "Adicionado por você",
+  "For exercise your watch and workouts did not record. Use the calories your watch or the machine showed, or a fair guess.": "Para exercícios que o relógio e os treinos não registraram. Use as calorias que o relógio ou o aparelho mostrou, ou uma estimativa razoável.",
+  "From Samsung Health, or your heart rate": "Do Samsung Health, ou da sua frequência cardíaca",
+  "From your heart rate": "Da sua frequência cardíaca",
 }
 
 export default { ...pt, ...PT_BR_OVERRIDES }

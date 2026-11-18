@@ -13,7 +13,7 @@
 import { EXIDX, smOf } from './exercises.js'
 import { isWarmupRow } from './workout-model.js'
 import { workoutLine } from './ai-review.js'
-import { workoutCalories } from './calories.js'
+import { burnedOn as burnedDay, extraOn } from './calories.js'
 import { ageOf, sexOf } from './strength-level.js'
 import { goalKeys } from './measure-change.js'
 import { MEASUREMENT_FIELDS } from './measurements.js'
@@ -30,7 +30,7 @@ const MAX_ANSWER = 2000
 
 const label = key => MEASUREMENT_FIELDS.find(f => f.key === key)?.label || key
 const unitOf = S => (S?.unit === 'lb' ? 'lb' : 'kg')
-const burnedOn = (S, iso) => (S?.workouts || []).filter(w => w && w.d === iso).reduce((n, w) => n + (workoutCalories(S, w).kcal || 0), 0)
+const burnedOn = (S, iso) => burnedDay(S, iso).total
 
 function you(S) {
   const bw = (S?.bodyweight || []).filter(b => b && +b.w > 0)
@@ -59,8 +59,8 @@ function nutritionContext(S, iso) {
     meals,
     ...(tg ? { targets: { kcal: tg.kcal, ...(tg.protein ? { proteinG: tg.protein } : {}) },
       left: { kcal: tg.kcal - tot.kcal, ...(tg.protein ? { proteinG: Math.round(tg.protein - tot.protein) } : {}) } } : {}),
-    burnedInWorkoutsKcal: burnedOn(S, iso),
-    trainedToday: [...workoutsToday, ...runsToday],
+    burnedInExerciseKcal: burnedDay(S, iso),
+    trainedToday: [...workoutsToday, ...runsToday, ...extraOn(S, iso).map(x => `${x.name} (${x.kcal} kcal, added by hand)`)],
     recipes: (S?.recipes || []).slice(0, 15).map(r => { const n = recipeNutrients(r).perServing; return `${r.name} (${n.kcal} kcal, ${n.protein} g protein a serving)` }),
     foodsYouEat: recentFoods(S, 20).map(e => e.name),
     ...(week.days > 1 ? { last7DaysAverage: { daysLogged: week.days, kcal: week.avg.kcal, proteinG: week.avg.protein } } : {}),

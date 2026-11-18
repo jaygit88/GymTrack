@@ -3839,4 +3839,11 @@ export default {
   "What should I train today?": "आज क्या ट्रेन करूं?",
   "Where should I feel it?": "मुझे यह कहां महसूस होना चाहिए?",
   "this exercise": "यह एक्सरसाइज़",
+  "About {0} kcal burned": "लगभग {0} kcal जली",
+  "Added by you": "आपने जोड़ा",
+  "Calories burned": "जली कैलोरी",
+  "For exercise your watch and workouts did not record. Use the calories your watch or the machine showed, or a fair guess.": "उस एक्सरसाइज़ के लिए जो वॉच और वर्कआउट ने दर्ज नहीं की। वॉच या मशीन पर दिखी कैलोरी, या सही अंदाज़ा डालें।",
+  "From Samsung Health, or your heart rate": "Samsung Health से, या आपकी हार्ट रेट से",
+  "From your heart rate": "आपकी हार्ट रेट से",
+  "e.g. Padel": "जैसे पैडल",
 }

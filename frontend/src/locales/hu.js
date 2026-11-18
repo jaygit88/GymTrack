@@ -3842,4 +3842,11 @@ export default {
   "What should I train today?": "Mit eddzek ma?",
   "Where should I feel it?": "Hol kellene éreznem?",
   "this exercise": "ez a gyakorlat",
+  "About {0} kcal burned": "Kb. {0} kcal elégetve",
+  "Added by you": "Te adtad hozzá",
+  "Calories burned": "Elégetett kalória",
+  "For exercise your watch and workouts did not record. Use the calories your watch or the machine showed, or a fair guess.": "Olyan mozgáshoz, amit az órád és az edzéseid nem rögzítettek. Írd be, amit az óra vagy a gép mutatott, vagy egy reális becslést.",
+  "From Samsung Health, or your heart rate": "A Samsung Healthből vagy a pulzusodból",
+  "From your heart rate": "A pulzusodból",
+  "e.g. Padel": "pl. Padel",
 }

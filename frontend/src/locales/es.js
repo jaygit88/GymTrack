@@ -3839,4 +3839,11 @@ export default {
   "What should I train today?": "¿Qué debería entrenar hoy?",
   "Where should I feel it?": "¿Dónde debería notarlo?",
   "this exercise": "este ejercicio",
+  "About {0} kcal burned": "Unas {0} kcal quemadas",
+  "Added by you": "Añadido por ti",
+  "Calories burned": "Calorías quemadas",
+  "For exercise your watch and workouts did not record. Use the calories your watch or the machine showed, or a fair guess.": "Para el ejercicio que tu reloj y tus entrenamientos no registraron. Usa las calorías que mostró tu reloj o la máquina, o una estimación razonable.",
+  "From Samsung Health, or your heart rate": "De Samsung Health, o de tu frecuencia cardíaca",
+  "From your heart rate": "De tu frecuencia cardíaca",
+  "e.g. Padel": "p. ej. Pádel",
 }
