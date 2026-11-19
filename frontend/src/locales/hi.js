@@ -3892,4 +3892,5 @@ export default {
   "{0} records": "{0} रिकॉर्ड",
   "kcal left": "kcal बाकी",
   "kcal over": "kcal ज़्यादा",
+  "Photo of the label": "लेबल की फ़ोटो",
 }

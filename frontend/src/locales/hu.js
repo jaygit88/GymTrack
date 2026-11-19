@@ -3895,4 +3895,5 @@ export default {
   "{0} records": "{0} rekord",
   "kcal left": "kcal maradt",
   "kcal over": "kcal túl",
+  "Photo of the label": "Fotó a címkéről",
 }

@@ -3947,4 +3947,5 @@ export default {
   "{0} records": "{0} أرقام قياسية",
   "kcal left": "سعرة متبقية",
   "kcal over": "سعرة زيادة",
+  "Photo of the label": "صورة الملصق",
 }

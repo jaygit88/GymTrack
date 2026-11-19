@@ -3885,4 +3885,5 @@ export default {
   "{0} records": "{0} 項紀錄",
   "kcal left": "大卡剩餘",
   "kcal over": "大卡超出",
+  "Photo of the label": "拍標示",
 }

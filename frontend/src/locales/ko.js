@@ -3892,4 +3892,5 @@ export default {
   "{0} records": "기록 {0}개",
   "kcal left": "kcal 남음",
   "kcal over": "kcal 초과",
+  "Photo of the label": "라벨 사진",
 }

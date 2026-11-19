@@ -3896,4 +3896,5 @@ export default {
   "{0} records": { one: "{0} рекорд", few: "{0} рекорда", many: "{0} рекордов", other: "{0} рекорда" },
   "kcal left": "ккал осталось",
   "kcal over": "ккал сверх",
+  "Photo of the label": "Фото этикетки",
 }

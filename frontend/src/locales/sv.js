@@ -3939,4 +3939,5 @@ export default {
   "{0} records": "{0} rekord",
   "kcal left": "kcal kvar",
   "kcal over": "kcal över",
+  "Photo of the label": "Foto av etiketten",
 }

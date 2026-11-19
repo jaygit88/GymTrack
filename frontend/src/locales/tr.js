@@ -3892,4 +3892,5 @@ export default {
   "{0} records": "{0} rekor",
   "kcal left": "kcal kaldı",
   "kcal over": "kcal fazla",
+  "Photo of the label": "Etiketin fotoğrafı",
 }

@@ -3903,4 +3903,5 @@ export default {
   "{0} records": "{0} สถิติ",
   "kcal left": "kcal ที่เหลือ",
   "kcal over": "kcal เกิน",
+  "Photo of the label": "ถ่ายรูปฉลาก",
 }

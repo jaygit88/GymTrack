@@ -396,6 +396,12 @@
         <intent>
             <action android:name="android.media.action.VIDEO_CAPTURE" />
         </intent>
+        <!-- GymTrack: "Photo of the nutrition label" (components/FoodSheets.jsx) is the same kind of
+             input for a still: without this the camera app is hidden from the chooser and the
+             button only offers photos already on the phone. -->
+        <intent>
+            <action android:name="android.media.action.IMAGE_CAPTURE" />
+        </intent>
         <!-- Spoken cues (SpeechCue.java): the phone's text-to-speech engine is another app, and
              since Android 11 the app cannot bind to it without saying so here. -->
         <intent>

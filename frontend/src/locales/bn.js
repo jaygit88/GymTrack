@@ -3971,4 +3971,5 @@ export default {
   "{0} records": "{0}টি রেকর্ড",
   "kcal left": "kcal বাকি",
   "kcal over": "kcal বেশি",
+  "Photo of the label": "লেবেলের ছবি",
 }

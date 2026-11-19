@@ -3892,4 +3892,5 @@ export default {
   "{0} records": "{0} record",
   "kcal left": "kcal rimaste",
   "kcal over": "kcal in più",
+  "Photo of the label": "Foto dell'etichetta",
 }

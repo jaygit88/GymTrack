@@ -3892,4 +3892,5 @@ export default {
   "{0} records": "{0} 项纪录",
   "kcal left": "千卡剩余",
   "kcal over": "千卡超出",
+  "Photo of the label": "拍标签",
 }

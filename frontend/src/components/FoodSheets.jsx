@@ -99,7 +99,7 @@ export const amountSheet = props => ui().openSheet(close => <Amount close={close
 
 /* ---------- a food of your own ---------- */
 
-function NewFood({ close, barcode = null, name: name0 = '', onMade }) {
+function NewFood({ close, barcode = null, name: name0 = '', photo: photo0 = null, onMade }) {
   const [name, setName] = useState(name0)
   const [per, setPer] = useState('100g')
   const [serving, setServing] = useState(100)
@@ -122,6 +122,8 @@ function NewFood({ close, barcode = null, name: name0 = '', onMade }) {
     } catch (e) { if (e?.code !== 'declined') setReadErr(e?.message || t('Try again')) }
     setReading(false)
   }
+  // Opened from the food search with a photo just taken: read it at once.
+  useEffect(() => { if (photo0) readLabel(photo0) }, [])
   const save = () => {
     if (!name.trim() || !(Number(v.kcal) >= 0) || v.kcal == null) { ui().toast(t('Give it a name and its calories.')); return }
     const k = per === 'serving' && Number(serving) > 0 ? 100 / Number(serving) : 1
@@ -210,6 +212,7 @@ function FindFood({ close, meal, iso, pick }) {
   const [generic, setGeneric] = useState([])
   const [off, setOff] = useState({ q: '', items: [], state: 'idle' })
   const input = useRef(null)
+  const labelPhoto = useRef(null)
   useEffect(() => { loadCofid().then(setGeneric).catch(() => {}); setTimeout(() => input.current?.focus(), 250) }, [])
   const mine = S.foods || [], recipes = pick ? [] : (S.recipes || [])
   const local = useMemo(() => searchFoods(q, { mine, recipes, generic }), [q, mine, recipes, generic]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -256,6 +259,17 @@ function FindFood({ close, meal, iso, pick }) {
     <SearchField ref={input} value={q} onChange={e => setQ(e.target.value)} onClear={() => setQ('')} placeholder={t('Search foods')} />
     <div className="food-actions">
       {MOBILE && <Button size="sm" variant="tinted" icon="barcode" onClick={scan}>{t('Scan barcode')}</Button>}
+      {/* Not in the list or Open Food Facts: photograph the label, GymTrackAI fills in a new food. */}
+      {aiReviewReady() && <>
+        <input ref={labelPhoto} type="file" accept="image/*" capture="environment" hidden onChange={e => {
+          const file = e.target.files?.[0]
+          e.target.value = ''
+          if (!file) return
+          close()
+          newFoodSheet({ name: q, photo: file, onMade: f => amountSheet({ food: f, meal, iso, onPick: pick }) })
+        }} />
+        <Button size="sm" variant="tinted" icon="camera" onClick={() => labelPhoto.current?.click()}>{t('Photo of the label')}</Button>
+      </>}
       {!pick && <Button size="sm" variant="ghost" icon="flame" onClick={() => { close(); ui().openSheet(c => <QuickAdd close={c} meal={meal} iso={iso} />) }}>{t('Quick add')}</Button>}
       <Button size="sm" variant="ghost" icon="plus" onClick={() => { close(); newFoodSheet({ name: q, onMade: f => amountSheet({ food: f, meal, iso, onPick: pick }) }) }}>{t('New food')}</Button>
     </div>
