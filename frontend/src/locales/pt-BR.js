@@ -2541,6 +2541,12 @@ export const PT_BR_OVERRIDES = {
   "Message GymTrackAI…": "Escreva para o GymTrackAI…",
   "Open the full chat": "Abrir a conversa completa",
   "{0} of {1} GymTrackAI requests used today": "{0} de {1} pedidos ao GymTrackAI usados hoje",
+  "Answers from your training, food, weight and runs, and suggests plan changes you say yes or no to.": "Responde a partir do seu treino, comida, peso e corridas, e sugere mudanças no plano que você aceita ou não.",
+  "GymTrackAI answers with Claude, using your own API key.": "O GymTrackAI responde com o Claude, usando sua própria chave de API.",
+  "GymTrackAI isn’t set up on this phone. Check Settings → GymTrackAI.": "O GymTrackAI não está configurado neste celular. Veja em Configurações → GymTrackAI.",
+  "Scheduled reviews take a break while GymTrackAI is off. Your setup and chats stay.": "As revisões agendadas param enquanto o GymTrackAI estiver desligado. Sua configuração e conversas ficam.",
+  "Set up GymTrackAI with your own API key first: Settings, GymTrackAI.": "Configure primeiro o GymTrackAI com sua chave de API: Configurações, GymTrackAI.",
+  "Your AI provider rejected the key on this phone. Check it under Settings → GymTrackAI.": "Seu provedor de IA recusou a chave neste celular. Confira em Configurações → GymTrackAI.",
 }
 
 export default { ...pt, ...PT_BR_OVERRIDES }

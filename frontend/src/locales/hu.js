@@ -3910,4 +3910,13 @@ export default {
   "Message GymTrackAI…": "Üzenet a GymTrackAI-nak…",
   "Open the full chat": "Teljes csevegés megnyitása",
   "{0} of {1} GymTrackAI requests used today": "Ma {1} GymTrackAI-kérésből {0} felhasználva",
+  "Answers from your training, food, weight and runs, and suggests plan changes you say yes or no to.": "Az edzésed, étkezésed, súlyod és futásaid alapján válaszol, és tervmódosításokat javasol, amikről te döntesz.",
+  "GymTrackAI answers with Claude, using your own API key.": "A GymTrackAI Claude-dal válaszol, a saját API-kulcsoddal.",
+  "GymTrackAI isn’t set up on this phone. Check Settings → GymTrackAI.": "A GymTrackAI nincs beállítva ezen a telefonon. Nézd meg: Beállítások → GymTrackAI.",
+  "Reading a label needs Claude (Anthropic) as the GymTrackAI provider.": "A címke olvasásához a GymTrackAI szolgáltatója Claude (Anthropic) kell legyen.",
+  "Scheduled reviews take a break while GymTrackAI is off. Your setup and chats stay.": "Az ütemezett áttekintések szünetelnek, amíg a GymTrackAI ki van kapcsolva. A beállítás és a csevegések maradnak.",
+  "Set up GymTrackAI": "GymTrackAI beállítása",
+  "Set up GymTrackAI with your own API key first: Settings, GymTrackAI.": "Először állítsd be a GymTrackAI-t a saját API-kulcsoddal: Beállítások, GymTrackAI.",
+  "Your AI provider rejected the key on this phone. Check it under Settings → GymTrackAI.": "Az MI-szolgáltatód elutasította a kulcsot ezen a telefonon. Ellenőrizd: Beállítások → GymTrackAI.",
+  "GymTrackAI": "GymTrackAI",
 }

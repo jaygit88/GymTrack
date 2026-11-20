@@ -40,7 +40,7 @@ export function runAiReview(mode, { deps = {}, minutes = 30 } = {}) {
  * { value }) and whatever `build` returned.
  */
 async function callModel(deps, build) {
-  if (!(deps.ready || aiReviewReady)()) throw fail(t('Set up the AI Coach with your own API key first: Settings, AI Coach.'), 'off')
+  if (!(deps.ready || aiReviewReady)()) throw fail(t('Set up GymTrackAI with your own API key first: Settings, GymTrackAI.'), 'off')
   await (deps.consent || ensureAiConsent)()
   const local = deps.local || await import('./coach-local.js')
   const core = deps.core || {
@@ -50,11 +50,11 @@ async function callModel(deps, build) {
   const d = await (deps.loadDevice || loadCoachDevice)()
   const adapter = local.ADAPTERS[d.provider]
   const meta = core.HTTP_PROVIDERS[d.provider]
-  if (!adapter || !meta) throw fail(t('Set up the AI Coach with your own API key first: Settings, AI Coach.'), 'off')
+  if (!adapter || !meta) throw fail(t('Set up GymTrackAI with your own API key first: Settings, GymTrackAI.'), 'off')
 
   const built = build(useStore.getState().S)
   // Only the Anthropic adapter carries a photo; another provider would answer without seeing it.
-  if (built.images && d.provider !== 'anthropic') throw fail(t('Reading a label needs Claude (Anthropic) as the AI Coach provider.'), 'provider')
+  if (built.images && d.provider !== 'anthropic') throw fail(t('Reading a label needs Claude (Anthropic) as the GymTrackAI provider.'), 'provider')
 
   // The Coach's daily cap counts these too: they are paid for the same way.
   const today = todayISO()

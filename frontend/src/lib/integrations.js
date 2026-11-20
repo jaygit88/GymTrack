@@ -48,7 +48,7 @@ export const CARDS = [
     syncs: ['A signed JSON message when a workout is finished, a record falls or you weigh in.', 'Sent by your server, from whichever device you logged on.'],
   },
   {
-    id: 'coach', cat: 'ai', name: 'AI Coach', translate: true, icon: 'sparkles', tint: 'var(--green)',
+    id: 'coach', cat: 'ai', name: 'GymTrackAI', translate: true, icon: 'sparkles', tint: 'var(--green)',
     desc: 'Plans and reviews from the model you pick.',
     syncs: ['Reads your plan and the last weeks of training when you ask.', 'Set up on its own page.'],
   },

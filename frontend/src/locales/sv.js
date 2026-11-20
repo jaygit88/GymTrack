@@ -3954,4 +3954,13 @@ export default {
   "Message GymTrackAI…": "Skriv till GymTrackAI…",
   "Open the full chat": "Öppna hela chatten",
   "{0} of {1} GymTrackAI requests used today": "{0} av {1} GymTrackAI-förfrågningar använda idag",
+  "Answers from your training, food, weight and runs, and suggests plan changes you say yes or no to.": "Svarar utifrån din träning, mat, vikt och löpning, och föreslår planändringar du säger ja eller nej till.",
+  "GymTrackAI answers with Claude, using your own API key.": "GymTrackAI svarar med Claude, via din egen API-nyckel.",
+  "GymTrackAI isn’t set up on this phone. Check Settings → GymTrackAI.": "GymTrackAI är inte inställt på den här telefonen. Kolla Inställningar → GymTrackAI.",
+  "Reading a label needs Claude (Anthropic) as the GymTrackAI provider.": "Att läsa en etikett kräver Claude (Anthropic) som GymTrackAI:s leverantör.",
+  "Scheduled reviews take a break while GymTrackAI is off. Your setup and chats stay.": "Schemalagda genomgångar pausar medan GymTrackAI är avstängt. Inställningar och chattar finns kvar.",
+  "Set up GymTrackAI": "Ställ in GymTrackAI",
+  "Set up GymTrackAI with your own API key first: Settings, GymTrackAI.": "Ställ först in GymTrackAI med din egen API-nyckel: Inställningar, GymTrackAI.",
+  "Your AI provider rejected the key on this phone. Check it under Settings → GymTrackAI.": "Din AI-leverantör avvisade nyckeln på den här telefonen. Kontrollera den under Inställningar → GymTrackAI.",
+  "GymTrackAI": "GymTrackAI",
 }

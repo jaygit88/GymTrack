@@ -3907,4 +3907,13 @@ export default {
   "Message GymTrackAI…": "GymTrackAI에게 메시지…",
   "Open the full chat": "전체 채팅 열기",
   "{0} of {1} GymTrackAI requests used today": "오늘 GymTrackAI 요청 {1}회 중 {0}회 사용",
+  "Answers from your training, food, weight and runs, and suggests plan changes you say yes or no to.": "운동, 식단, 체중, 달리기를 바탕으로 답하고, 수락 여부를 고를 수 있는 계획 변경을 제안해요.",
+  "GymTrackAI answers with Claude, using your own API key.": "GymTrackAI는 내 API 키로 Claude를 통해 답해요.",
+  "GymTrackAI isn’t set up on this phone. Check Settings → GymTrackAI.": "이 휴대폰에 GymTrackAI가 설정되지 않았어요. 설정 → GymTrackAI를 확인하세요.",
+  "Reading a label needs Claude (Anthropic) as the GymTrackAI provider.": "라벨을 읽으려면 GymTrackAI 제공자가 Claude(Anthropic)여야 해요.",
+  "Scheduled reviews take a break while GymTrackAI is off. Your setup and chats stay.": "GymTrackAI가 꺼져 있는 동안 예약 검토는 쉬어요. 설정과 채팅은 그대로예요.",
+  "Set up GymTrackAI": "GymTrackAI 설정",
+  "Set up GymTrackAI with your own API key first: Settings, GymTrackAI.": "먼저 내 API 키로 GymTrackAI를 설정하세요: 설정, GymTrackAI.",
+  "Your AI provider rejected the key on this phone. Check it under Settings → GymTrackAI.": "AI 제공자가 이 휴대폰의 키를 거부했어요. 설정 → GymTrackAI에서 확인하세요.",
+  "GymTrackAI": "GymTrackAI",
 }

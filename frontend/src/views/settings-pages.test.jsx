@@ -136,14 +136,14 @@ describe('the root', () => {
     mocks.user = { id: 'u1', name: 'Dana' }
     mount()
     expect(titles()).toContain('Reminders')
-    expect(titles()).not.toContain('AI Coach')
+    expect(titles()).not.toContain('GymTrackAI')
     expect(host.querySelector('.sp-acct .lrow-t').textContent).toBe('Dana')
     expect(host.querySelector('.sp-avatar').textContent).toBe('D')
     mocks.user = null
     mocks.MOBILE = true
     mount()
     expect(titles()).toContain('Reminders')
-    expect(titles()).toContain('AI Coach')
+    expect(titles()).toContain('GymTrackAI')
     expect(host.querySelector('.sp-acct .lrow-t').textContent).toBe('This phone')
   })
 
@@ -151,7 +151,7 @@ describe('the root', () => {
     mocks.MOBILE = true
     mount()
     act(() => rowTitled('Timer alerts').click())
-    act(() => rowTitled('AI Coach').click())
+    act(() => rowTitled('GymTrackAI').click())
     act(() => host.querySelector('.sp-acct').click())
     expect(mocks.navs).toEqual([['/settings/alerts'], ['/coach/setup'], ['/settings/account']])
   })
@@ -160,24 +160,24 @@ describe('the root', () => {
     mocks.config = { coach: { enabled: true } }
     mocks.user = { id: 'u1', name: 'Dana' }
     mount()
-    expect(titles()).not.toContain('AI Coach')
+    expect(titles()).not.toContain('GymTrackAI')
     mocks.user = { id: 'u1', name: 'Dana', admin: true }
     mount()
-    expect(rowTitled('AI Coach').textContent).toContain('Admin')
-    act(() => rowTitled('AI Coach').click())
+    expect(rowTitled('GymTrackAI').textContent).toContain('Admin')
+    act(() => rowTitled('GymTrackAI').click())
     expect(mocks.navs).toEqual([['/admin', { state: { section: 'coach' } }]])
   })
 
   it('only while the server offers the Coach, so the row never leads to an admin page without it (#683)', () => {
     mocks.user = { id: 'u1', name: 'Dana', admin: true }
     mount()
-    expect(titles()).not.toContain('AI Coach')
+    expect(titles()).not.toContain('GymTrackAI')
     mocks.config = { coach: null }
     mount()
-    expect(titles()).not.toContain('AI Coach')
+    expect(titles()).not.toContain('GymTrackAI')
     mocks.config = { coach: { enabled: true } }
     mount()
-    expect(titles()).toContain('AI Coach')
+    expect(titles()).toContain('GymTrackAI')
   })
 
   it('searches every setting and a hit goes to its page with the row to flash', () => {

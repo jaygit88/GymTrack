@@ -3900,4 +3900,13 @@ export default {
   "Message GymTrackAI…": "傳訊息給 GymTrackAI…",
   "Open the full chat": "開啟完整對話",
   "{0} of {1} GymTrackAI requests used today": "今天已用 {0}/{1} 次 GymTrackAI 請求",
+  "Answers from your training, food, weight and runs, and suggests plan changes you say yes or no to.": "根據你的訓練、飲食、體重和跑步來回答，並建議由你決定是否接受的課表調整。",
+  "GymTrackAI answers with Claude, using your own API key.": "GymTrackAI 使用你自己的 API 金鑰，透過 Claude 回答。",
+  "GymTrackAI isn’t set up on this phone. Check Settings → GymTrackAI.": "這支手機上還沒有設定 GymTrackAI。請查看設定 → GymTrackAI。",
+  "Reading a label needs Claude (Anthropic) as the GymTrackAI provider.": "讀取標示需要 GymTrackAI 使用 Claude（Anthropic）。",
+  "Scheduled reviews take a break while GymTrackAI is off. Your setup and chats stay.": "GymTrackAI 關閉期間，定期回顧會暫停。你的設定和對話會保留。",
+  "Set up GymTrackAI": "設定 GymTrackAI",
+  "Set up GymTrackAI with your own API key first: Settings, GymTrackAI.": "請先用你自己的 API 金鑰設定 GymTrackAI：設定，GymTrackAI。",
+  "Your AI provider rejected the key on this phone. Check it under Settings → GymTrackAI.": "你的 AI 服務商拒絕了這支手機上的金鑰。請在設定 → GymTrackAI 中檢查。",
+  "GymTrackAI": "GymTrackAI",
 }

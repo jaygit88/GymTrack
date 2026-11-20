@@ -80,8 +80,8 @@ function AiChat({ close, where }) {
     <h3>{t('Ask GymTrackAI')}</h3>
     <div className="small muted ai-chat-about">{about}</div>
     {!ready ? <>
-      <p className="small">{t('GymTrackAI answers with Claude, using the AI Coach connection and your own API key.')}</p>
-      <Button variant="primary" icon="sparkles" onClick={setUp}>{t('Set up the AI Coach')}</Button>
+      <p className="small">{t('GymTrackAI answers with Claude, using your own API key.')}</p>
+      <Button variant="primary" icon="sparkles" onClick={setUp}>{t('Set up GymTrackAI')}</Button>
     </> : <>
       <div className="ai-chat">
         {turns.map((x, i) => <div key={i} className={'ai-msg ' + (x.role === 'ai' ? 'ai' : 'you')}>{x.role === 'ai' ? <Answer text={x.text} /> : x.text}</div>)}

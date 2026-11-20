@@ -91,15 +91,15 @@ describe('the Modules page', () => {
   it('asks once before switching off a module that is connected, and pauses on yes', () => {
     mocks.coachLocal = { mode: 'byok' }
     mount()
-    act(() => sw('AI Coach').click())
+    act(() => sw('GymTrackAI').click())
     expect(mocks.S.modules).toBeUndefined()
     expect(mocks.confirms).toHaveLength(1)
-    expect(mocks.confirms[0].title).toBe('Switch off AI Coach?')
+    expect(mocks.confirms[0].title).toBe('Switch off GymTrackAI?')
     act(() => mocks.confirms[0].onConfirm())
     expect(isOn(mocks.S, 'coach')).toBe(false)
     // back on needs no question
     mount()
-    act(() => sw('AI Coach').click())
+    act(() => sw('GymTrackAI').click())
     expect(isOn(mocks.S, 'coach')).toBe(true)
     expect(mocks.confirms).toHaveLength(1)
   })

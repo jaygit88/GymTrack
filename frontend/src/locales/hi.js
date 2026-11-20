@@ -3907,4 +3907,13 @@ export default {
   "Message GymTrackAI…": "GymTrackAI को लिखें…",
   "Open the full chat": "पूरी चैट खोलें",
   "{0} of {1} GymTrackAI requests used today": "आज {1} में से {0} GymTrackAI अनुरोध इस्तेमाल हुए",
+  "Answers from your training, food, weight and runs, and suggests plan changes you say yes or no to.": "आपकी ट्रेनिंग, खाने, वज़न और रन से जवाब देता है और प्लान बदलाव सुझाता है जिन्हें आप मानें या नहीं।",
+  "GymTrackAI answers with Claude, using your own API key.": "GymTrackAI आपकी अपनी API key से Claude के ज़रिए जवाब देता है।",
+  "GymTrackAI isn’t set up on this phone. Check Settings → GymTrackAI.": "इस फ़ोन पर GymTrackAI सेट नहीं है। सेटिंग्स → GymTrackAI देखें।",
+  "Reading a label needs Claude (Anthropic) as the GymTrackAI provider.": "लेबल पढ़ने के लिए GymTrackAI प्रोवाइडर Claude (Anthropic) होना चाहिए।",
+  "Scheduled reviews take a break while GymTrackAI is off. Your setup and chats stay.": "GymTrackAI बंद रहने तक तय समीक्षाएं रुकी रहती हैं। आपका सेटअप और चैट बने रहते हैं।",
+  "Set up GymTrackAI": "GymTrackAI सेट करें",
+  "Set up GymTrackAI with your own API key first: Settings, GymTrackAI.": "पहले अपनी API key से GymTrackAI सेट करें: सेटिंग्स, GymTrackAI।",
+  "Your AI provider rejected the key on this phone. Check it under Settings → GymTrackAI.": "आपके AI प्रोवाइडर ने इस फ़ोन की key अस्वीकार कर दी। सेटिंग्स → GymTrackAI में जांचें।",
+  "GymTrackAI": "GymTrackAI",
 }

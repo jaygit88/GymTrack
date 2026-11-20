@@ -3918,4 +3918,13 @@ export default {
   "Message GymTrackAI…": "ส่งข้อความถึง GymTrackAI…",
   "Open the full chat": "เปิดแชตทั้งหมด",
   "{0} of {1} GymTrackAI requests used today": "ใช้คำขอ GymTrackAI ไปแล้ว {0} จาก {1} วันนี้",
+  "Answers from your training, food, weight and runs, and suggests plan changes you say yes or no to.": "ตอบจากการฝึก อาหาร น้ำหนัก และการวิ่งของคุณ และเสนอการเปลี่ยนแผนที่คุณเลือกรับหรือไม่ก็ได้",
+  "GymTrackAI answers with Claude, using your own API key.": "GymTrackAI ตอบผ่าน Claude ด้วยคีย์ API ของคุณเอง",
+  "GymTrackAI isn’t set up on this phone. Check Settings → GymTrackAI.": "ยังไม่ได้ตั้งค่า GymTrackAI บนโทรศัพท์นี้ ดูที่ การตั้งค่า → GymTrackAI",
+  "Reading a label needs Claude (Anthropic) as the GymTrackAI provider.": "การอ่านฉลากต้องใช้ Claude (Anthropic) เป็นผู้ให้บริการของ GymTrackAI",
+  "Scheduled reviews take a break while GymTrackAI is off. Your setup and chats stay.": "การรีวิวตามกำหนดจะหยุดไว้ระหว่างที่ปิด GymTrackAI การตั้งค่าและแชตยังอยู่",
+  "Set up GymTrackAI": "ตั้งค่า GymTrackAI",
+  "Set up GymTrackAI with your own API key first: Settings, GymTrackAI.": "ตั้งค่า GymTrackAI ด้วยคีย์ API ของคุณก่อน: การตั้งค่า, GymTrackAI",
+  "Your AI provider rejected the key on this phone. Check it under Settings → GymTrackAI.": "ผู้ให้บริการ AI ปฏิเสธคีย์บนโทรศัพท์นี้ ตรวจสอบที่ การตั้งค่า → GymTrackAI",
+  "GymTrackAI": "GymTrackAI",
 }

@@ -235,8 +235,8 @@ export const JOB_ERRORS = {
 // check anything, the person reading this is the operator, and the provider's own words
 // are the only thing that lets them fix it (a spent quota, a wrong model, a rejected key).
 export const BYOK_ERRORS = {
-  get auth() { return t('Your AI provider rejected the key on this phone. Check it under Settings → AI Coach.') },
-  get missing() { return t('The Coach isn’t set up on this phone. Check Settings → AI Coach.') },
+  get auth() { return t('Your AI provider rejected the key on this phone. Check it under Settings → GymTrackAI.') },
+  get missing() { return t('GymTrackAI isn’t set up on this phone. Check Settings → GymTrackAI.') },
   get provider() { return t('Your AI provider couldn’t answer.') },
   get unusable() { return t('The Coach answered with something the app couldn’t use.') },
   get internal() { return t('Something went wrong on this phone.') }

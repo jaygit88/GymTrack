@@ -97,7 +97,7 @@ function PlanCard({ S }) {
     {error && <div className="small ai-err">{error}</div>}
     <div className="ai-actions">
       <Button size="sm" variant={week ? 'ghost' : 'tinted'} icon="sparkles" disabled={busy || (!runGoalOf(S) && ready)} onClick={ask}>
-        {!ready ? t('Set up the AI Coach') : busy ? t('GymTrackAI is thinking…') : plan ? t('New plan') : t('Make a plan')}
+        {!ready ? t('Set up GymTrackAI') : busy ? t('GymTrackAI is thinking…') : plan ? t('New plan') : t('Make a plan')}
       </Button>
     </div>
     {ready && !runGoalOf(S) && <div className="small muted" style={{ textAlign: 'end' }}>{t('Set a running goal first.')}</div>}

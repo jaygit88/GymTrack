@@ -3907,4 +3907,13 @@ export default {
   "Message GymTrackAI…": "给 GymTrackAI 发消息…",
   "Open the full chat": "打开完整对话",
   "{0} of {1} GymTrackAI requests used today": "今天已用 {0}/{1} 次 GymTrackAI 请求",
+  "Answers from your training, food, weight and runs, and suggests plan changes you say yes or no to.": "根据你的训练、饮食、体重和跑步来回答，并建议由你决定是否接受的计划调整。",
+  "GymTrackAI answers with Claude, using your own API key.": "GymTrackAI 使用你自己的 API 密钥，通过 Claude 回答。",
+  "GymTrackAI isn’t set up on this phone. Check Settings → GymTrackAI.": "这部手机上还没有设置 GymTrackAI。请查看设置 → GymTrackAI。",
+  "Reading a label needs Claude (Anthropic) as the GymTrackAI provider.": "读取标签需要 GymTrackAI 使用 Claude（Anthropic）。",
+  "Scheduled reviews take a break while GymTrackAI is off. Your setup and chats stay.": "GymTrackAI 关闭期间，定期回顾会暂停。你的设置和对话会保留。",
+  "Set up GymTrackAI": "设置 GymTrackAI",
+  "Set up GymTrackAI with your own API key first: Settings, GymTrackAI.": "请先用你自己的 API 密钥设置 GymTrackAI：设置，GymTrackAI。",
+  "Your AI provider rejected the key on this phone. Check it under Settings → GymTrackAI.": "你的 AI 服务商拒绝了这部手机上的密钥。请在设置 → GymTrackAI 中检查。",
+  "GymTrackAI": "GymTrackAI",
 }

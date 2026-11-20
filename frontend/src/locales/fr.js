@@ -3907,4 +3907,13 @@ export default {
   "Message GymTrackAI…": "Écrire à GymTrackAI…",
   "Open the full chat": "Ouvrir la conversation",
   "{0} of {1} GymTrackAI requests used today": "{0} sur {1} demandes GymTrackAI utilisées aujourd'hui",
+  "Answers from your training, food, weight and runs, and suggests plan changes you say yes or no to.": "Répond à partir de ton entraînement, ton alimentation, ton poids et tes courses, et propose des changements de plan que tu acceptes ou non.",
+  "GymTrackAI answers with Claude, using your own API key.": "GymTrackAI répond avec Claude, grâce à ta propre clé API.",
+  "GymTrackAI isn’t set up on this phone. Check Settings → GymTrackAI.": "GymTrackAI n'est pas configuré sur ce téléphone. Vérifie Réglages → GymTrackAI.",
+  "Reading a label needs Claude (Anthropic) as the GymTrackAI provider.": "Lire une étiquette nécessite Claude (Anthropic) comme fournisseur de GymTrackAI.",
+  "Scheduled reviews take a break while GymTrackAI is off. Your setup and chats stay.": "Les bilans programmés font une pause tant que GymTrackAI est désactivé. Ta configuration et tes conversations restent.",
+  "Set up GymTrackAI": "Configurer GymTrackAI",
+  "Set up GymTrackAI with your own API key first: Settings, GymTrackAI.": "Configure d'abord GymTrackAI avec ta propre clé API : Réglages, GymTrackAI.",
+  "Your AI provider rejected the key on this phone. Check it under Settings → GymTrackAI.": "Ton fournisseur d'IA a refusé la clé sur ce téléphone. Vérifie-la dans Réglages → GymTrackAI.",
+  "GymTrackAI": "GymTrackAI",
 }

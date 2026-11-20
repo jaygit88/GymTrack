@@ -66,7 +66,7 @@ describe('Ask GymTrackAI', () => {
     mocks.ready = false
     act(() => root.render(<Sheets />))
     act(() => { aiChatSheet() })
-    expect(host.textContent).toContain('Set up the AI Coach')
+    expect(host.textContent).toContain('Set up GymTrackAI')
     expect(host.querySelector('textarea')).toBeNull()
   })
 })

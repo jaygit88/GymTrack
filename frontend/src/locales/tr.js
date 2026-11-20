@@ -3907,4 +3907,13 @@ export default {
   "Message GymTrackAI…": "GymTrackAI'a yaz…",
   "Open the full chat": "Tüm sohbeti aç",
   "{0} of {1} GymTrackAI requests used today": "Bugün {1} GymTrackAI isteğinin {0} tanesi kullanıldı",
+  "Answers from your training, food, weight and runs, and suggests plan changes you say yes or no to.": "Antrenman, beslenme, kilo ve koşularına göre yanıt verir; evet ya da hayır dediğin plan değişiklikleri önerir.",
+  "GymTrackAI answers with Claude, using your own API key.": "GymTrackAI kendi API anahtarınla Claude üzerinden yanıt verir.",
+  "GymTrackAI isn’t set up on this phone. Check Settings → GymTrackAI.": "GymTrackAI bu telefonda kurulu değil. Ayarlar → GymTrackAI'a bak.",
+  "Reading a label needs Claude (Anthropic) as the GymTrackAI provider.": "Etiket okumak için GymTrackAI sağlayıcısı Claude (Anthropic) olmalı.",
+  "Scheduled reviews take a break while GymTrackAI is off. Your setup and chats stay.": "GymTrackAI kapalıyken planlı incelemeler durur. Kurulumun ve sohbetlerin kalır.",
+  "Set up GymTrackAI": "GymTrackAI'ı kur",
+  "Set up GymTrackAI with your own API key first: Settings, GymTrackAI.": "Önce GymTrackAI'ı kendi API anahtarınla kur: Ayarlar, GymTrackAI.",
+  "Your AI provider rejected the key on this phone. Check it under Settings → GymTrackAI.": "Yapay zekâ sağlayıcın bu telefondaki anahtarı reddetti. Ayarlar → GymTrackAI'dan kontrol et.",
+  "GymTrackAI": "GymTrackAI",
 }

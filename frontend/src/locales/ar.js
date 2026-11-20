@@ -3962,4 +3962,13 @@ export default {
   "Message GymTrackAI…": "راسل GymTrackAI…",
   "Open the full chat": "افتح المحادثة كاملة",
   "{0} of {1} GymTrackAI requests used today": "استُخدم {0} من {1} طلبات GymTrackAI اليوم",
+  "Answers from your training, food, weight and runs, and suggests plan changes you say yes or no to.": "يجيب من تمارينك وطعامك ووزنك وجريك، ويقترح تغييرات على الخطة توافق عليها أو لا.",
+  "GymTrackAI answers with Claude, using your own API key.": "يجيب GymTrackAI عبر Claude باستخدام مفتاح API الخاص بك.",
+  "GymTrackAI isn’t set up on this phone. Check Settings → GymTrackAI.": "GymTrackAI غير مُعدّ على هذا الهاتف. راجع الإعدادات ← GymTrackAI.",
+  "Reading a label needs Claude (Anthropic) as the GymTrackAI provider.": "قراءة الملصق تتطلب Claude (Anthropic) مزوّدًا لـ GymTrackAI.",
+  "Scheduled reviews take a break while GymTrackAI is off. Your setup and chats stay.": "المراجعات المجدولة متوقفة ما دام GymTrackAI معطّلًا. إعدادك ومحادثاتك باقية.",
+  "Set up GymTrackAI": "إعداد GymTrackAI",
+  "Set up GymTrackAI with your own API key first: Settings, GymTrackAI.": "أعدّ GymTrackAI أولًا بمفتاح API الخاص بك: الإعدادات، GymTrackAI.",
+  "Your AI provider rejected the key on this phone. Check it under Settings → GymTrackAI.": "رفض مزوّد الذكاء الاصطناعي المفتاح على هذا الهاتف. تحقّق منه في الإعدادات ← GymTrackAI.",
+  "GymTrackAI": "GymTrackAI",
 }

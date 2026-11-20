@@ -57,7 +57,7 @@ export function connectionNotes(ids, conn) {
     if (id === 'health' && conn.health) out.push(t('{0} stops syncing while Health is off. Nothing is disconnected, and it catches up once Health is back.', conn.health))
     if (id === 'watch' && conn.watch) out.push(t('Your watch stops getting workouts while Watch is off. It stays paired.'))
     if (id === 'integrations' && conn.webhooks) out.push(t('Your webhooks stop sending while Integrations is off. They stay set up.'))
-    if (id === 'coach' && conn.coach) out.push(t('Scheduled Coach reviews take a break while the AI Coach is off. Your setup and chats stay.'))
+    if (id === 'coach' && conn.coach) out.push(t('Scheduled reviews take a break while GymTrackAI is off. Your setup and chats stay.'))
   }
   return out
 }

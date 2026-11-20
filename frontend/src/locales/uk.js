@@ -3904,4 +3904,13 @@ export default {
   "Message GymTrackAI…": "Написати GymTrackAI…",
   "Open the full chat": "Відкрити весь чат",
   "{0} of {1} GymTrackAI requests used today": "Сьогодні використано {0} з {1} запитів GymTrackAI",
+  "Answers from your training, food, weight and runs, and suggests plan changes you say yes or no to.": "Відповідає за твоїми тренуваннями, харчуванням, вагою й бігом і пропонує зміни плану, які ти приймаєш чи ні.",
+  "GymTrackAI answers with Claude, using your own API key.": "GymTrackAI відповідає через Claude з твоїм власним API-ключем.",
+  "GymTrackAI isn’t set up on this phone. Check Settings → GymTrackAI.": "GymTrackAI не налаштовано на цьому телефоні. Перевір Налаштування → GymTrackAI.",
+  "Reading a label needs Claude (Anthropic) as the GymTrackAI provider.": "Для читання етикетки GymTrackAI потрібен провайдер Claude (Anthropic).",
+  "Scheduled reviews take a break while GymTrackAI is off. Your setup and chats stay.": "Заплановані огляди на паузі, поки GymTrackAI вимкнено. Налаштування й чати лишаються.",
+  "Set up GymTrackAI": "Налаштувати GymTrackAI",
+  "Set up GymTrackAI with your own API key first: Settings, GymTrackAI.": "Спершу налаштуй GymTrackAI зі своїм API-ключем: Налаштування, GymTrackAI.",
+  "Your AI provider rejected the key on this phone. Check it under Settings → GymTrackAI.": "Твій ШІ-провайдер відхилив ключ на цьому телефоні. Перевір його в Налаштування → GymTrackAI.",
+  "GymTrackAI": "GymTrackAI",
 }

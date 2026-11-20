@@ -84,7 +84,7 @@ function QuickWorkoutSheet({ close }) {
     </div>
     <div style={{ height: 8 }} />
     <Button variant="tinted" icon="sparkles" onClick={askAi} disabled={busy}>
-      {!ready ? t('Set up the AI Coach') : busy ? t('GymTrackAI is thinking…') : aiPlan ? t('Ask again') : t('Ask GymTrackAI')}
+      {!ready ? t('Set up GymTrackAI') : busy ? t('GymTrackAI is thinking…') : aiPlan ? t('Ask again') : t('Ask GymTrackAI')}
     </Button>
   </>
 }

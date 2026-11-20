@@ -61,7 +61,7 @@ export default function AiReviewCard({ S }) {
     {error && <div className="small ai-err">{error}</div>}
     <div className="ai-actions">
       <Button size="sm" variant={saved ? 'ghost' : 'tinted'} icon="sparkles" disabled={busy} onClick={ask}>
-        {!ready ? t('Set up the AI Coach') : busy ? t('GymTrackAI is thinking…') : saved ? t('Review again') : t('Review my month')}
+        {!ready ? t('Set up GymTrackAI') : busy ? t('GymTrackAI is thinking…') : saved ? t('Review again') : t('Review my month')}
       </Button>
       {ready && <Button size="sm" variant="ghost" icon="sparkles" onClick={() => aiChatSheet({ screen: 'general' })}>{t('Ask GymTrackAI')}</Button>}
     </div>
@@ -88,7 +88,7 @@ export function StallCard({ S, stalled }) {
     <div className="ai-actions">
       <Button size="sm" variant="ghost" icon="target" onClick={goalsSheet}>{t('Goals')}</Button>
       <Button size="sm" variant={same ? 'ghost' : 'tinted'} icon="sparkles" disabled={busy} onClick={ask}>
-        {!ready ? t('Set up the AI Coach') : busy ? t('GymTrackAI is thinking…') : same ? t('Ask again') : t('Ask GymTrackAI')}
+        {!ready ? t('Set up GymTrackAI') : busy ? t('GymTrackAI is thinking…') : same ? t('Ask again') : t('Ask GymTrackAI')}
       </Button>
     </div>
   </div>

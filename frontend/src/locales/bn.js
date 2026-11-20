@@ -3986,4 +3986,13 @@ export default {
   "Message GymTrackAI…": "GymTrackAI-কে লিখুন…",
   "Open the full chat": "পুরো চ্যাট খুলুন",
   "{0} of {1} GymTrackAI requests used today": "আজ {1}টির মধ্যে {0}টি GymTrackAI অনুরোধ ব্যবহৃত",
+  "Answers from your training, food, weight and runs, and suggests plan changes you say yes or no to.": "আপনার ট্রেনিং, খাবার, ওজন ও দৌড় দেখে উত্তর দেয় এবং প্ল্যান বদলের পরামর্শ দেয়, আপনি রাজি হলে তবেই।",
+  "GymTrackAI answers with Claude, using your own API key.": "GymTrackAI আপনার নিজের API key দিয়ে Claude-এর মাধ্যমে উত্তর দেয়।",
+  "GymTrackAI isn’t set up on this phone. Check Settings → GymTrackAI.": "এই ফোনে GymTrackAI সেট করা নেই। সেটিংস → GymTrackAI দেখুন।",
+  "Reading a label needs Claude (Anthropic) as the GymTrackAI provider.": "লেবেল পড়তে GymTrackAI-এর প্রোভাইডার Claude (Anthropic) হতে হবে।",
+  "Scheduled reviews take a break while GymTrackAI is off. Your setup and chats stay.": "GymTrackAI বন্ধ থাকলে নির্ধারিত রিভিউ থেমে থাকে। আপনার সেটআপ ও চ্যাট থাকে।",
+  "Set up GymTrackAI": "GymTrackAI সেট করুন",
+  "Set up GymTrackAI with your own API key first: Settings, GymTrackAI.": "আগে নিজের API key দিয়ে GymTrackAI সেট করুন: সেটিংস, GymTrackAI।",
+  "Your AI provider rejected the key on this phone. Check it under Settings → GymTrackAI.": "আপনার AI প্রোভাইডার এই ফোনের key প্রত্যাখ্যান করেছে। সেটিংস → GymTrackAI-এ দেখুন।",
+  "GymTrackAI": "GymTrackAI",
 }
