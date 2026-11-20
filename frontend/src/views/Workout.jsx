@@ -503,7 +503,7 @@ function ExerciseBlock({ entryIdx, compact, dense, editing, onToggle, onToggleSi
         // GymTrackAI on this exercise: form cues, the squeeze, whether to go heavier (components/AiChatSheet.jsx).
         aiReviewReady() && { icon: 'sparkles', label: t('Tips from GymTrackAI'), sub: t('Form cues and how to get more from it'), onClick: () => aiChatSheet({ screen: 'exercise', exId: entry.id, name: exerciseNameText(ex) }) },
         // The Coach on this exercise, for the rest of this workout (components/WorkoutCoachSheet.jsx).
-        onAskCoach && { icon: 'sparkles', label: t('Ask the Coach'), sub: t('It hurts, it’s taken, no time, feeling great'), onClick: onAskCoach },
+        onAskCoach && { icon: 'sparkles', label: t('Adjust this workout'), sub: t('GymTrackAI: it hurts, it’s taken, no time, feeling great'), onClick: onAskCoach },
       ] },
       { more: [
         { title: t('Exercise'), items: [

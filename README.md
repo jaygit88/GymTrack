@@ -93,6 +93,12 @@ and the muscles with room for more, runs and distance against your planned runs,
 day of food against your budget, and your average weight against the week before.
 
 ### GymTrackAI
+GymTrackAI is the app's coach. The chat (Plan, **GymTrackAI**) answers questions from your
+training, food diary, weigh-ins and runs, and keeps the conversation; the sparkle buttons on
+Nutrition, Home and an exercise's menu ask it about that screen and save to the same chat.
+**Review my training**, **Improve a routine** and **Adjust this workout** change your plan as
+cards you accept, as openGym's Coach did.
+
 - **Ask GymTrackAI:** a short chat about what is on screen. On Nutrition it knows the day's food,
   what is left of your targets, what you burned and your recipes ("What should I have for
   dinner?"). On an exercise in a workout (its menu, **Tips from GymTrackAI**) it knows the muscles,

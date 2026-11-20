@@ -35,6 +35,8 @@ import { insightsFor, sessionInsights } from '../lib/coach-insights.js'
 import { useCoachStatus, requestReview, requestDebrief, requestPlan, refinePlan, askCoach, resolvePending, cohortStats, setCohortShare, jobErrorText, awaitedJob, settleAwaited, JOB_ERRORS, ensureAiConsent, isDeclined } from '../lib/coach-api.js'
 import { AiConsentSection } from '../components/CoachConsentSheet.jsx'
 import { useCoachGate } from '../lib/use-coach-gate.js'
+import { aiReviewReady, runAiChat } from '../lib/ai-review-run.js'
+import { chatHistoryOf } from '../lib/ai-chat.js'
 import { confirmSheet } from '../sheets.jsx'
 import Icon from '../components/Icon.jsx'
 import { glyphOf } from '../lib/glyphs.js'
@@ -57,6 +59,8 @@ export default function CoachChat() {
   // The message box opened into a tall editor (components/ChatInput.jsx); closed again on send.
   const [expanded, setExpanded] = useState(false)
   const [busy, setBusy] = useState(false)
+  // GymTrack: a question answered by GymTrackAI right now (lib/ai-chat.js), not a server job.
+  const [aiBusy, setAiBusy] = useState(false)
   const endRef = useRef(null)
   const prevJob = useRef(null)
   const coachMode = coachLocal?.mode
@@ -135,6 +139,9 @@ export default function CoachChat() {
       // is a question, answered in words (`ask`): "how long should I rest?" is not a request to
       // review the whole plan. A review is the chip and the menu's, as it always was.
       if (pending?.kind === 'create' || !(S.routines || []).length) await refinePlan(msg)
+      // GymTrack: questions go to GymTrackAI, which reads the food diary, weigh-ins, runs and
+      // training (lib/ai-chat.js). The plan jobs below (review, improve, build) stay the Coach's.
+      else if (aiReviewReady()) { setText(''); setExpanded(false); setBusy(false); await askAi(msg); return }
       else await askCoach(msg)
       update(s => appendChat(s, { role: 'user', kind: 'text', text: msg }))
       setText('')
@@ -147,6 +154,20 @@ export default function CoachChat() {
       if (!isDeclined(e)) toast(JOB_ERRORS[e.data?.code] || e.message || t('Could not ask the Coach'))
     }
     setBusy(false)
+  }
+
+  const askAi = async msg => {
+    const history = chatHistoryOf(S.coach?.chat)
+    update(s => appendChat(s, { role: 'user', kind: 'text', text: msg }))
+    setAiBusy(true)
+    try {
+      const r = await runAiChat({ screen: 'general' }, history, msg)
+      update(s => appendChat(s, { role: 'coach', kind: 'text', text: r.answer, ...(r.followUps?.length ? { followUps: r.followUps } : {}) }))
+      refresh()
+    } catch (e) {
+      if (!isDeclined(e) && e?.code !== 'declined') toast(e?.message || t('Try again'))
+    }
+    setAiBusy(false)
   }
 
   const ask = async (fn, line) => {
@@ -182,7 +203,7 @@ export default function CoachChat() {
 
   const idle = !job && !pending
   const menu = () => openSheet(close => <div className="chat-menu">
-    <h3>{t('Coach')}</h3>
+    <h3>GymTrackAI</h3>
     <div className="sect-b">
       {idle && <Row icon="sparkles" iconTint="var(--acc)" title={t('Ask for a review')} subtitle={t('What would the Coach change after your last sessions?')} accessory="chevron" onClick={() => { close(); askReview() }} />}
       {idle && !!lastWorkout && <Row icon="checkCircle" iconTint="var(--green)" title={t('Review my last workout')} subtitle={t('What went well, what to watch, what to do next time')} accessory="chevron" onClick={() => { close(); askDebrief() }} />}
@@ -209,28 +230,29 @@ export default function CoachChat() {
     }
   })
 
-  const status = job || pending?.kind === 'ask' ? t('thinking…') : pending ? t('has a suggestion for you') : t('here when you need it')
+  const status = job || aiBusy || pending?.kind === 'ask' ? t('thinking…') : pending ? t('has a suggestion for you') : t('here when you need it')
   const placeholder = pending?.kind === 'create'
     ? t('What should change?')
-    : job ? t('Coach is thinking…') : t('Message the Coach…')
+    : job || aiBusy ? t('GymTrackAI is thinking…') : t('Message GymTrackAI…')
 
   return <div className="narrow chat">
     <div className="chat-hdr">
       <button className="iconbtn" data-back="/plan" onClick={() => nav('/plan')} aria-label={t('Back')}><Icon name="chevronLeft" /></button>
       <div className="chat-av"><Icon name="sparkles" /></div>
       <div className="grow">
-        <h1>{t('Coach')}</h1>
+        <h1>GymTrackAI</h1>
         <div className={'chat-st' + (job ? ' live' : '')}>{status}</div>
       </div>
       <button className="iconbtn" onClick={menu} aria-label={t('More')}><Icon name="more" /></button>
     </div>
 
     <div className="msgs">
-      <Bubble role="coach">{t('Hi, I’m your Coach. I build your plan from your answers and adjust it from what you actually log. Nothing changes until you say so.')}</Bubble>
+      <Bubble role="coach">{t('Hi, I’m GymTrackAI. Ask me anything about your training, food, weight or runs. I can also review your training or improve a routine, and nothing changes until you say so.')}</Bubble>
 
       {(coach.chat || []).map(m => <Message key={m.id} m={m} S={S} profile={coach.profile} openSheet={openSheet} />)}
 
       {job && <Typing S={S} kind={job.kind} coachLocal={coachLocal} config={config} />}
+      {aiBusy && !job && <Typing S={S} kind="ask" coachLocal={coachLocal} config={config} />}
 
       {pending && !job && pending.kind === 'adapt' && <div className="msg coach" style={{ maxWidth: '100%', width: '100%' }}>
         <AdaptProposal p={pending} onDone={refresh} />
@@ -245,7 +267,10 @@ export default function CoachChat() {
     </div>
 
     <div className="composer">
-      {idle && !busy && <div className="chips-row">
+      {idle && !busy && !aiBusy && <div className="chips-row">
+        {/* GymTrackAI's suggested next questions, under its last answer. */}
+        {(() => { const last = (S.coach?.chat || []).at(-1); return last?.role === 'coach' && Array.isArray(last.followUps)
+          ? last.followUps.map(q => <button key={q} className="qchip" onClick={() => askAi(q)}><Icon name="chat" />{q}</button>) : null })()}
         <button className="qchip" onClick={askReview}><Icon name="sparkles" />{t('Review my training')}</button>
         {!!lastWorkout && <button className="qchip" onClick={askDebrief}><Icon name="checkCircle" />{t('Last workout')}</button>}
         {!!(S.routines || []).length && <button className="qchip" onClick={pickRoutine}><Icon name="wrench" />{t('Improve a routine')}</button>}
@@ -254,9 +279,9 @@ export default function CoachChat() {
       <div className={'composer-in' + (expanded ? ' tall' : '')}>
         <ChatInput value={text} onChange={setText} onSend={send} placeholder={placeholder} disabled={!!job}
           maxLength={maxMessageLen || 1000} expanded={expanded} setExpanded={setExpanded} />
-        <button className="send" onClick={send} disabled={!text.trim() || busy || !!job} aria-label={t('Send')}><Icon name="arrowUp" /></button>
+        <button className="send" onClick={send} disabled={!text.trim() || busy || aiBusy || !!job} aria-label={t('Send')}><Icon name="arrowUp" /></button>
       </div>
-      {cap?.limit > 0 && <div className="composer-cap">{t('{0} of {1} Coach runs used today', cap.used, cap.limit)}</div>}
+      {cap?.limit > 0 && <div className="composer-cap">{t('{0} of {1} GymTrackAI requests used today', cap.used, cap.limit)}</div>}
     </div>
   </div>
 }
@@ -385,7 +410,7 @@ function PlanCard({ p, S, update, toast, nav, refresh }) {
           : <span className="lrow-m"><span className="lrow-t">{t('Use this weekly schedule')}</span><span className="lrow-s">{t('Replaces your current week. Days this plan leaves empty become rest days.')}</span></span>}
         <Switch checked={schedule} onChange={setSchedule} />
       </div>
-      <div className="pcard-note">{t('The Coach is not a doctor or a physiotherapist. If something hurts, ask a professional.')}</div>
+      <div className="pcard-note">{t('GymTrackAI is not a doctor or a physiotherapist. If something hurts, ask a professional.')}</div>
       <div className="pcard-ft">
         <Button variant="primary" icon="download" onClick={accept}>{t('Import this plan')}</Button>
         <Button onClick={discard}>{t('Discard')}</Button>
@@ -465,7 +490,7 @@ function ReviewCard({ p, S, update, toast, refresh }) {
 
       <Notes notes={marked.notes} />
 
-      <div className="pcard-note">{t('The Coach is not a doctor or a physiotherapist. If something hurts, ask a professional.')}</div>
+      <div className="pcard-note">{t('GymTrackAI is not a doctor or a physiotherapist. If something hurts, ask a professional.')}</div>
       <div className="pcard-ft">
         <Button variant="primary" icon="check" onClick={apply}>
           {accepted.size ? tn('Apply {0} change', 'Apply {0} changes', accepted.size) : t('Apply nothing')}

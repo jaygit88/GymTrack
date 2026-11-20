@@ -3953,4 +3953,13 @@ export default {
   "Meal": "الوجبة",
   "Move to": "نقل إلى",
   "Shakes, smoothies and drinks after training": "مخفوقات وعصائر ومشروبات بعد التمرين",
+  "Adjust this workout": "عدّل التمرين",
+  "Answers use what is on this screen and your data.": "تستخدم الإجابات ما على هذه الشاشة وبياناتك.",
+  "GymTrackAI is not a doctor or a physiotherapist. If something hurts, ask a professional.": "GymTrackAI ليس طبيبًا ولا أخصائي علاج طبيعي. إن آلمك شيء فاستشر مختصًا.",
+  "GymTrackAI: it hurts, it’s taken, no time, feeling great": "GymTrackAI: يؤلم، مشغول، لا وقت، بأفضل حال",
+  "Hi, I’m GymTrackAI. Ask me anything about your training, food, weight or runs. I can also review your training or improve a routine, and nothing changes until you say so.": "مرحبًا، أنا GymTrackAI. اسألني أي شيء عن التمرين أو الطعام أو الوزن أو الجري. يمكنني أيضًا مراجعة تمرينك أو تحسين روتين، ولا يتغير شيء قبل موافقتك.",
+  "Logged sets and your routine stay as they are. GymTrackAI is not a doctor or a physiotherapist. If something hurts, ask a professional.": "المجموعات المسجّلة وروتينك تبقى كما هي. GymTrackAI ليس طبيبًا ولا أخصائي علاج طبيعي. إن آلمك شيء فاستشر مختصًا.",
+  "Message GymTrackAI…": "راسل GymTrackAI…",
+  "Open the full chat": "افتح المحادثة كاملة",
+  "{0} of {1} GymTrackAI requests used today": "استُخدم {0} من {1} طلبات GymTrackAI اليوم",
 }

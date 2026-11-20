@@ -66,10 +66,10 @@ describe('Ask the Coach mid-workout', () => {
   it('asks with the exercise and the reason picked', async () => {
     render(<WorkoutCoachSheet entryIdx={1} close={() => {}} />)
     expect(host.textContent).toContain('Dumbbell Biceps Curl')
-    const send = [...host.querySelectorAll('button')].find(b => b.textContent.includes('Ask the Coach'))
+    const send = [...host.querySelectorAll('button')].find(b => b.textContent.includes('Ask GymTrackAI'))
     expect(send.disabled).toBe(true)
     act(() => { [...host.querySelectorAll('.adapt-reasons button')].find(b => b.textContent.includes('Short on time')).click() })
-    await act(async () => { [...host.querySelectorAll('button')].find(b => b.textContent.includes('Ask the Coach')).click() })
+    await act(async () => { [...host.querySelectorAll('button')].find(b => b.textContent.includes('Ask GymTrackAI')).click() })
     expect(api.requestAdapt).toHaveBeenCalledWith({ entry: 1, reason: 'short', text: '' })
   })
 

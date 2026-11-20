@@ -131,6 +131,15 @@ export const CHAT_SCHEMA = {
   properties: { answer: { type: 'string' }, followUps: { type: 'array', items: { type: 'string' } } },
 }
 
+/**
+ * The chat's last turns for the model, from the saved thread (S.coach.chat): the plain question
+ * and answer lines only; plan cards, debriefs and notices are left out.
+ */
+export function chatHistoryOf(chat, max = MAX_TURNS) {
+  return (Array.isArray(chat) ? chat : []).filter(m => m && m.kind === 'text' && typeof m.text === 'string' && m.text.trim())
+    .slice(-max).map(m => ({ role: m.role === 'user' ? 'you' : 'ai', text: m.text }))
+}
+
 /** The prompt for one question, with the earlier turns of this chat (`history`: [{ role: 'you' | 'ai', text }]). */
 export function buildChatPrompt(context, history, question, langName = 'English') {
   const turns = (history || []).filter(h => h && h.text).slice(-MAX_TURNS)

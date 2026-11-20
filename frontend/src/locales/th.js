@@ -3909,4 +3909,13 @@ export default {
   "Meal": "มื้อ",
   "Move to": "ย้ายไปที่",
   "Shakes, smoothies and drinks after training": "เชค สมูทตี้ และเครื่องดื่มหลังฝึก",
+  "Adjust this workout": "ปรับการฝึก",
+  "Answers use what is on this screen and your data.": "คำตอบใช้สิ่งที่อยู่บนหน้าจอนี้และข้อมูลของคุณ",
+  "GymTrackAI is not a doctor or a physiotherapist. If something hurts, ask a professional.": "GymTrackAI ไม่ใช่แพทย์หรือนักกายภาพบำบัด ถ้าเจ็บ ให้ปรึกษาผู้เชี่ยวชาญ",
+  "GymTrackAI: it hurts, it’s taken, no time, feeling great": "GymTrackAI: เจ็บ, เครื่องไม่ว่าง, ไม่มีเวลา, ฟิตมาก",
+  "Hi, I’m GymTrackAI. Ask me anything about your training, food, weight or runs. I can also review your training or improve a routine, and nothing changes until you say so.": "สวัสดี ฉันคือ GymTrackAI ถามได้ทุกเรื่องเกี่ยวกับการฝึก อาหาร น้ำหนัก หรือการวิ่ง ฉันยังช่วยรีวิวการฝึกหรือปรับปรุงรูทีนได้ และจะไม่มีอะไรเปลี่ยนจนกว่าคุณตกลง",
+  "Logged sets and your routine stay as they are. GymTrackAI is not a doctor or a physiotherapist. If something hurts, ask a professional.": "เซ็ตที่บันทึกและรูทีนของคุณยังเหมือนเดิม GymTrackAI ไม่ใช่แพทย์หรือนักกายภาพบำบัด ถ้าเจ็บ ให้ปรึกษาผู้เชี่ยวชาญ",
+  "Message GymTrackAI…": "ส่งข้อความถึง GymTrackAI…",
+  "Open the full chat": "เปิดแชตทั้งหมด",
+  "{0} of {1} GymTrackAI requests used today": "ใช้คำขอ GymTrackAI ไปแล้ว {0} จาก {1} วันนี้",
 }

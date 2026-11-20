@@ -111,14 +111,14 @@ describe('a Coach run that fails before the first poll', () => {
     await click(chip(/Review my training/))
     expect(mocks.S.coach.chat.at(-1)).toMatchObject({ role: 'coach', kind: 'error', text: FAILED })
     expect(mocks.S.coach.chat.at(-2)).toMatchObject({ role: 'user', kind: 'text' })
-    expect(container.querySelector('.composer-cap').textContent).toBe('5 of 10 Coach runs used today')
+    expect(container.querySelector('.composer-cap').textContent).toBe('5 of 10 GymTrackAI requests used today')
 
     await settle()
     expect(replies()).toHaveLength(1)                         // written once, not on every render
 
     await click(chip(/Review my training/))
     expect(replies()).toHaveLength(2)
-    expect(container.querySelector('.composer-cap').textContent).toBe('6 of 10 Coach runs used today')
+    expect(container.querySelector('.composer-cap').textContent).toBe('6 of 10 GymTrackAI requests used today')
   })
 
   it('a message asking for a plan gets the error reply', async () => {
@@ -151,9 +151,9 @@ describe('a Coach run that fails before the first poll', () => {
     mocks.statusGate = new Promise(r => { release = r })
     await mount()
     await click(chip(/Review my training/))
-    expect(container.querySelector('.composer-cap').textContent).toBe('5 of 10 Coach runs used today')
+    expect(container.querySelector('.composer-cap').textContent).toBe('5 of 10 GymTrackAI requests used today')
     await act(async () => { release(); await flush() })
-    expect(container.querySelector('.composer-cap').textContent).toBe('5 of 10 Coach runs used today')
+    expect(container.querySelector('.composer-cap').textContent).toBe('5 of 10 GymTrackAI requests used today')
     expect(replies()).toHaveLength(1)
     expect(replies()[0]).toMatchObject({ kind: 'error', text: FAILED })
   })

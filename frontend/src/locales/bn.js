@@ -3977,4 +3977,13 @@ export default {
   "Meal": "খাবার",
   "Move to": "এখানে সরান",
   "Shakes, smoothies and drinks after training": "ট্রেনিংয়ের পর শেক, স্মুদি ও পানীয়",
+  "Adjust this workout": "ওয়ার্কআউট বদলান",
+  "Answers use what is on this screen and your data.": "উত্তর এই স্ক্রিন ও আপনার ডেটা থেকে।",
+  "GymTrackAI is not a doctor or a physiotherapist. If something hurts, ask a professional.": "GymTrackAI ডাক্তার বা ফিজিওথেরাপিস্ট নয়। কিছু ব্যথা হলে বিশেষজ্ঞকে জিজ্ঞেস করুন।",
+  "GymTrackAI: it hurts, it’s taken, no time, feeling great": "GymTrackAI: ব্যথা, মেশিন ব্যস্ত, সময় নেই, দারুণ লাগছে",
+  "Hi, I’m GymTrackAI. Ask me anything about your training, food, weight or runs. I can also review your training or improve a routine, and nothing changes until you say so.": "হাই, আমি GymTrackAI। ট্রেনিং, খাবার, ওজন বা দৌড় নিয়ে যা খুশি জিজ্ঞেস করুন। আমি আপনার ট্রেনিং দেখতে বা রুটিন উন্নত করতে পারি, আর আপনি রাজি না হলে কিছু বদলায় না।",
+  "Logged sets and your routine stay as they are. GymTrackAI is not a doctor or a physiotherapist. If something hurts, ask a professional.": "লগ করা সেট ও রুটিন যেমন আছে তেমনই থাকবে। GymTrackAI ডাক্তার বা ফিজিওথেরাপিস্ট নয়। কিছু ব্যথা হলে বিশেষজ্ঞকে জিজ্ঞেস করুন।",
+  "Message GymTrackAI…": "GymTrackAI-কে লিখুন…",
+  "Open the full chat": "পুরো চ্যাট খুলুন",
+  "{0} of {1} GymTrackAI requests used today": "আজ {1}টির মধ্যে {0}টি GymTrackAI অনুরোধ ব্যবহৃত",
 }

@@ -96,7 +96,7 @@ export function AdaptProposal({ p, onDone }) {
       </div>
       {!c.stale && <Check checked={accepted.has(c.id)} onChange={() => toggle(c.id)} label={adaptTitle(c)} />}
     </div>)}
-    <div className="pcard-note">{t('Logged sets and your routine stay as they are. The Coach is not a doctor or a physiotherapist. If something hurts, ask a professional.')}</div>
+    <div className="pcard-note">{t('Logged sets and your routine stay as they are. GymTrackAI is not a doctor or a physiotherapist. If something hurts, ask a professional.')}</div>
     <div className="pcard-ft">
       {live && <Button variant="primary" icon="check" onClick={apply} disabled={!ids.length}>
         {ids.length ? tn('Apply {0} change', 'Apply {0} changes', ids.length) : t('Apply nothing')}
@@ -137,7 +137,7 @@ export default function WorkoutCoachSheet({ entryIdx, close }) {
   if (mine) return <div className="workout-coach"><AdaptProposal p={mine} onDone={close} /></div>
   const name = entry ? exTitle(entry.id) : ''
   return <div className="workout-coach">
-    <div className="pcard-eyebrow"><Icon name="sparkles" /> {t('Ask the Coach')}</div>
+    <div className="pcard-eyebrow"><Icon name="sparkles" /> GymTrackAI</div>
     <h2 className="pcard-h" style={{ margin: '4px 0 12px' }}>{name}</h2>
     {job || (sent && !ended)
       ? <div className="adapt-wait" role="status">
@@ -165,7 +165,7 @@ export default function WorkoutCoachSheet({ entryIdx, close }) {
             onChange={e => setText(e.target.value)} />
           {error && <p className="small" style={{ color: 'var(--red)' }}>{error}</p>}
           <div className="pcard-ft" style={{ paddingInline: 0 }}>
-            <Button variant="primary" icon="sparkles" onClick={send} disabled={!reason || busy}>{t('Ask the Coach')}</Button>
+            <Button variant="primary" icon="sparkles" onClick={send} disabled={!reason || busy}>{t('Ask GymTrackAI')}</Button>
             <Button onClick={close}>{t('Cancel')}</Button>
           </div>
         </>}

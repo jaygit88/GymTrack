@@ -3898,4 +3898,13 @@ export default {
   "Meal": "Öğün",
   "Move to": "Taşı",
   "Shakes, smoothies and drinks after training": "Antrenman sonrası shake, smoothie ve içecekler",
+  "Adjust this workout": "Antrenmanı ayarla",
+  "Answers use what is on this screen and your data.": "Cevaplar bu ekrandakileri ve verilerini kullanır.",
+  "GymTrackAI is not a doctor or a physiotherapist. If something hurts, ask a professional.": "GymTrackAI doktor ya da fizyoterapist değildir. Bir yerin ağrırsa bir uzmana danış.",
+  "GymTrackAI: it hurts, it’s taken, no time, feeling great": "GymTrackAI: ağrıyor, dolu, vakit yok, formdayım",
+  "Hi, I’m GymTrackAI. Ask me anything about your training, food, weight or runs. I can also review your training or improve a routine, and nothing changes until you say so.": "Merhaba, ben GymTrackAI. Antrenman, beslenme, kilo veya koşu hakkında her şeyi sor. Antrenmanını inceleyebilir ya da bir rutini iyileştirebilirim; onay vermeden hiçbir şey değişmez.",
+  "Logged sets and your routine stay as they are. GymTrackAI is not a doctor or a physiotherapist. If something hurts, ask a professional.": "Kaydedilen setler ve rutinin olduğu gibi kalır. GymTrackAI doktor ya da fizyoterapist değildir. Bir yerin ağrırsa bir uzmana danış.",
+  "Message GymTrackAI…": "GymTrackAI'a yaz…",
+  "Open the full chat": "Tüm sohbeti aç",
+  "{0} of {1} GymTrackAI requests used today": "Bugün {1} GymTrackAI isteğinin {0} tanesi kullanıldı",
 }

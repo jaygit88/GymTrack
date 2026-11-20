@@ -3898,4 +3898,13 @@ export default {
   "Meal": "식사",
   "Move to": "이동할 곳",
   "Shakes, smoothies and drinks after training": "운동 후 쉐이크, 스무디, 음료",
+  "Adjust this workout": "운동 조정",
+  "Answers use what is on this screen and your data.": "답변은 이 화면의 내용과 내 데이터를 사용해요.",
+  "GymTrackAI is not a doctor or a physiotherapist. If something hurts, ask a professional.": "GymTrackAI는 의사나 물리치료사가 아니에요. 아프면 전문가와 상담하세요.",
+  "GymTrackAI: it hurts, it’s taken, no time, feeling great": "GymTrackAI: 아파요, 기구가 차 있어요, 시간이 없어요, 컨디션 좋아요",
+  "Hi, I’m GymTrackAI. Ask me anything about your training, food, weight or runs. I can also review your training or improve a routine, and nothing changes until you say so.": "안녕하세요, GymTrackAI예요. 운동, 식단, 체중, 달리기에 대해 무엇이든 물어보세요. 운동 기록을 검토하거나 루틴을 개선할 수도 있고, 동의하기 전엔 아무것도 바뀌지 않아요.",
+  "Logged sets and your routine stay as they are. GymTrackAI is not a doctor or a physiotherapist. If something hurts, ask a professional.": "기록한 세트와 루틴은 그대로예요. GymTrackAI는 의사나 물리치료사가 아니에요. 아프면 전문가와 상담하세요.",
+  "Message GymTrackAI…": "GymTrackAI에게 메시지…",
+  "Open the full chat": "전체 채팅 열기",
+  "{0} of {1} GymTrackAI requests used today": "오늘 GymTrackAI 요청 {1}회 중 {0}회 사용",
 }

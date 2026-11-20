@@ -2533,6 +2533,14 @@ export const PT_BR_OVERRIDES = {
   "kcal left": "kcal restantes",
   "Log your weight once to see the calories.": "Registre seu peso uma vez para ver as calorias.",
   "Shakes, smoothies and drinks after training": "Shakes, smoothies e bebidas depois do treino",
+  "Answers use what is on this screen and your data.": "As respostas usam o que está nesta tela e seus dados.",
+  "GymTrackAI is not a doctor or a physiotherapist. If something hurts, ask a professional.": "O GymTrackAI não é médico nem fisioterapeuta. Se algo doer, procure um profissional.",
+  "GymTrackAI: it hurts, it’s taken, no time, feeling great": "GymTrackAI: dói, está ocupado, sem tempo, com energia",
+  "Hi, I’m GymTrackAI. Ask me anything about your training, food, weight or runs. I can also review your training or improve a routine, and nothing changes until you say so.": "Oi, sou o GymTrackAI. Pergunte o que quiser sobre treino, comida, peso ou corridas. Também posso revisar seu treino ou melhorar uma rotina, e nada muda até você dizer que sim.",
+  "Logged sets and your routine stay as they are. GymTrackAI is not a doctor or a physiotherapist. If something hurts, ask a professional.": "As séries registradas e sua rotina ficam como estão. O GymTrackAI não é médico nem fisioterapeuta. Se algo doer, procure um profissional.",
+  "Message GymTrackAI…": "Escreva para o GymTrackAI…",
+  "Open the full chat": "Abrir a conversa completa",
+  "{0} of {1} GymTrackAI requests used today": "{0} de {1} pedidos ao GymTrackAI usados hoje",
 }
 
 export default { ...pt, ...PT_BR_OVERRIDES }

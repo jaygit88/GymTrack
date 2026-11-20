@@ -3945,4 +3945,13 @@ export default {
   "Meal": "Måltid",
   "Move to": "Flytta till",
   "Shakes, smoothies and drinks after training": "Shakes, smoothies och drycker efter träning",
+  "Adjust this workout": "Justera passet",
+  "Answers use what is on this screen and your data.": "Svaren använder det som finns på skärmen och din data.",
+  "GymTrackAI is not a doctor or a physiotherapist. If something hurts, ask a professional.": "GymTrackAI är inte läkare eller fysioterapeut. Om något gör ont, fråga en expert.",
+  "GymTrackAI: it hurts, it’s taken, no time, feeling great": "GymTrackAI: det gör ont, upptaget, ingen tid, i toppform",
+  "Hi, I’m GymTrackAI. Ask me anything about your training, food, weight or runs. I can also review your training or improve a routine, and nothing changes until you say so.": "Hej, jag är GymTrackAI. Fråga mig vad som helst om träning, mat, vikt eller löpning. Jag kan också granska din träning eller förbättra en rutin, och inget ändras förrän du säger ja.",
+  "Logged sets and your routine stay as they are. GymTrackAI is not a doctor or a physiotherapist. If something hurts, ask a professional.": "Loggade set och din rutin förblir som de är. GymTrackAI är inte läkare eller fysioterapeut. Om något gör ont, fråga en expert.",
+  "Message GymTrackAI…": "Skriv till GymTrackAI…",
+  "Open the full chat": "Öppna hela chatten",
+  "{0} of {1} GymTrackAI requests used today": "{0} av {1} GymTrackAI-förfrågningar använda idag",
 }

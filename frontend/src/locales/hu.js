@@ -3901,4 +3901,13 @@ export default {
   "Meal": "Étkezés",
   "Move to": "Áthelyezés ide",
   "Shakes, smoothies and drinks after training": "Shake-ek, turmixok és italok edzés után",
+  "Adjust this workout": "Edzés igazítása",
+  "Answers use what is on this screen and your data.": "A válaszok a képernyőn látottakat és az adataidat használják.",
+  "GymTrackAI is not a doctor or a physiotherapist. If something hurts, ask a professional.": "A GymTrackAI nem orvos és nem gyógytornász. Ha valami fáj, kérdezz szakembert.",
+  "GymTrackAI: it hurts, it’s taken, no time, feeling great": "GymTrackAI: fáj, foglalt, nincs idő, remek forma",
+  "Hi, I’m GymTrackAI. Ask me anything about your training, food, weight or runs. I can also review your training or improve a routine, and nothing changes until you say so.": "Szia, GymTrackAI vagyok. Kérdezz bármit edzésről, étkezésről, súlyról vagy futásról. Át is nézhetem az edzésedet vagy javíthatok egy rutint, és semmi sem változik a beleegyezésed nélkül.",
+  "Logged sets and your routine stay as they are. GymTrackAI is not a doctor or a physiotherapist. If something hurts, ask a professional.": "A naplózott sorozatok és a rutinod maradnak. A GymTrackAI nem orvos és nem gyógytornász. Ha valami fáj, kérdezz szakembert.",
+  "Message GymTrackAI…": "Üzenet a GymTrackAI-nak…",
+  "Open the full chat": "Teljes csevegés megnyitása",
+  "{0} of {1} GymTrackAI requests used today": "Ma {1} GymTrackAI-kérésből {0} felhasználva",
 }

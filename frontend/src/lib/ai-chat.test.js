@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { chatContext, buildChatPrompt, checkChat, CHAT_SCHEMA } from './ai-chat.js'
+import { chatContext, buildChatPrompt, checkChat, CHAT_SCHEMA, chatHistoryOf } from './ai-chat.js'
 
 const now = new Date('2026-11-18T18:00:00').getTime()
 const S = {
@@ -68,5 +68,13 @@ describe('checkChat', () => {
   it('refuses an empty answer', () => {
     expect(checkChat({ answer: '' }).ok).toBe(false)
     expect(checkChat(null).ok).toBe(false)
+  })
+})
+
+describe('chatHistoryOf', () => {
+  it('keeps the plain lines of the saved chat, the last few, as you and ai', () => {
+    const chat = [{ role: 'user', kind: 'intake' }, { role: 'user', kind: 'text', text: 'a' }, { role: 'coach', kind: 'applied', text: 'x' }, { role: 'coach', kind: 'text', text: 'b' }]
+    expect(chatHistoryOf(chat)).toEqual([{ role: 'you', text: 'a' }, { role: 'ai', text: 'b' }])
+    expect(chatHistoryOf(null)).toEqual([])
   })
 })

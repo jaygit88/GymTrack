@@ -3898,4 +3898,13 @@ export default {
   "Meal": "Comida",
   "Move to": "Mover a",
   "Shakes, smoothies and drinks after training": "Batidos, smoothies y bebidas después de entrenar",
+  "Adjust this workout": "Ajustar el entrenamiento",
+  "Answers use what is on this screen and your data.": "Las respuestas usan lo que hay en esta pantalla y tus datos.",
+  "GymTrackAI is not a doctor or a physiotherapist. If something hurts, ask a professional.": "GymTrackAI no es médico ni fisioterapeuta. Si algo duele, consulta a un profesional.",
+  "GymTrackAI: it hurts, it’s taken, no time, feeling great": "GymTrackAI: duele, está ocupado, sin tiempo, con energía",
+  "Hi, I’m GymTrackAI. Ask me anything about your training, food, weight or runs. I can also review your training or improve a routine, and nothing changes until you say so.": "Hola, soy GymTrackAI. Pregúntame lo que quieras sobre entrenamiento, comida, peso o carreras. También puedo revisar tu entrenamiento o mejorar una rutina, y nada cambia hasta que digas que sí.",
+  "Logged sets and your routine stay as they are. GymTrackAI is not a doctor or a physiotherapist. If something hurts, ask a professional.": "Las series registradas y tu rutina se quedan como están. GymTrackAI no es médico ni fisioterapeuta. Si algo duele, consulta a un profesional.",
+  "Message GymTrackAI…": "Escribe a GymTrackAI…",
+  "Open the full chat": "Abrir el chat completo",
+  "{0} of {1} GymTrackAI requests used today": "{0} de {1} consultas a GymTrackAI usadas hoy",
 }

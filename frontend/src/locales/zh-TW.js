@@ -3891,4 +3891,13 @@ export default {
   "Meal": "餐次",
   "Move to": "移到",
   "Shakes, smoothies and drinks after training": "訓練後的奶昔、果昔和飲品",
+  "Adjust this workout": "調整這次訓練",
+  "Answers use what is on this screen and your data.": "回答會使用此畫面上的內容和你的資料。",
+  "GymTrackAI is not a doctor or a physiotherapist. If something hurts, ask a professional.": "GymTrackAI 不是醫生或物理治療師。如有疼痛，請諮詢專業人士。",
+  "GymTrackAI: it hurts, it’s taken, no time, feeling great": "GymTrackAI：疼痛、器材被占、沒時間、狀態很好",
+  "Hi, I’m GymTrackAI. Ask me anything about your training, food, weight or runs. I can also review your training or improve a routine, and nothing changes until you say so.": "你好，我是 GymTrackAI。訓練、飲食、體重或跑步的問題都可以問我。我也可以回顧你的訓練或改進某個課表，你同意之前什麼都不會改變。",
+  "Logged sets and your routine stay as they are. GymTrackAI is not a doctor or a physiotherapist. If something hurts, ask a professional.": "已記錄的組和你的課表保持不變。GymTrackAI 不是醫生或物理治療師。如有疼痛，請諮詢專業人士。",
+  "Message GymTrackAI…": "傳訊息給 GymTrackAI…",
+  "Open the full chat": "開啟完整對話",
+  "{0} of {1} GymTrackAI requests used today": "今天已用 {0}/{1} 次 GymTrackAI 請求",
 }

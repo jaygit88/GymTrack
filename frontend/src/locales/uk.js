@@ -3895,4 +3895,13 @@ export default {
   "Meal": "Прийом їжі",
   "Move to": "Перенести до",
   "Shakes, smoothies and drinks after training": "Шейки, смузі й напої після тренування",
+  "Adjust this workout": "Змінити тренування",
+  "Answers use what is on this screen and your data.": "Відповіді використовують те, що на екрані, і твої дані.",
+  "GymTrackAI is not a doctor or a physiotherapist. If something hurts, ask a professional.": "GymTrackAI не лікар і не фізіотерапевт. Якщо щось болить, звернися до фахівця.",
+  "GymTrackAI: it hurts, it’s taken, no time, feeling great": "GymTrackAI: болить, зайнято, немає часу, чудова форма",
+  "Hi, I’m GymTrackAI. Ask me anything about your training, food, weight or runs. I can also review your training or improve a routine, and nothing changes until you say so.": "Привіт, я GymTrackAI. Питай про тренування, харчування, вагу чи біг. Я також можу розібрати тренування або покращити програму, і нічого не зміниться без твоєї згоди.",
+  "Logged sets and your routine stay as they are. GymTrackAI is not a doctor or a physiotherapist. If something hurts, ask a professional.": "Записані підходи й програма лишаються як є. GymTrackAI не лікар і не фізіотерапевт. Якщо щось болить, звернися до фахівця.",
+  "Message GymTrackAI…": "Написати GymTrackAI…",
+  "Open the full chat": "Відкрити весь чат",
+  "{0} of {1} GymTrackAI requests used today": "Сьогодні використано {0} з {1} запитів GymTrackAI",
 }

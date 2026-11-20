@@ -4,13 +4,14 @@ import { Button } from './ui.jsx'
 import { useUI } from '../store/useUI.js'
 import { useStore } from '../store/useStore.js'
 import { aiReviewReady, runAiChat } from '../lib/ai-review-run.js'
+import { appendChat } from '../lib/coach.js'
 import { isOn } from '../lib/modules.js'
 import { EXIDX } from '../lib/exercises.js'
 import { t } from '../lib/i18n.js'
 
 // "Ask GymTrackAI": a short chat about what is on screen (lib/ai-chat.js decides what Claude
 // reads for each screen). Opened from Nutrition, from an exercise's menu in a workout, and from
-// Home. The chat lives in this sheet only: close it and it is gone.
+// Home. Each question and answer is also saved to the GymTrackAI chat (S.coach.chat, views/CoachChat.jsx).
 
 const STARTERS = {
   nutrition: ['What should I have for dinner?', 'Am I eating enough protein today?', 'What is a good snack after training?'],
@@ -62,6 +63,11 @@ function AiChat({ close, where }) {
     try {
       const r = await runAiChat(where, history, question)
       setTurns(x => [...x, { role: 'ai', text: r.answer, followUps: r.followUps }])
+      // The same conversation as the GymTrackAI screen: it is there to read back, and to go on with.
+      useStore.getState().update(s => {
+        appendChat(s, { role: 'user', kind: 'text', text: question })
+        appendChat(s, { role: 'coach', kind: 'text', text: r.answer })
+      })
     } catch (e) {
       if (e?.code !== 'declined') setError(e?.message || t('Try again'))
       setTurns(x => (x[x.length - 1]?.role === 'you' ? x.slice(0, -1) : x))
@@ -90,7 +96,8 @@ function AiChat({ close, where }) {
           onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); ask(text) } }} />
         <button type="submit" className="iconbtn ai-send" disabled={busy || !text.trim()} aria-label={t('Send')}><Icon name="arrowUp" /></button>
       </form>
-      <div className="small muted ai-chat-note">{t('Answers use what is on this screen and your data, and are not kept.')}</div>
+      <div className="small muted ai-chat-note">{t('Answers use what is on this screen and your data.')}{' '}
+        <button className="linkbtn" onClick={() => { close(); window.location.hash = '#/coach' }}>{t('Open the full chat')}</button></div>
     </>}
   </>
 }

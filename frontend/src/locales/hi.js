@@ -3898,4 +3898,13 @@ export default {
   "Meal": "भोजन",
   "Move to": "यहां ले जाएं",
   "Shakes, smoothies and drinks after training": "ट्रेनिंग के बाद शेक, स्मूदी और ड्रिंक्स",
+  "Adjust this workout": "वर्कआउट बदलें",
+  "Answers use what is on this screen and your data.": "जवाब इस स्क्रीन और आपके डेटा से बनते हैं।",
+  "GymTrackAI is not a doctor or a physiotherapist. If something hurts, ask a professional.": "GymTrackAI डॉक्टर या फ़िज़ियोथेरेपिस्ट नहीं है। कुछ दर्द हो तो किसी विशेषज्ञ से पूछें।",
+  "GymTrackAI: it hurts, it’s taken, no time, feeling great": "GymTrackAI: दर्द है, मशीन व्यस्त है, समय नहीं, बढ़िया लग रहा है",
+  "Hi, I’m GymTrackAI. Ask me anything about your training, food, weight or runs. I can also review your training or improve a routine, and nothing changes until you say so.": "नमस्ते, मैं GymTrackAI हूं। ट्रेनिंग, खाना, वज़न या रन के बारे में कुछ भी पूछें। मैं आपकी ट्रेनिंग देख सकता हूं या रूटीन बेहतर कर सकता हूं, और आपकी हां के बिना कुछ नहीं बदलता।",
+  "Logged sets and your routine stay as they are. GymTrackAI is not a doctor or a physiotherapist. If something hurts, ask a professional.": "दर्ज सेट और आपका रूटीन जैसे हैं वैसे रहेंगे। GymTrackAI डॉक्टर या फ़िज़ियोथेरेपिस्ट नहीं है। कुछ दर्द हो तो किसी विशेषज्ञ से पूछें।",
+  "Message GymTrackAI…": "GymTrackAI को लिखें…",
+  "Open the full chat": "पूरी चैट खोलें",
+  "{0} of {1} GymTrackAI requests used today": "आज {1} में से {0} GymTrackAI अनुरोध इस्तेमाल हुए",
 }
