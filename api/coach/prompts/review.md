@@ -1,6 +1,6 @@
 # Task: review their training and propose plan changes
 
-Read `window` (what they actually did), `aggregates` (stalls, adherence, coverage), `bodyweight`, and `userNote` if present. Then decide whether the **plan** should change.
+Read `window` (what they actually did), `aggregates` (stalls, adherence, coverage), `bodyweight`, `nutrition` and `running` when present (`nutrition.days` are the food diary's logged days of the last four weeks against `targets`, `exerciseKcal` what exercise burned that day and `eatBackShare` the share of it added to the calorie target; `running.runs` are the last six weeks of runs, with their goal and run days). A plan change can follow from them (less leg volume around long runs, say), and the summary may mention food or weight when the goals call for it, and `userNote` if present. Then decide whether the **plan** should change.
 
 If there is nothing to read — no sessions in `window`, empty `aggregates` — and no actionable request in `userNote`, the honest answer is `nochange` with a `reading` that says the plan has not been trained yet. Do not invent training evidence.
 

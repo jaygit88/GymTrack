@@ -9,5 +9,7 @@ export const DATA_CATEGORIES = Object.freeze([
   'training',    // logged sets, targets, effort ratings, durations, PRs, session notes in the review window
   'bodyweight',  // weigh-ins in the window and your goal weight
   'profile',     // the intake answers you gave the Coach, including any limitations
-  'prefs'        // unit, language, effort scale
+  'prefs',       // unit, language, effort scale
+  'nutrition',   // GymTrack: the food diary's day totals for four weeks, today's foods, your targets
+  'running'      // GymTrack: runs from your watch for six weeks, your running goal and run days
 ]);

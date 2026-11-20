@@ -121,6 +121,7 @@ function cleanProfile(profile) {
    Kept here, next to the code that acts on it, and rendered by the consent UI from the same
    list — a screen that drifts from the payload is worse than no screen. */
 export { DATA_CATEGORIES } from './categories.js';
+import { nutritionOf, runningOf } from './body-context.js';
 
 /* ---------- reading a session the way the engine reads it ----------
    Duplicated from frontend/src/lib/history.js rather than shared: the two runtimes have no
@@ -602,6 +603,14 @@ export const TASKS = ['create', 'review', 'debrief', 'ask', 'adapt'];
 export const ADAPT_REASONS = ['pain', 'busy', 'short', 'great', 'tired', 'other'];
 export const ADAPT_RECENT = 3;
 
+/** GymTrack: the food diary and the running (core/body-context.js), each only when there is some. */
+function addBody(p, S, now) {
+  const nutrition = nutritionOf(S, now);
+  if (nutrition) p.nutrition = nutrition;
+  const running = runningOf(S, now);
+  if (running) p.running = running;
+}
+
 export function build(S, opts = {}) {
   if (typeof opts.handle !== 'string' || !opts.handle) throw new Error('payload.build: opts.handle is required');
   const coach = S.coach || {};
@@ -700,6 +709,9 @@ export function build(S, opts = {}) {
     p.aggregates = aggregates(S, workouts);
     const today = cleanToday(opts.today);
     if (today) p.today = today;
+    // GymTrack: the rest of the picture a question can be about (core/body-context.js).
+    p.bodyweight = { goal: num(S.targetW) ?? null, ...dailyOf(S), series: weighIns(S, iso(new Date(now - 84 * 86400e3)), null) };
+    addBody(p, S, now);
   } else if (opts.kind === 'adapt') {
     // An exercise in the workout running now, and why it needs a rethink: pain, a busy rack, a
     // short day, feeling great. The session as it stands (each entry with its index, so a change
@@ -731,6 +743,7 @@ export function build(S, opts = {}) {
     };
     p.aggregates = aggregates(S, workouts);
     p.bodyweight = { goal: num(S.targetW) ?? null, ...dailyOf(S), series: weighIns(S, p.window.from, null) };
+    addBody(p, S, now);
     if (opts.note) p.userNote = String(opts.note).slice(0, MAX_NOTE_CHARS);
     if (opts.cohort) p.cohort = cleanCohort(opts.cohort);
     // A review names mostly what is already trained; 60 candidates is plenty for a swap. But
