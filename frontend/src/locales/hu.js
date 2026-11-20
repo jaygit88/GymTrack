@@ -3896,4 +3896,6 @@ export default {
   "kcal left": "kcal maradt",
   "kcal over": "kcal túl",
   "Photo of the label": "Fotó a címkéről",
+  "Log your weight once to see the calories.": "Naplózd egyszer a testsúlyod, hogy lásd a kalóriát.",
+  "{0} avg": "átl. {0}",
 }

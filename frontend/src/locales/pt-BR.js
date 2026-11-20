@@ -2531,6 +2531,7 @@ export const PT_BR_OVERRIDES = {
   "{0} on the week before": "{0} em relação à semana anterior",
   "{0} would help. Open Nutrition to log it.": "{0} ajudaria. Abra a Nutrição para registrar.",
   "kcal left": "kcal restantes",
+  "Log your weight once to see the calories.": "Registre seu peso uma vez para ver as calorias.",
 }
 
 export default { ...pt, ...PT_BR_OVERRIDES }

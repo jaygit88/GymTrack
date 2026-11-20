@@ -3897,4 +3897,6 @@ export default {
   "kcal left": "ккал осталось",
   "kcal over": "ккал сверх",
   "Photo of the label": "Фото этикетки",
+  "Log your weight once to see the calories.": "Запишите вес один раз, чтобы видеть калории.",
+  "{0} avg": "ср. {0}",
 }

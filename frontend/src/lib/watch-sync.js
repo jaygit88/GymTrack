@@ -331,6 +331,8 @@ function claim (ev) {
  *                                    (staleWatchFinish: the phone logged it after `at`, #904)
  *   discard { wid, at }              the workout screen's own Discard (confirmed on the watch)
  *   setHr   { wid, exId, entryIdx, setIdx, hr?, restHr? }   heart rate on a set (lib/heart-rate.js)
+ *   sessionHr { wid, hr }            GymTrack (Wear OS): the whole session's heart rate, sent when it
+ *                                    ends however it ended, for its calories (lib/calories.js)
  *
  * A tick for a workout already saved (finished on the phone while the watch was away) is written
  * into that saved workout, stamped so the next sync keeps it. A tick while the workout screen is
@@ -403,6 +405,12 @@ function applyEach (events, getState) {
         if (!appHandlers) break
         appHandlers.patchSet({ wid: ev.wid, exId: ev.exId, entryIdx: ev.entryIdx, setIdx: ev.setIdx }, fields)
       }
+    } else if (ev.type === 'sessionHr') {
+      // The session's heart rate, from the watch's own readings: on the running workout (the
+      // finish copies it), else on the saved one, where only a reading from the watch is replaced.
+      const hr = sanitizeHr(ev.hr)
+      if (hr && appHandlers?.sessionHr) appHandlers.sessionHr(ev.wid, hr)
+      else if (hr) break
     } else if (ev.type === 'finish' && ours && staleWatchFinish(A, ev)) {
       // The watch took the workout for forgotten while it was being logged here (#904): it keeps
       // running, and the phone says why the watch has let go of it.

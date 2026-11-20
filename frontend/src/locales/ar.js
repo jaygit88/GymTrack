@@ -3948,4 +3948,6 @@ export default {
   "kcal left": "سعرة متبقية",
   "kcal over": "سعرة زيادة",
   "Photo of the label": "صورة الملصق",
+  "Log your weight once to see the calories.": "سجّل وزنك مرة واحدة لترى السعرات.",
+  "{0} avg": "متوسط {0}",
 }

@@ -3972,4 +3972,6 @@ export default {
   "kcal left": "kcal বাকি",
   "kcal over": "kcal বেশি",
   "Photo of the label": "লেবেলের ছবি",
+  "Log your weight once to see the calories.": "ক্যালোরি দেখতে একবার ওজন লগ করুন।",
+  "{0} avg": "গড় {0}",
 }

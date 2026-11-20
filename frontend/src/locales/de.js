@@ -3913,4 +3913,6 @@ export default {
   "kcal left": "kcal übrig",
   "kcal over": "kcal zu viel",
   "Photo of the label": "Foto vom Etikett",
+  "Log your weight once to see the calories.": "Trag einmal dein Gewicht ein, um die Kalorien zu sehen.",
+  "{0} avg": "Ø {0}",
 }

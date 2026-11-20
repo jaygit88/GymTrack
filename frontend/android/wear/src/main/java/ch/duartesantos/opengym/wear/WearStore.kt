@@ -71,6 +71,7 @@ object WearStore {
         // The phone ended the workout the watch had (finished or discarded there).
         if (gone != null && after.workout == null) {
             _summary.value = SessionCore.summary(gone, now().toDouble(), endedOnPhone = true, hr = hrOf(0))
+            sendSessionHr(gone.id)
             stopRest()
             readings.clear()
         }
@@ -137,6 +138,7 @@ object WearStore {
         val at = now()
         val (s1, event) = SessionCore.finish(before, at.toDouble(), UUID.randomUUID().toString(), discard)
         event?.let { PhoneLink.send(app, it) }
+        if (!discard) sendSessionHr(w.id)
         _summary.value = if (discard) null else SessionCore.summary(w, at.toDouble(), hr = hrOf(0))
         stopRest()
         readings.clear()
@@ -188,6 +190,13 @@ object WearStore {
     }
 
     fun clearHeartRate() { _heartRate.value = null }
+
+    /** GymTrack: the whole session's heart rate to the phone, for its calories (lib/calories.js). */
+    private fun sendSessionHr(wid: String?) {
+        val hr = hrOf(0) ?: return
+        if (wid.isNullOrBlank()) return
+        PhoneLink.send(app, SessionCore.sessionHrEvent(wid, hr, UUID.randomUUID().toString()))
+    }
 
     /** avg and max of the readings since `from` (ms), or null without any (the phone's sanitizeHr shape). */
     private fun hrOf(from: Long): Pair<Int, Int>? {

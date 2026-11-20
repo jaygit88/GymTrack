@@ -20,6 +20,15 @@ import org.junit.Test
 class CodecTest {
     private fun resource(name: String) = javaClass.classLoader!!.getResource(name)!!.readText()
 
+    @Test fun sendsTheSessionsHeartRate() {
+        val e = SessionCore.sessionHrEvent("w-1", 121 to 158, "e-1")
+        assertEquals("sessionHr", (e["type"] as JsonPrimitive).content)
+        assertEquals("w-1", (e["wid"] as JsonPrimitive).content)
+        val hr = e["hr"] as JsonObject
+        assertEquals(121.0, (hr["avg"] as JsonPrimitive).doubleOrNull!!, 0.0)
+        assertEquals(158.0, (hr["max"] as JsonPrimitive).doubleOrNull!!, 0.0)
+    }
+
     @Test fun readsTheTilesDayAndKeepsIt() {
         val snap = Snapshot.parse("""{"v":1,"tile":{"iso":"2026-11-18","run":"Easy · 5 km","kcal":"1,900","kcalLine":"kcal left","protein":"90 g protein to go","fresh":{"kcal":"2,900","kcalLine":"kcal left"}}}""")!!
         val t = snap.tile!!

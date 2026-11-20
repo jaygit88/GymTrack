@@ -237,6 +237,12 @@ object SessionCore {
         return s to event
     }
 
+    /** GymTrack: the session's heart rate, avg and max, once it has ended (the phone's sessionHr). */
+    fun sessionHrEvent(wid: String, hr: Pair<Int, Int>, id: String): Event = buildJsonObject {
+        put("id", id); put("type", "sessionHr"); put("wid", wid)
+        put("hr", buildJsonObject { put("avg", hr.first); put("max", hr.second) })
+    }
+
     /** Work sets done and in all, for the Tile's and the complication's ring. */
     fun progress(s: SessionState): Pair<Int, Int> {
         val all = s.workout?.entries?.flatMap { it.sets }?.filter { !it.warmup } ?: return 0 to 0

@@ -3893,4 +3893,6 @@ export default {
   "kcal left": "kcal 남음",
   "kcal over": "kcal 초과",
   "Photo of the label": "라벨 사진",
+  "Log your weight once to see the calories.": "칼로리를 보려면 체중을 한 번 기록하세요.",
+  "{0} avg": "평균 {0}",
 }

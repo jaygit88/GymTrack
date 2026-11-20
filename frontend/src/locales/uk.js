@@ -3890,4 +3890,6 @@ export default {
   "kcal left": "ккал лишилося",
   "kcal over": "ккал понад",
   "Photo of the label": "Фото етикетки",
+  "Log your weight once to see the calories.": "Запиши вагу один раз, щоб бачити калорії.",
+  "{0} avg": "сер. {0}",
 }

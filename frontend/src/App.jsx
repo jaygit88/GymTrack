@@ -459,6 +459,14 @@ export default function App() {
       patchSet: (where, fields, opts = {}) => useStore.getState().update(s => {
         patchSetIn(s, where, fields, stampWorkout, { ...opts, recount: w => { w.vol = workoutVolume(w) } })
       }),
+      // GymTrack: the whole session's heart rate from the Wear OS watch (lib/watch-sync.js sessionHr).
+      sessionHr: (wid, hr) => useStore.getState().update(s => {
+        if (s.active?.id === wid) { s.active.hr = hr; return }
+        const w = (s.workouts || []).find(x => x && x.id === wid)
+        if (!w || (w.hr && w.hr.src && w.hr.src !== 'watch')) return
+        w.hr = { ...hr, src: 'watch' }
+        stampWorkout(w)
+      }),
       // Ticks from the watch are the workout screen's to apply: it opens, and drains the queue.
       openWorkout: () => { if (!String(window.location.hash || '').startsWith('#/workout')) navToWorkout() },
     })

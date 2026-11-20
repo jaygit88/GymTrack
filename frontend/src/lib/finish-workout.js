@@ -126,6 +126,8 @@ export function buildCompletedWorkout(active, { end = Date.now(), prs = [], snap
     prs,
     ...(allNoProg ? { excludeFromProgression: true } : {}),
     ...(sessionNote ? { note: sessionNote } : {}),
+    // GymTrack: the session's heart rate the Wear OS watch sent while it ran (lib/watch-sync.js).
+    ...(active.hr && Number(active.hr.avg) > 0 && Number(active.hr.max) >= Number(active.hr.avg) ? { hr: { avg: Math.round(active.hr.avg), max: Math.round(active.hr.max), src: 'watch' } } : {}),
     // The gym it was done at (#808, lib/gym-inventory.js): { id, name }, so editing it later loads
     // that gym's plates and the history can say where. Only when there are gyms.
     ...(active.gym && typeof active.gym === 'object' && active.gym.id != null ? { gym: { id: active.gym.id, name: String(active.gym.name || '') } } : {}),

@@ -18,7 +18,7 @@ import { MEASUREMENT_FIELDS } from './measurements.js'
 import { runDistance } from './runs.js'
 import { isoOf, startOfWeek, weekStartOf } from './format.js'
 import { loadOfWorkouts } from './muscles.js'
-import { workoutCalories, burnedOn } from './calories.js'
+import { workoutCalories, burnedOn, sessionHrOf } from './calories.js'
 import { nutritionSummary } from './nutrition.js'
 import { quickContext, minutesFor } from './quick-workout.js'
 import { runGoalOf, goalProgress, fitnessTrend, weeklyKm, loadWarning, planThisWeek, fmtPace, fmtRaceTime, RUN_KINDS, runDaysForModel } from './running.js'
@@ -44,7 +44,7 @@ export function workoutLine(w, unit, S) {
   }).filter(Boolean).slice(0, MAX_EXERCISES)
   const minutes = w.end > w.start ? Math.round((w.end - w.start) / 60000) : null
   const kcal = workoutCalories(S, w).kcal
-  return { date: w.d, name: w.name || null, ...(minutes ? { minutes } : {}), ...(w.hr?.avg ? { hrAvg: Math.round(w.hr.avg) } : {}), ...(kcal ? { kcal } : {}),
+  return { date: w.d, name: w.name || null, ...(minutes ? { minutes } : {}), ...(sessionHrOf(w) ? { hrAvg: sessionHrOf(w).avg } : {}), ...(kcal ? { kcal } : {}),
     sets: exercises.reduce((n, e) => n + e.sets, 0), prs: Array.isArray(w.prs) ? w.prs.length : 0, exercises }
 }
 

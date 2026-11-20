@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { workoutCalories, weightKgFor, runCalories, burnedOn, addExtra, removeExtra, extraOn } from './calories.js'
+import { workoutCalories, sessionHrOf, weightKgFor, runCalories, burnedOn, addExtra, removeExtra, extraOn } from './calories.js'
 
 const w = (over = {}) => ({ d: '2026-11-18', start: 0, end: 60 * 60e3, hr: { avg: 125, max: 160 }, ...over })
 const S = (over = {}) => ({ unit: 'kg', sex: 'male', birthYear: 1988, bodyweight: [{ d: '2026-11-10', w: 85 }], ...over })
@@ -55,5 +55,21 @@ describe('runs and exercise added by hand', () => {
     removeExtra(st, '2026-11-18', 'x')
     expect(st.exerciseLog['2026-11-18']).toBeUndefined()
     expect(burnedOn({}, '2026-11-18').total).toBe(0)
+  })
+})
+
+describe('sessionHrOf', () => {
+  const set = (avg, rest) => ({ done: true, hr: { avg, max: avg + 10 }, ...(rest ? { restHr: { avg: rest, max: rest + 5 } } : {}) })
+  it('takes the session\'s own reading first', () => {
+    expect(sessionHrOf({ hr: { avg: 118, max: 160 }, entries: [{ sets: [set(140), set(140), set(140)] }] })).toEqual({ avg: 118, max: 160, from: 'session' })
+  })
+  it('works one out from the sets, discounting for rests it did not see', () => {
+    expect(sessionHrOf({ entries: [{ sets: [set(130), set(140)] }, { sets: [set(150)] }] })).toEqual({ avg: 129, max: 160, from: 'sets' })
+    expect(sessionHrOf({ entries: [{ sets: [set(130, 100), set(140, 110), set(150, 110)] }] }).avg).toBe(123)
+    expect(sessionHrOf({ entries: [{ sets: [set(130), set(140)] }] })).toBeNull()
+  })
+  it('gives a workout without a session reading its calories', () => {
+    const w = { d: '2026-11-18', start: 0, end: 60 * 60e3, entries: [{ sets: [set(136), set(136), set(136)] }] }
+    expect(workoutCalories(S(), w).kcal).toBe(695)     // 136 x 0.92 = 125 bpm, as the hour above
   })
 })

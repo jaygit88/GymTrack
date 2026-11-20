@@ -3893,4 +3893,6 @@ export default {
   "kcal left": "kcal por comer",
   "kcal over": "kcal a mais",
   "Photo of the label": "Foto do rótulo",
+  "Log your weight once to see the calories.": "Regista o teu peso uma vez para ver as calorias.",
+  "{0} avg": "{0} de média",
 }

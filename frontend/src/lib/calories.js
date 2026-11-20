@@ -31,11 +31,31 @@ export function weightKgFor(S, w) {
 }
 
 /**
+ * A workout's heart rate: the session's own (the watch's, or Health Connect's), else worked out
+ * from the readings on its sets: their average, the rests' too when the watch measured them. Sets
+ * alone run high (the heart is up while lifting, lower between), so without rests they count at
+ * 92 %. Null with fewer than three sets measured.
+ */
+export function sessionHrOf(w) {
+  const own = w?.hr
+  if (Number(own?.avg) > 0) return { avg: Math.round(own.avg), max: Math.round(Number(own.max) || own.avg), from: 'session' }
+  const sets = [], rests = [], maxes = []
+  for (const e of w?.entries || []) for (const s of e?.sets || []) {
+    if (Number(s?.hr?.avg) > 0) { sets.push(Number(s.hr.avg)); maxes.push(Number(s.hr.max) || 0) }
+    if (Number(s?.restHr?.avg) > 0) rests.push(Number(s.restHr.avg))
+  }
+  if (sets.length < 3) return null
+  const mean = xs => xs.reduce((a, b) => a + b, 0) / xs.length
+  const avg = rests.length ? mean([...sets, ...rests]) : mean(sets) * 0.92
+  return { avg: Math.round(avg), max: Math.max(...maxes, Math.round(avg)), from: 'sets' }
+}
+
+/**
  * The calories of one workout, rounded to 5: { kcal, avgHr, minutes } or { kcal: null, missing }
  * where `missing` says what is needed ('hr', 'age', 'weight' or 'time').
  */
 export function workoutCalories(S, w) {
-  const avg = Number(w?.hr?.avg)
+  const avg = Number(sessionHrOf(w)?.avg)
   if (!(avg >= HR_MIN && avg <= HR_MAX)) return { kcal: null, missing: 'hr' }
   const minutes = (Number(w?.end) - Number(w?.start)) / 60000
   if (!(minutes >= 5)) return { kcal: null, missing: 'time' }

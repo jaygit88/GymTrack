@@ -3940,4 +3940,6 @@ export default {
   "kcal left": "kcal kvar",
   "kcal over": "kcal över",
   "Photo of the label": "Foto av etiketten",
+  "Log your weight once to see the calories.": "Logga din vikt en gång för att se kalorierna.",
+  "{0} avg": "snitt {0}",
 }

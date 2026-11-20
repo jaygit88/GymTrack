@@ -3886,4 +3886,6 @@ export default {
   "kcal left": "大卡剩餘",
   "kcal over": "大卡超出",
   "Photo of the label": "拍標示",
+  "Log your weight once to see the calories.": "記錄一次體重即可查看熱量。",
+  "{0} avg": "平均 {0}",
 }

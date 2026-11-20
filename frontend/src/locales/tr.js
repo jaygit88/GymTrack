@@ -3893,4 +3893,6 @@ export default {
   "kcal left": "kcal kaldı",
   "kcal over": "kcal fazla",
   "Photo of the label": "Etiketin fotoğrafı",
+  "Log your weight once to see the calories.": "Kalorileri görmek için kilonu bir kez kaydet.",
+  "{0} avg": "ort. {0}",
 }

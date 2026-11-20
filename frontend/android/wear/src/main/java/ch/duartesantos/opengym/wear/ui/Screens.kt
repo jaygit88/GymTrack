@@ -418,10 +418,13 @@ fun RestScreen(s: SessionState, rest: Rest, hr: Int?) {
     val w = s.workout
     val ne = w?.entries?.getOrNull(s.entryIndex)
     val nsi = ne?.let { SessionCore.setIndex(s, s.entryIndex) }
+    val restWord = stringResource(R.string.rest)
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Ring(frac, Modifier.fillMaxSize().padding(4.dp), stroke = 10.dp)
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Quiet(stringResource(R.string.rest), 13.sp)
+        // No "Rest" title: on a round screen it sat under the watch's clock, and the ring and the
+        // countdown say it already. TalkBack still hears it (contentDescription below).
+        Column(horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.semantics(mergeDescendants = false) { contentDescription = restWord }) {
             Text(clock(kotlin.math.ceil(left).toLong()), style = Og.Number, fontSize = 48.sp)
             if (s.settings.show?.showNext != false && ne != null && nsi != null) {
                 Quiet(stringResource(R.string.next_set, ne.name, ne.sets.take(nsi + 1).count { !it.warmup }.coerceAtLeast(1)), 11.sp,

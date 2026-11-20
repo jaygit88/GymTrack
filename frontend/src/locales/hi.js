@@ -3893,4 +3893,6 @@ export default {
   "kcal left": "kcal बाकी",
   "kcal over": "kcal ज़्यादा",
   "Photo of the label": "लेबल की फ़ोटो",
+  "Log your weight once to see the calories.": "कैलोरी देखने के लिए एक बार अपना वज़न दर्ज करें।",
+  "{0} avg": "औसत {0}",
 }

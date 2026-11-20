@@ -300,3 +300,15 @@ describe('tileFor (GymTrack: the Wear OS Tile)', () => {
     expect(tileFor({ runs: [], workouts: [] }, '2026-11-18')).toBeNull()
   })
 })
+
+describe('sessionHr (GymTrack, Wear OS)', () => {
+  it('hands the session’s heart rate to the app, and only a plausible one', async () => {
+    const { applyEvents, bindWatchAppActions } = await import('./watch-sync.js')
+    const sessionHr = vi.fn()
+    const unbind = bindWatchAppActions({ sessionHr })
+    applyEvents([{ id: 'hr-1', type: 'sessionHr', wid: 'w-9', hr: { avg: 121, max: 158 } }, { id: 'hr-2', type: 'sessionHr', wid: 'w-9', hr: { avg: 400, max: 10 } }], () => ({ S: { workouts: [] } }))
+    expect(sessionHr).toHaveBeenCalledTimes(1)
+    expect(sessionHr).toHaveBeenCalledWith('w-9', { avg: 121, max: 158 })
+    unbind()
+  })
+})

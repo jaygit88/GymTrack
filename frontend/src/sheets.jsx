@@ -80,7 +80,7 @@ import { warmupModeOf, ownRowsOf } from './lib/warmup-ramp.js'
 import { useSheetKeyboard, useRevealActiveChip, tappable } from './lib/use-sheet-keyboard.js'
 import { useAutoMore } from './lib/use-auto-more.js'
 import { isFav, toggleFav, sortFavouritesFirst, sortYoursFirst } from './lib/favourites.js'
-import { workoutCalories } from './lib/calories.js'
+import { workoutCalories, sessionHrOf } from './lib/calories.js'
 import { buildSessionEntries, buildPlannedEntry, buildSessionEntry, plannedConfigOf } from './lib/session-start.js'
 import { finishCompare, finishCardio } from './lib/finish-compare.js'
 import { workoutFit, fitFileName } from './lib/fit-export.js'
@@ -3259,7 +3259,7 @@ function WorkoutDetail({ w, close }) {
   return <>
     <h3>{w.name}</h3>
     <div className="muted small" style={{ marginBottom: kcal.missing === 'age' ? 4 : 12 }}>{[fmtDate(w.d, true), ...durPart(w.end - w.start), fmtVol(sessionVolume(w, st), st.unit), ...(w.bw ? [fmtNum(w.bw) + ' ' + st.unit] : []),
-      ...(w.hr?.avg ? ['♥ ' + Math.round(w.hr.avg) + ' bpm'] : []), ...(kcal.kcal ? [t('≈ {0} kcal', kcal.kcal)] : [])].join(' · ')}</div>
+      ...(sessionHrOf(w) ? ['♥ ' + sessionHrOf(w).avg + ' bpm'] : []), ...(kcal.kcal ? [t('≈ {0} kcal', kcal.kcal)] : [])].join(' · ')}</div>
     {/* GymTrack: calories need your age (Settings, About you); the heart rate is already here. */}
     {kcal.missing === 'age' && <div className="small dim" style={{ marginBottom: 12 }}>{t('Add your year of birth in Settings, About you, to see the calories.')}</div>}
     {grouped ? groups.map(g => {
@@ -4046,8 +4046,12 @@ function KeepInRoutine({ additions }) {
   </div>
 }
 
-function FinishSummary({ w, prs, e1prs = [], additions = [], close }) {
+function FinishSummary({ w: w0, prs, e1prs = [], additions = [], close }) {
   const st = useStore(s => s.S)
+  // The saved copy: the watch's heart rate for the whole session can land a moment after Finish.
+  const w = st.workouts.find(x => x.id === w0.id) || w0
+  const hr = sessionHrOf(w)
+  const kcal = workoutCalories(st, w)
   return <div style={{ textAlign: 'center', padding: '8px 0' }}>
     {/* Sticky, so the summary can be left from the top however far it has been scrolled. */}
     <div className="fin-x"><button type="button" className="iconbtn" aria-label={t('Close')} onClick={() => closeThenNav(close, '/home')}><Icon name="xmark" /></button></div>
@@ -4058,7 +4062,12 @@ function FinishSummary({ w, prs, e1prs = [], additions = [], close }) {
       <div className="tile"><div className="l">{t('Volume')}</div><div className="v v-sm">{fmtVol(sessionVolume(w, st), st.unit)}</div></div>
       <div className="tile wide"><div className="l">{t('Sets')}</div><div className="v v-sm">{setsWorkCount(setsDone(w), workSetsDone(w))}</div></div>
       <div className="tile narrow"><div className="l">{t('PRs')}</div><div className="v v-sm">{prs.length || '–'}</div></div>
+      {/* GymTrack: the watch's heart rate and the calories worked out from it (lib/calories.js). */}
+      {hr && <div className="tile"><div className="l">{t('Heart rate')}</div><div className="v v-sm">{t('{0} avg', hr.avg)} · {hr.max}</div></div>}
+      {kcal.kcal > 0 && <div className="tile"><div className="l">{t('Calories')}</div><div className="v v-sm">≈ {fmtNum(kcal.kcal)}</div></div>}
     </div>
+    {!kcal.kcal && kcal.missing === 'age' && hr && <div className="small dim" style={{ textAlign: 'start', marginBottom: 10 }}>{t('Add your year of birth in Settings, About you, to see the calories.')}</div>}
+    {!kcal.kcal && kcal.missing === 'weight' && hr && <div className="small dim" style={{ textAlign: 'start', marginBottom: 10 }}>{t('Log your weight once to see the calories.')}</div>}
     {(prs.length > 0 || e1prs.length > 0) && <div style={{ textAlign: 'start', marginBottom: 12 }}>
       {prs.map(id => <div key={id} className="small accent row" style={{ gap: 6, alignItems: 'flex-start' }}><Icon name="trophy" style={{ fontSize: 'var(--fs-footnote)', marginTop: 2, flex: 'none' }} /><span>{t('New PR:')} <span className={exerciseNameClass(EXIDX[id])}>{EXIDX[id] ? exerciseNameFor(EXIDX[id]) : id}</span></span></div>)}
       {e1prs.map(p => <div key={p.id} className="small accent row" style={{ gap: 6, alignItems: 'flex-start' }}><Icon name="chartLine" style={{ fontSize: 'var(--fs-footnote)', marginTop: 2, flex: 'none' }} /><span>{t('Best estimated 1RM:')} <span className={exerciseNameClass(EXIDX[p.id])}>{EXIDX[p.id] ? exerciseNameFor(EXIDX[p.id]) : p.id}</span> · {fmtNum(p.est)} {st.unit}</span></div>)}

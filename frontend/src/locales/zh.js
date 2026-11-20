@@ -3893,4 +3893,6 @@ export default {
   "kcal left": "千卡剩余",
   "kcal over": "千卡超出",
   "Photo of the label": "拍标签",
+  "Log your weight once to see the calories.": "记录一次体重即可查看热量。",
+  "{0} avg": "平均 {0}",
 }
