@@ -3895,4 +3895,7 @@ export default {
   "Photo of the label": "라벨 사진",
   "Log your weight once to see the calories.": "칼로리를 보려면 체중을 한 번 기록하세요.",
   "{0} avg": "평균 {0}",
+  "Meal": "식사",
+  "Move to": "이동할 곳",
+  "Shakes, smoothies and drinks after training": "운동 후 쉐이크, 스무디, 음료",
 }

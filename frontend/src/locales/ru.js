@@ -3899,4 +3899,7 @@ export default {
   "Photo of the label": "Фото этикетки",
   "Log your weight once to see the calories.": "Запишите вес один раз, чтобы видеть калории.",
   "{0} avg": "ср. {0}",
+  "Meal": "Приём пищи",
+  "Move to": "Перенести в",
+  "Shakes, smoothies and drinks after training": "Коктейли, смузи и напитки после тренировки",
 }

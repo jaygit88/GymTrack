@@ -3974,4 +3974,7 @@ export default {
   "Photo of the label": "লেবেলের ছবি",
   "Log your weight once to see the calories.": "ক্যালোরি দেখতে একবার ওজন লগ করুন।",
   "{0} avg": "গড় {0}",
+  "Meal": "খাবার",
+  "Move to": "এখানে সরান",
+  "Shakes, smoothies and drinks after training": "ট্রেনিংয়ের পর শেক, স্মুদি ও পানীয়",
 }

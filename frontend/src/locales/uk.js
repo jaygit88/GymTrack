@@ -3892,4 +3892,7 @@ export default {
   "Photo of the label": "Фото етикетки",
   "Log your weight once to see the calories.": "Запиши вагу один раз, щоб бачити калорії.",
   "{0} avg": "сер. {0}",
+  "Meal": "Прийом їжі",
+  "Move to": "Перенести до",
+  "Shakes, smoothies and drinks after training": "Шейки, смузі й напої після тренування",
 }

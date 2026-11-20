@@ -93,7 +93,9 @@ export default function Nutrition() {
       const prevMeal = list.length ? null : mealTotals(S, prev, meal)
       return <div key={meal} className="card nut-meal">
         <div className="row between">
-          <div><div className="nut-meal-t">{t(MEAL_LABEL[meal])}</div>{list.length > 0 && <div className="small muted">{t('{0} kcal', fmtNum(mt.kcal))} · {t('{0} g protein', fmtNum(mt.protein))}</div>}</div>
+          <div><div className="nut-meal-t">{t(MEAL_LABEL[meal])}</div>{list.length > 0
+            ? <div className="small muted">{t('{0} kcal', fmtNum(mt.kcal))} · {t('{0} g protein', fmtNum(mt.protein))}</div>
+            : meal === 'recovery' && <div className="small muted">{t('Shakes, smoothies and drinks after training')}</div>}</div>
           <Button size="sm" variant="tinted" icon="plus" onClick={() => findFoodSheet({ meal, iso })}>{t('Add')}</Button>
         </div>
         {prevMeal?.kcal > 0 && <button className="food-copy" onClick={() => update(s => copyMeal(s, prev, iso, meal, uid))}>

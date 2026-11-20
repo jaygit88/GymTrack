@@ -167,3 +167,11 @@ describe('proteinNudge', () => {
     expect(proteinNudgeOf({ proteinNudge: { on: true, time: '20:30' } })).toEqual({ on: true, time: '20:30' })
   })
 })
+
+describe('the recovery meal', () => {
+  it('is a meal of its own, not folded into snacks', () => {
+    const e = makeEntry({ id: 'a', meal: 'recovery', quick: { name: 'Shake', kcal: 250, protein: 30 } })
+    expect(e.meal).toBe('recovery')
+    expect(makeEntry({ id: 'b', meal: 'elevenses', quick: { kcal: 100 } }).meal).toBe('snacks')
+  })
+})

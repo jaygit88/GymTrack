@@ -3950,4 +3950,7 @@ export default {
   "Photo of the label": "صورة الملصق",
   "Log your weight once to see the calories.": "سجّل وزنك مرة واحدة لترى السعرات.",
   "{0} avg": "متوسط {0}",
+  "Meal": "الوجبة",
+  "Move to": "نقل إلى",
+  "Shakes, smoothies and drinks after training": "مخفوقات وعصائر ومشروبات بعد التمرين",
 }

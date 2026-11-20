@@ -3895,4 +3895,7 @@ export default {
   "Photo of the label": "Foto de la etiqueta",
   "Log your weight once to see the calories.": "Registra tu peso una vez para ver las calorías.",
   "{0} avg": "{0} de media",
+  "Meal": "Comida",
+  "Move to": "Mover a",
+  "Shakes, smoothies and drinks after training": "Batidos, smoothies y bebidas después de entrenar",
 }

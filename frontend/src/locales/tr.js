@@ -3895,4 +3895,7 @@ export default {
   "Photo of the label": "Etiketin fotoğrafı",
   "Log your weight once to see the calories.": "Kalorileri görmek için kilonu bir kez kaydet.",
   "{0} avg": "ort. {0}",
+  "Meal": "Öğün",
+  "Move to": "Taşı",
+  "Shakes, smoothies and drinks after training": "Antrenman sonrası shake, smoothie ve içecekler",
 }

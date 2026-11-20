@@ -3942,4 +3942,7 @@ export default {
   "Photo of the label": "Foto av etiketten",
   "Log your weight once to see the calories.": "Logga din vikt en gång för att se kalorierna.",
   "{0} avg": "snitt {0}",
+  "Meal": "Måltid",
+  "Move to": "Flytta till",
+  "Shakes, smoothies and drinks after training": "Shakes, smoothies och drycker efter träning",
 }

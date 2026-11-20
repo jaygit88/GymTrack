@@ -3895,4 +3895,7 @@ export default {
   "Photo of the label": "लेबल की फ़ोटो",
   "Log your weight once to see the calories.": "कैलोरी देखने के लिए एक बार अपना वज़न दर्ज करें।",
   "{0} avg": "औसत {0}",
+  "Meal": "भोजन",
+  "Move to": "यहां ले जाएं",
+  "Shakes, smoothies and drinks after training": "ट्रेनिंग के बाद शेक, स्मूदी और ड्रिंक्स",
 }

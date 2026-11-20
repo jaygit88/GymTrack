@@ -3895,4 +3895,7 @@ export default {
   "Photo of the label": "拍标签",
   "Log your weight once to see the calories.": "记录一次体重即可查看热量。",
   "{0} avg": "平均 {0}",
+  "Meal": "餐次",
+  "Move to": "移到",
+  "Shakes, smoothies and drinks after training": "训练后的奶昔、果昔和饮品",
 }

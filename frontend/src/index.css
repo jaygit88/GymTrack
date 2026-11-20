@@ -3404,3 +3404,4 @@ button.wl-summary{width:100%;padding:0 0 10px;text-align:start;border-radius:var
 .week-sum-l { display: flex; flex-direction: column; gap: 10px; margin-top: 6px; }
 .week-sum-i { display: grid; grid-template-columns: 76px 1fr; gap: 8px; align-items: baseline; }
 .week-sum-v { font-size: var(--fs-subhead, 15px); font-variant-numeric: tabular-nums; }
+.food-meals { flex-wrap: wrap; margin: 4px 0 12px; }

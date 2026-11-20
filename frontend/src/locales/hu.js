@@ -3898,4 +3898,7 @@ export default {
   "Photo of the label": "Fotó a címkéről",
   "Log your weight once to see the calories.": "Naplózd egyszer a testsúlyod, hogy lásd a kalóriát.",
   "{0} avg": "átl. {0}",
+  "Meal": "Étkezés",
+  "Move to": "Áthelyezés ide",
+  "Shakes, smoothies and drinks after training": "Shake-ek, turmixok és italok edzés után",
 }

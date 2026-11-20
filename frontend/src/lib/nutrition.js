@@ -15,7 +15,8 @@
 
 import { burnedOn } from './calories.js'
 
-export const MEALS = ['breakfast', 'lunch', 'dinner', 'snacks']
+// `recovery`: what you have after training (a shake, a smoothie, a recovery drink).
+export const MEALS = ['breakfast', 'lunch', 'dinner', 'snacks', 'recovery']
 export const NUTRIENTS = ['kcal', 'protein', 'carbs', 'fat', 'sugars', 'fibre', 'satfat', 'salt']
 const LB_PER_KG = 2.2046226218
 const DAY = 86400e3

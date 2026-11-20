@@ -2532,6 +2532,7 @@ export const PT_BR_OVERRIDES = {
   "{0} would help. Open Nutrition to log it.": "{0} ajudaria. Abra a Nutrição para registrar.",
   "kcal left": "kcal restantes",
   "Log your weight once to see the calories.": "Registre seu peso uma vez para ver as calorias.",
+  "Shakes, smoothies and drinks after training": "Shakes, smoothies e bebidas depois do treino",
 }
 
 export default { ...pt, ...PT_BR_OVERRIDES }

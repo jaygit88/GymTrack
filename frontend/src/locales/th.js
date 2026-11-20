@@ -3906,4 +3906,7 @@ export default {
   "Photo of the label": "ถ่ายรูปฉลาก",
   "Log your weight once to see the calories.": "บันทึกน้ำหนักสักครั้งเพื่อดูแคลอรี",
   "{0} avg": "เฉลี่ย {0}",
+  "Meal": "มื้อ",
+  "Move to": "ย้ายไปที่",
+  "Shakes, smoothies and drinks after training": "เชค สมูทตี้ และเครื่องดื่มหลังฝึก",
 }

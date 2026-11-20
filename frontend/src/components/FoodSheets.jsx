@@ -21,7 +21,7 @@ import { photoForModel } from '../lib/label-read.js'
 
 const ui = () => useUI.getState()
 const update = fn => useStore.getState().update(fn)
-export const MEAL_LABEL = { breakfast: 'Breakfast', lunch: 'Lunch', dinner: 'Dinner', snacks: 'Snacks' }
+export const MEAL_LABEL = { breakfast: 'Breakfast', lunch: 'Lunch', dinner: 'Dinner', snacks: 'Snacks', recovery: 'Recovery' }
 // For the string check: t('Breakfast') t('Lunch') t('Dinner') t('Snacks')
 const NUTRIENT_LABEL = { kcal: 'Calories', protein: 'Protein', carbs: 'Carbs', fat: 'Fat', sugars: 'Sugars', fibre: 'Fibre', satfat: 'Saturates', salt: 'Salt' }
 // t('Calories') t('Protein') t('Carbs') t('Fat') t('Sugars') t('Fibre') t('Saturates') t('Salt')
@@ -81,7 +81,11 @@ function Amount({ close, food, recipe, meal, iso, entry, onPick }) {
       {favItem && <button className="iconbtn" aria-pressed={starred} aria-label={starred ? t('Remove from favourites') : t('Add to favourites')}
         onClick={() => update(st => toggleFav(st, favItem))}><Icon name={starred ? 'starFill' : 'star'} style={starred ? { color: 'var(--yellow)' } : undefined} /></button>}
     </div>
-    {!onPick && <Segmented value={m} onChange={setMeal} options={MEALS.map(x => ({ value: x, label: t(MEAL_LABEL[x]) }))} />}
+    {/* Which meal it goes in; on a logged food, choosing another and Save moves it there. */}
+    {!onPick && <>
+      <div className="lbl2">{entry ? t('Move to') : t('Meal')}</div>
+      <div className="chips food-meals">{MEALS.map(x => <button key={x} type="button" className={'chip' + (m === x ? ' on' : '')} aria-pressed={m === x} onClick={() => setMeal(x)}>{t(MEAL_LABEL[x])}</button>)}</div>
+    </>}
     <Section>
       <Row title={isRecipe ? t('Servings') : t('Amount')} subtitle={isRecipe ? null : 'g'}>
         <NumberField value={amount} onChange={setAmount} className="food-amt" aria-label={isRecipe ? t('Servings') : t('Amount')} />
