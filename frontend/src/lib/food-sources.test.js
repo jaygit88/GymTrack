@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { loadCofid, searchFoods, offFood, lookupBarcode, searchProducts } from './food-sources.js'
+import { loadCofid, searchFoods, offFood, lookupBarcode, searchProducts, rankProducts } from './food-sources.js'
 
 describe('the bundled CoFID list', () => {
   it('loads as foods with values per 100 g', async () => {
@@ -45,11 +45,39 @@ describe('Open Food Facts', () => {
     expect(await lookupBarcode('4000000000000', { fetchFn })).toBeNull()
     expect(fetchFn.mock.calls[0][0]).toContain('/api/v2/product/5000159484695.json')
   })
-  it('searches by name, and throws when it cannot reach the service', async () => {
-    const ok = vi.fn(async () => ({ ok: true, json: async () => ({ products: [product, { code: '2' }] }) }))
-    expect(await searchProducts('twix', { fetchFn: ok })).toHaveLength(1)
-    expect(ok.mock.calls[0][0]).toContain('countries_tags_en=united-kingdom')
+  it('searches the newer search first, UK products first, brands as a list', async () => {
+    const hits = [
+      { code: '7', product_name: 'Oat drink', brands: ['Oatly'], countries_tags: ['en:sweden'], nutriments: { 'energy-kcal_100g': 57 } },
+      { code: '8', product_name: 'Whole oat drink', brands: ['Oatly'], countries_tags: ['en:united-kingdom'], nutriments: { 'energy-kcal_100g': 60 } },
+      { code: '9', product_name: 'No calories', brands: ['Oatly'], nutriments: {} },
+    ]
+    const fetchFn = vi.fn(async () => ({ ok: true, json: async () => ({ hits }) }))
+    const got = await searchProducts('oatly', { fetchFn })
+    expect(got.map(f => f.name)).toEqual(['Whole oat drink, Oatly', 'Oat drink, Oatly'])
+    expect(fetchFn.mock.calls[0][0]).toMatch(/^https:\/\/search\.openfoodfacts\.org\/search\?q=oatly/)
+  })
+  it('falls back to the old search, asked twice, and throws when neither answers', async () => {
+    let n = 0
+    const flaky = vi.fn(async url => (url.includes('search.openfoodfacts') ? { ok: false, status: 502 }
+      : ++n === 1 ? { ok: false, status: 503 } : { ok: true, json: async () => ({ products: [product, { code: '2' }] }) }))
+    expect(await searchProducts('twix', { fetchFn: flaky })).toHaveLength(1)
+    expect(flaky.mock.calls.map(c => c[0]).filter(u => u.includes('countries_tags_en=united-kingdom'))).toHaveLength(2)
     const down = vi.fn(async () => ({ ok: false, status: 503 }))
     await expect(searchProducts('twix', { fetchFn: down })).rejects.toThrow(/503/)
+  })
+})
+
+describe('rankProducts', () => {
+  it('puts what holds most of the words first, yoghurt and yogurt alike, then the UK', () => {
+    const hits = [
+      { product_name: '3 Pack Mixed Peppers', brands: ['Tesco'], countries_tags: ['en:united-kingdom'] },
+      { product_name: 'Greek style yoghurt', brands: ['Tesco'], countries_tags: ['en:united-kingdom'] },
+      { product_name: 'Greek yogurt', brands: ['Fage'], countries_tags: ['en:greece'] },
+      { product_name: 'Greek yogurt', brands: ['Fage'], countries_tags: ['en:united-kingdom'] },
+    ]
+    expect(rankProducts('tesco greek yogurt', hits).map(h => h.product_name + ' ' + h.brands[0])).toEqual([
+      'Greek style yoghurt Tesco', 'Greek yogurt Fage', 'Greek yogurt Fage', '3 Pack Mixed Peppers Tesco',
+    ])
+    expect(rankProducts('tesco greek yogurt', hits)[1].countries_tags).toEqual(['en:united-kingdom'])
   })
 })

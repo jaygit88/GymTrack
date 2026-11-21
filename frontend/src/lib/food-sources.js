@@ -11,6 +11,9 @@
 import { pickNutrients } from './nutrition.js'
 
 const OFF = 'https://world.openfoodfacts.org'
+// Open Food Facts' newer search (search-a-licious): about half a second, where the old
+// /cgi/search.pl often answers 503 when busy. The old one stays as the fallback.
+const OFF_SEARCH = 'https://search.openfoodfacts.org'
 // Open Food Facts asks every app to name itself; no personal details.
 const USER_AGENT = 'GymTrack/' + (typeof __APP_VERSION__ === 'string' ? __APP_VERSION__ : 'dev') + ' (personal nutrition diary)'
 const OFF_FIELDS = 'code,product_name,product_name_en,brands,nutriments,serving_size,serving_quantity'
@@ -59,7 +62,9 @@ export function offFood(p) {
   if (!(kcal >= 0) && Number(n.energy_100g) > 0) kcal = Number(n.energy_100g) / 4.184     // kJ only
   if (!(kcal >= 0)) return null
   const v = k => (Number.isFinite(Number(n[k])) ? Math.round(Number(n[k]) * 10) / 10 : null)
-  const name = [p.product_name_en || p.product_name, p.brands && String(p.brands).split(',')[0].trim()].filter(Boolean).join(', ')
+  // `brands` is text on the old API ("Tesco, Tesco Finest") and a list on the new search.
+  const brand = Array.isArray(p.brands) ? p.brands[0] : p.brands && String(p.brands).split(',')[0]
+  const name = [p.product_name_en || p.product_name, brand && String(brand).trim()].filter(Boolean).join(', ')
   if (!name) return null
   const sq = Number(p.serving_quantity)
   return {
@@ -91,12 +96,45 @@ export async function lookupBarcode(code, opts) {
   return d && d.status !== 0 && d.product ? offFood({ ...d.product, code: d.product.code || c }) : null
 }
 
-/** Branded products by name, UK ones first. Throws when Open Food Facts cannot be reached. */
+// Spellings that are one word to a shopper ("yoghurt" on a UK pot, "yogurt" in the search).
+const SAME = [/^yog(h)?(o)?urts?$/, /^flavou?rs?$/, /^colou?rs?$/, /^chocs?$|^chocolates?$/]
+const norm = w => { for (const re of SAME) if (re.test(w)) return re.source; return w.replace(/s$/, '') }
+
+/**
+ * The new search's hits in the order a shopper means: the ones whose name and brand hold the most
+ * of the words typed first ("tesco greek yogurt" puts Tesco's Greek yogurt before Tesco's
+ * peppers), then products sold in the UK, then the search's own order. With two words or more,
+ * hits that match only one of them go to the back.
+ */
+export function rankProducts(term, hits) {
+  const qw = [...new Set(words(term).map(norm))]
+  const scored = (hits || []).map((h, i) => {
+    const brand = Array.isArray(h?.brands) ? h.brands.join(' ') : h?.brands || ''
+    const nw = words((h?.product_name_en || h?.product_name || '') + ' ' + brand).map(norm)
+    const score = qw.filter(w => nw.some(n => n.startsWith(w) || w.startsWith(n) && n.length >= 4)).length
+    const uk = Array.isArray(h?.countries_tags) && h.countries_tags.includes('en:united-kingdom')
+    return { h, i, score, uk }
+  })
+  const weak = s => qw.length >= 2 && s.score < 2
+  return scored.sort((a, b) => weak(a) - weak(b) || b.score - a.score || b.uk - a.uk || a.i - b.i).map(x => x.h)
+}
+
+/** Branded products by name, UK ones first. Throws when Open Food Facts cannot be reached at all. */
 export async function searchProducts(q, opts = {}) {
   const term = String(q || '').trim()
   if (term.length < 3) return []
-  const url = `${OFF}/cgi/search.pl?search_terms=${encodeURIComponent(term)}&search_simple=1&action=process&json=1&page_size=${opts.limit || 20}` +
-    `&fields=${OFF_FIELDS}&countries_tags_en=united-kingdom`
-  const d = await getJson(url, opts)
-  return (d?.products || []).map(offFood).filter(Boolean)
+  const limit = opts.limit || 20
+  try {
+    const url = `${OFF_SEARCH}/search?q=${encodeURIComponent(term)}&page_size=50&fields=${OFF_FIELDS},countries_tags`
+    const d = await getJson(url, opts)
+    const hits = Array.isArray(d?.hits) ? d.hits : []
+    return rankProducts(term, hits).map(offFood).filter(Boolean).slice(0, limit)
+  } catch (e) {
+    // The new search down: the old one, asked twice, since it often answers 503 when busy.
+    const old = `${OFF}/cgi/search.pl?search_terms=${encodeURIComponent(term)}&search_simple=1&action=process&json=1&page_size=${limit}` +
+      `&fields=${OFF_FIELDS}&countries_tags_en=united-kingdom`
+    let d
+    try { d = await getJson(old, opts) } catch { d = await getJson(old, opts) }
+    return (d?.products || []).map(offFood).filter(Boolean)
+  }
 }
