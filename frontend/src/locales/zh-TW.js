@@ -3920,4 +3920,6 @@ export default {
   "Saved to your plan": "已儲存到課表",
   "Start it now": "現在開始",
   "Undone. Your plan is as it was.": "已復原。課表恢復原樣。",
+  "From Samsung Health": "來自 Samsung Health",
+  "No calories from Samsung Health yet. In Settings, Health Connect, turn Runs from your watch off and on to allow them.": "還沒有來自 Samsung Health 的熱量。在設定、Health Connect 中關閉再開啟「來自手錶的跑步」以允許讀取。",
 }

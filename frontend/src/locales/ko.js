@@ -3927,4 +3927,6 @@ export default {
   "Saved to your plan": "계획에 저장됨",
   "Start it now": "지금 시작",
   "Undone. Your plan is as it was.": "되돌렸어요. 계획이 이전과 같아요.",
+  "From Samsung Health": "Samsung Health에서",
+  "No calories from Samsung Health yet. In Settings, Health Connect, turn Runs from your watch off and on to allow them.": "아직 Samsung Health에서 칼로리가 없어요. 설정, Health Connect에서 시계의 달리기를 껐다 켜서 허용하세요.",
 }

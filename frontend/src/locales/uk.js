@@ -3924,4 +3924,6 @@ export default {
   "Saved to your plan": "Збережено в плані",
   "Start it now": "Почати зараз",
   "Undone. Your plan is as it was.": "Скасовано. План як був.",
+  "From Samsung Health": "Із Samsung Health",
+  "No calories from Samsung Health yet. In Settings, Health Connect, turn Runs from your watch off and on to allow them.": "Калорій із Samsung Health ще немає. У Налаштуваннях, Health Connect, вимкни й увімкни Пробіжки з годинника, щоб дозволити їх.",
 }

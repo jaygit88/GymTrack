@@ -9,6 +9,7 @@ import androidx.health.connect.client.HealthConnectClient;
 import androidx.health.connect.client.HealthConnectFeatures;
 import androidx.health.connect.client.PermissionController;
 import androidx.health.connect.client.records.ActiveCaloriesBurnedRecord;
+import androidx.health.connect.client.records.TotalCaloriesBurnedRecord;
 import androidx.health.connect.client.records.DistanceRecord;
 import androidx.health.connect.client.records.ElevationGainedRecord;
 import androidx.health.connect.client.records.ExerciseLap;
@@ -384,6 +385,7 @@ public class HealthConnectPlugin extends Plugin {
                     if (s.steps >= 0) o.put("steps", s.steps);
                     if (s.elevation >= 0) o.put("elevation", s.elevation);
                     if (s.kcal >= 0) o.put("kcal", s.kcal);
+                    if (s.kcalTotal >= 0) o.put("kcalTotal", s.kcalTotal);
                     list.put(o);
                 }
                 JSObject out = new JSObject();
@@ -444,6 +446,16 @@ public class HealthConnectPlugin extends Plugin {
                 k += r.getEnergy().getKilocalories(); any = true;
             }
             if (any) s.kcal = k;
+        } catch (Exception ignored) { }
+        // GymTrack: total calories, resting ones included, for a run whose app saved no active
+        // ones (Samsung Health often does); the page takes the resting part off (lib/calories.js).
+        try {
+            double k = 0; boolean any = false;
+            for (TotalCaloriesBurnedRecord r : read(TotalCaloriesBurnedRecord.class, in)) {
+                if (!s.origin.equals(r.getMetadata().getDataOrigin().getPackageName())) continue;
+                k += r.getEnergy().getKilocalories(); any = true;
+            }
+            if (any) s.kcalTotal = k;
         } catch (Exception ignored) { }
     }
 

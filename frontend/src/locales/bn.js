@@ -4006,4 +4006,6 @@ export default {
   "Saved to your plan": "প্ল্যানে সংরক্ষিত",
   "Start it now": "এখনই শুরু করুন",
   "Undone. Your plan is as it was.": "ফেরানো হয়েছে। প্ল্যান আগের মতো।",
+  "From Samsung Health": "Samsung Health থেকে",
+  "No calories from Samsung Health yet. In Settings, Health Connect, turn Runs from your watch off and on to allow them.": "Samsung Health থেকে এখনো ক্যালোরি আসেনি। সেটিংস, Health Connect-এ ঘড়ি থেকে দৌড় বন্ধ করে আবার চালু করুন।",
 }

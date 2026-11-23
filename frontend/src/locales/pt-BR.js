@@ -2555,6 +2555,7 @@ export const PT_BR_OVERRIDES = {
   "Saved to your plan": "Salvo no seu plano",
   "Start it now": "Começar agora",
   "Undone. Your plan is as it was.": "Desfeito. Seu plano está como antes.",
+  "No calories from Samsung Health yet. In Settings, Health Connect, turn Runs from your watch off and on to allow them.": "Ainda sem calorias do Samsung Health. Em Configurações, Health Connect, desligue e ligue Corridas do relógio para permitir.",
 }
 
 export default { ...pt, ...PT_BR_OVERRIDES }

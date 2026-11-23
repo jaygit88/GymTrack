@@ -3927,4 +3927,6 @@ export default {
   "Saved to your plan": "आपके प्लान में सेव हुआ",
   "Start it now": "अभी शुरू करें",
   "Undone. Your plan is as it was.": "वापस लिया गया। प्लान पहले जैसा है।",
+  "From Samsung Health": "Samsung Health से",
+  "No calories from Samsung Health yet. In Settings, Health Connect, turn Runs from your watch off and on to allow them.": "Samsung Health से अभी कैलोरी नहीं आईं। सेटिंग्स, Health Connect में वॉच से रन बंद करके चालू करें ताकि अनुमति मिले।",
 }

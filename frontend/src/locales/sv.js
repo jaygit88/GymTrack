@@ -3974,4 +3974,6 @@ export default {
   "Saved to your plan": "Sparat i planen",
   "Start it now": "Starta nu",
   "Undone. Your plan is as it was.": "Ångrat. Planen är som förut.",
+  "From Samsung Health": "Från Samsung Health",
+  "No calories from Samsung Health yet. In Settings, Health Connect, turn Runs from your watch off and on to allow them.": "Inga kalorier från Samsung Health än. Under Inställningar, Health Connect, slå av och på Löprundor från klockan för att tillåta dem.",
 }

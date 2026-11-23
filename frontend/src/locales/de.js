@@ -3947,4 +3947,6 @@ export default {
   "Saved to your plan": "Im Plan gespeichert",
   "Start it now": "Jetzt starten",
   "Undone. Your plan is as it was.": "Rückgängig gemacht. Dein Plan ist wie vorher.",
+  "From Samsung Health": "Aus Samsung Health",
+  "No calories from Samsung Health yet. In Settings, Health Connect, turn Runs from your watch off and on to allow them.": "Noch keine Kalorien aus Samsung Health. Schalte unter Einstellungen, Health Connect, Läufe von deiner Uhr aus und wieder an, um sie zu erlauben.",
 }

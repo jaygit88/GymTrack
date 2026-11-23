@@ -3930,4 +3930,6 @@ export default {
   "Saved to your plan": "Mentve a tervbe",
   "Start it now": "Indítás most",
   "Undone. Your plan is as it was.": "Visszavonva. A terv olyan, mint előtte.",
+  "From Samsung Health": "A Samsung Healthből",
+  "No calories from Samsung Health yet. In Settings, Health Connect, turn Runs from your watch off and on to allow them.": "Még nincs kalória a Samsung Healthből. A Beállítások, Health Connect alatt kapcsold ki és be a Futások az órádról lehetőséget.",
 }

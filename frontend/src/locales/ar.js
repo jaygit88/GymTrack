@@ -3982,4 +3982,6 @@ export default {
   "Saved to your plan": "حُفظ في خطتك",
   "Start it now": "ابدأ الآن",
   "Undone. Your plan is as it was.": "تم التراجع. خطتك كما كانت.",
+  "From Samsung Health": "من Samsung Health",
+  "No calories from Samsung Health yet. In Settings, Health Connect, turn Runs from your watch off and on to allow them.": "لا سعرات من Samsung Health بعد. في الإعدادات، Health Connect، أوقف ثم شغّل الجري من ساعتك للسماح بها.",
 }

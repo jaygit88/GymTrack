@@ -3927,4 +3927,6 @@ export default {
   "Saved to your plan": "Planına kaydedildi",
   "Start it now": "Şimdi başla",
   "Undone. Your plan is as it was.": "Geri alındı. Planın eskisi gibi.",
+  "From Samsung Health": "Samsung Health'ten",
+  "No calories from Samsung Health yet. In Settings, Health Connect, turn Runs from your watch off and on to allow them.": "Samsung Health'ten henüz kalori yok. Ayarlar, Health Connect'te Saatinden koşular'ı kapatıp açarak izin ver.",
 }

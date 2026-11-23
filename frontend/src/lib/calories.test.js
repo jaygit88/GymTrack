@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { workoutCalories, sessionHrOf, weightKgFor, runCalories, burnedOn, addExtra, removeExtra, extraOn } from './calories.js'
+import { workoutCalories, sessionHrOf, weightKgFor, runCalories, runCalorieInfo, burnedOn, addExtra, removeExtra, extraOn } from './calories.js'
 
 const w = (over = {}) => ({ d: '2026-11-18', start: 0, end: 60 * 60e3, hr: { avg: 125, max: 160 }, ...over })
 const S = (over = {}) => ({ unit: 'kg', sex: 'male', birthYear: 1988, bodyweight: [{ d: '2026-11-10', w: 85 }], ...over })
@@ -71,5 +71,21 @@ describe('sessionHrOf', () => {
   it('gives a workout without a session reading its calories', () => {
     const w = { d: '2026-11-18', start: 0, end: 60 * 60e3, entries: [{ sets: [set(136), set(136), set(136)] }] }
     expect(workoutCalories(S(), w).kcal).toBe(695)     // 136 x 0.92 = 125 bpm, as the hour above
+  })
+})
+
+describe('runCalorieInfo', () => {
+  const run = over => ({ d: '2026-11-18', start: 0, end: 30 * 60e3, ...over })
+  it('takes the watch\'s active calories, then its total less the resting part, then the heart rate', () => {
+    expect(runCalorieInfo(S(), run({ kcal: 312 }))).toEqual({ kcal: 310, from: 'watch' })
+    // 85 kg at rest for 30 minutes: 85 / 60 x 30 = 42.5 kcal off 400
+    expect(runCalorieInfo(S(), run({ kcalTotal: 400 }))).toEqual({ kcal: 360, from: 'total' })
+    expect(runCalorieInfo(S({ bodyweight: [] }), run({ kcalTotal: 400 }))).toEqual({ kcal: 365, from: 'total' })
+    expect(runCalorieInfo(S(), run({ hr: { avg: 150, max: 170 } })).from).toBe('hr')
+  })
+  it('says what is missing when there is no way to a number', () => {
+    expect(runCalorieInfo(S(), run())).toEqual({ kcal: null, missing: 'calories' })
+    expect(runCalorieInfo(S({ bodyweight: [] }), run({ hr: { avg: 150, max: 170 } }))).toEqual({ kcal: null, missing: 'weight' })
+    expect(runCalorieInfo(S({ birthYear: null }), run({ hr: { avg: 150, max: 170 } }))).toEqual({ kcal: null, missing: 'age' })
   })
 })

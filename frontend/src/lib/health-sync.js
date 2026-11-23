@@ -252,7 +252,7 @@ let lastRunsRead = 0
 // (with a day's overlap, for a watch that syncs late).
 const RUNS_FIRST_MS = 30 * 86400e3
 const RUNS_OVERLAP_MS = 86400e3
-const RUN_PERMISSIONS = ['exercise', 'distance', 'heartRate', 'speed', 'elevation', 'steps', 'calories', 'vo2max', 'restingHeartRate']
+const RUN_PERMISSIONS = ['exercise', 'distance', 'heartRate', 'speed', 'elevation', 'steps', 'calories', 'totalCalories', 'vo2max', 'restingHeartRate']
 
 /**
  * Turns one of the two reads on (`kind`: 'hr' | 'weight'): asks for that read permission only,

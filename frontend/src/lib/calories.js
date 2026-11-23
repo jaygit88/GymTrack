@@ -72,13 +72,27 @@ export function workoutCalories(S, w) {
 }
 
 /**
- * The calories of one run: what the watch saved for it (Samsung Health's active calories, read
- * through Health Connect), else worked out from its heart rate like a workout. Null when neither.
+ * The calories of one run and where they came from: { kcal, from: 'watch' | 'total' | 'hr' } or
+ * { kcal: null, missing }. In order: the active calories the watch saved; its total calories with
+ * the resting part taken off (about 1 kcal per kg of body weight an hour, 1.2 kcal a minute
+ * without a weigh-in); else worked out from the run's heart rate like a workout. `missing` is
+ * 'calories' (nothing saved and no heart rate), or what the heart-rate way lacks: 'weight', 'age'.
  */
-export function runCalories(S, r) {
-  if (Number(r?.kcal) > 0) return Math.round(Number(r.kcal) / 5) * 5
-  return workoutCalories(S, { d: r?.d, start: r?.start, end: r?.end, hr: r?.hr }).kcal
+export function runCalorieInfo(S, r) {
+  const round = k => Math.round(k / 5) * 5
+  if (Number(r?.kcal) > 0) return { kcal: round(Number(r.kcal)), from: 'watch' }
+  const minutes = (Number(r?.end) - Number(r?.start)) / 60000
+  if (Number(r?.kcalTotal) > 0 && minutes > 0) {
+    const kg = weightKgFor(S, { d: r.d })
+    const resting = (kg ? kg / 60 : 1.2) * Math.min(minutes, MAX_MIN)
+    const k = Number(r.kcalTotal) - resting
+    if (k > 0) return { kcal: round(k), from: 'total' }
+  }
+  const est = workoutCalories(S, { d: r?.d, start: r?.start, end: r?.end, hr: r?.hr })
+  if (est.kcal) return { kcal: est.kcal, from: 'hr' }
+  return { kcal: null, missing: est.missing === 'hr' ? 'calories' : est.missing }
 }
+export const runCalories = (S, r) => runCalorieInfo(S, r).kcal
 
 /** Exercise you added by hand for a day (S.exerciseLog): [{ id, name, kcal, at }]. */
 export const extraOn = (S, iso) => (S?.exerciseLog?.[iso] || []).filter(x => x && Number(x.kcal) > 0)

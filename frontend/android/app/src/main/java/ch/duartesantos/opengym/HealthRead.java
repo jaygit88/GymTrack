@@ -76,6 +76,8 @@ final class HealthRead {
             case "elevation": return "android.permission.health.READ_ELEVATION_GAINED";
             case "steps": return "android.permission.health.READ_STEPS";
             case "calories": return "android.permission.health.READ_ACTIVE_CALORIES_BURNED";
+            // GymTrack: Samsung Health often saves a run's energy only as total calories.
+            case "totalCalories": return "android.permission.health.READ_TOTAL_CALORIES_BURNED";
             case "vo2max": return "android.permission.health.READ_VO2_MAX";
             case "restingHeartRate": return "android.permission.health.READ_RESTING_HEART_RATE";
             default: return null;
@@ -102,7 +104,7 @@ final class HealthRead {
         List<double[]> speed = new ArrayList<>();   // [ms, m/s], the same
         List<double[]> laps = new ArrayList<>();    // [start ms, end ms, metres or -1]
         long steps = -1;
-        double elevation = -1, kcal = -1;
+        double elevation = -1, kcal = -1, kcalTotal = -1;
 
         Session(String id, String origin, String clientId, long start, long end, String type, String title) {
             this.id = id; this.origin = origin; this.clientId = clientId;

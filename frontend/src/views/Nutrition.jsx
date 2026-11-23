@@ -5,7 +5,8 @@ import CardHead from '../components/CardHead.jsx'
 import { Button } from '../components/ui.jsx'
 import { findFoodSheet, amountSheet, recipeSheet, targetsSheet, extraBurnSheet, macroLine, MEAL_LABEL } from '../components/FoodSheets.jsx'
 import { MEALS, dayEntries, dayTotals, mealTotals, averages, targetsOf, recipeNutrients, dayBudget, copyMeal } from '../lib/nutrition.js'
-import { burnedOn, extraOn, removeExtra } from '../lib/calories.js'
+import { burnedOn, extraOn, removeExtra, runCalorieInfo } from '../lib/calories.js'
+import { runsOn, runDistance } from '../lib/runs.js'
 import { todayISO, isoOf, fmtDate, fmtNum, uid } from '../lib/format.js'
 import { t } from '../lib/i18n.js'
 import { tappable } from '../lib/use-sheet-keyboard.js'
@@ -60,6 +61,13 @@ export default function Nutrition() {
   const burned = burnedOn(S, iso)
   const budget = dayBudget(S, iso)
   const extras = extraOn(S, iso)
+  const runs = runsOn(S, iso)
+  // Why a run has no calories, and what fixes it (lib/calories.js runCalorieInfo).
+  const MISSING = {
+    calories: () => t('No calories from Samsung Health yet. In Settings, Health Connect, turn Runs from your watch off and on to allow them.'),
+    weight: () => t('Log your weight once to see the calories.'),
+    age: () => t('Add your year of birth in Settings, About you, to see the calories.'),
+  }
   const update = useStore(s => s.update)
   const week = averages(S, 7)
   const label = iso === today ? t('Today') : iso === shift(today, -1) ? t('Yesterday') : fmtDate(iso, true)
@@ -134,9 +142,15 @@ export default function Nutrition() {
         <div><div className="nut-meal-t">{t('Exercise')}</div>{burned.total > 0 && <div className="small muted">{t('About {0} kcal burned', burned.total)}{budget?.earned > 0 ? ' · ' + t('{0} added to today', fmtNum(budget.earned)) : ''}</div>}</div>
         <Button size="sm" variant="tinted" icon="plus" onClick={() => extraBurnSheet(iso)}>{t('Add')}</Button>
       </div>
-      {burned.total > 0 && <div className="list">
+      {(burned.total > 0 || runs.length > 0) && <div className="list">
         {burned.workouts > 0 && <div className="item"><div className="grow"><div className="tt">{t('Workouts')}</div><div className="ss">{t('From your heart rate')}</div></div><b className="nut-kcal">{burned.workouts}</b></div>}
-        {burned.runs > 0 && <div className="item"><div className="grow"><div className="tt">{t('Runs')}</div><div className="ss">{t('From Samsung Health, or your heart rate')}</div></div><b className="nut-kcal">{burned.runs}</b></div>}
+        {runs.map(r => {
+          const info = runCalorieInfo(S, r), dist = runDistance(r, S.unit)
+          return <div key={r.id} className="item"><div className="grow">
+            <div className="tt">{r.title || t('Run')}{dist ? ' · ' + fmtNum(dist.value) + ' ' + dist.unit : ''}</div>
+            <div className="ss">{info.kcal ? (info.from === 'hr' ? t('From your heart rate') : t('From Samsung Health')) : MISSING[info.missing]?.()}</div>
+          </div><b className="nut-kcal">{info.kcal ? fmtNum(info.kcal) : '–'}</b></div>
+        })}
         {extras.map(x => <div key={x.id} className="item">
           <div className="grow"><div className="tt">{x.name}</div><div className="ss">{t('Added by you')}</div></div>
           <b className="nut-kcal">{x.kcal}</b>

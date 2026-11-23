@@ -98,6 +98,8 @@ export function summarizeRunDetail(s) {
   }
   if (Number(s?.elevation) >= 0 && s?.elevation != null) out.elevM = Math.round(Number(s.elevation))
   if (Number(s?.kcal) > 0) out.kcal = Math.round(Number(s.kcal))
+  // GymTrack: total calories (resting ones in), for a run saved without active ones (lib/calories.js).
+  if (Number(s?.kcalTotal) > 0) out.kcalTotal = Math.round(Number(s.kcalTotal))
   // Efficiency: metres covered per heartbeat. Going up at the same effort is cardio fitness.
   if (out.hr && meters > 0 && minutes > 0) out.eff = Math.round(meters / (out.hr.avg * minutes) * 100) / 100
   // Decoupling: how much pace-per-beat fell from the first half to the second. Under about 5 %
