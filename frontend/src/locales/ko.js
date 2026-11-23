@@ -3932,4 +3932,6 @@ export default {
   "No heart rate for this one. Wear the watch with the GymTrack watch app open to get one.": "이번 운동은 심박수가 없어요. GymTrack 시계 앱을 켠 채 시계를 차면 기록돼요.",
   "Too short to count.": "계산하기엔 너무 짧아요.",
   "Worked out for age 35. Add your year of birth in Settings, About you, for a closer number.": "35세 기준으로 계산했어요. 더 정확하게 하려면 설정, 내 정보에 출생 연도를 넣으세요.",
+  "Add it now": "지금 추가",
+  "Year of birth and sex, for calories and strength levels": "출생 연도와 성별, 칼로리와 근력 수준에 써요",
 }

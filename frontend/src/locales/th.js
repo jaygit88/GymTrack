@@ -3943,4 +3943,6 @@ export default {
   "No heart rate for this one. Wear the watch with the GymTrack watch app open to get one.": "ไม่มีอัตราการเต้นของหัวใจสำหรับครั้งนี้ สวมนาฬิกาโดยเปิดแอป GymTrack ไว้เพื่อให้ได้ค่า",
   "Too short to count.": "สั้นเกินกว่าจะนับ",
   "Worked out for age 35. Add your year of birth in Settings, About you, for a closer number.": "คำนวณที่อายุ 35 เพิ่มปีเกิดใน การตั้งค่า, เกี่ยวกับคุณ เพื่อตัวเลขที่ใกล้เคียงขึ้น",
+  "Add it now": "เพิ่มเลย",
+  "Year of birth and sex, for calories and strength levels": "ปีเกิดและเพศ สำหรับแคลอรีและระดับความแข็งแรง",
 }

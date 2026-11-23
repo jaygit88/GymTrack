@@ -167,7 +167,8 @@ export default function Nutrition() {
           <button className="iconbtn" aria-label={t('Remove')} onClick={() => update(s => removeExtra(s, iso, x.id))}><Icon name="xmark" /></button>
         </div>)}
       </div>}
-      {assumedAge && <div className="small muted" style={{ marginTop: 8 }}>{t('Worked out for age 35. Add your year of birth in Settings, About you, for a closer number.')}</div>}
+      {assumedAge && <div className="small muted" style={{ marginTop: 8 }}>{t('Worked out for age 35. Add your year of birth in Settings, About you, for a closer number.')}{' '}
+        <button className="linkbtn" onClick={async () => (await import('../components/StrengthLevel.jsx')).aboutYouSheet()}>{t('Add it now')}</button></div>}
     </div>
   </div>
 }

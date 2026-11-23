@@ -3935,4 +3935,6 @@ export default {
   "No heart rate for this one. Wear the watch with the GymTrack watch app open to get one.": "Ehhez nincs pulzus. Viseld az órát nyitott GymTrack óraalkalmazással, hogy legyen.",
   "Too short to count.": "Túl rövid ahhoz, hogy számítson.",
   "Worked out for age 35. Add your year of birth in Settings, About you, for a closer number.": "35 éves korra számolva. Add meg a születési éved a Beállítások, Rólad alatt a pontosabb számhoz.",
+  "Add it now": "Megadom most",
+  "Year of birth and sex, for calories and strength levels": "Születési év és nem, a kalóriához és az erőszintekhez",
 }

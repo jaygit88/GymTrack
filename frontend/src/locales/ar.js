@@ -3987,4 +3987,6 @@ export default {
   "No heart rate for this one. Wear the watch with the GymTrack watch app open to get one.": "لا نبض لهذا التمرين. البس الساعة وتطبيق GymTrack مفتوح عليها للحصول عليه.",
   "Too short to count.": "أقصر من أن يُحسب.",
   "Worked out for age 35. Add your year of birth in Settings, About you, for a closer number.": "محسوب لعمر 35. أضف سنة ميلادك في الإعدادات، عنك، لرقم أدق.",
+  "Add it now": "أضفه الآن",
+  "Year of birth and sex, for calories and strength levels": "سنة الميلاد والجنس، للسعرات ومستويات القوة",
 }

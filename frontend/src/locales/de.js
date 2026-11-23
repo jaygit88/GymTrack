@@ -3952,4 +3952,6 @@ export default {
   "No heart rate for this one. Wear the watch with the GymTrack watch app open to get one.": "Keine Herzfrequenz für dieses Training. Trag die Uhr mit geöffneter GymTrack-Uhren-App, um eine zu bekommen.",
   "Too short to count.": "Zu kurz, um zu zählen.",
   "Worked out for age 35. Add your year of birth in Settings, About you, for a closer number.": "Für Alter 35 berechnet. Trag dein Geburtsjahr unter Einstellungen, Über dich, ein, für einen genaueren Wert.",
+  "Add it now": "Jetzt eintragen",
+  "Year of birth and sex, for calories and strength levels": "Geburtsjahr und Geschlecht, für Kalorien und Kraftstufen",
 }

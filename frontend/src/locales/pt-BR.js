@@ -2559,6 +2559,7 @@ export const PT_BR_OVERRIDES = {
   "No heart rate for this one. Wear the watch with the GymTrack watch app open to get one.": "Sem frequência cardíaca neste. Use o relógio com o app GymTrack aberto para ter.",
   "Too short to count.": "Curto demais para contar.",
   "Worked out for age 35. Add your year of birth in Settings, About you, for a closer number.": "Calculado para 35 anos. Adicione seu ano de nascimento em Configurações, Sobre você, para um número mais certo.",
+  "Year of birth and sex, for calories and strength levels": "Ano de nascimento e sexo, para calorias e níveis de força",
 }
 
 export default { ...pt, ...PT_BR_OVERRIDES }

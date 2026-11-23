@@ -927,8 +927,9 @@ export default function Settings({ page = null, find = null, via = null, entryKe
           <Switch aria-label={t('Count body weight in bodyweight lifts')} checked={S.volumeBodyweight === true}
             onChange={v => update(s => { s.volumeBodyweight = v })} />
         </Row>
-        {/* Sex and year of birth, read only by the strength levels (lib/strength-level.js). */}
-        {on('strength') && <Row icon="person" iconTint="var(--teal)" title={t('About you')} subtitle={t('For your strength levels')} accessory="chevron" onClick={aboutYouSheet} />}
+        {/* Sex and year of birth: the strength levels (lib/strength-level.js) and, in GymTrack, the
+            calories from heart rate (lib/calories.js), so always here. */}
+        <Row icon="person" iconTint="var(--teal)" title={t('About you')} subtitle={t('Year of birth and sex, for calories and strength levels')} accessory="chevron" onClick={aboutYouSheet} />
         {/* #859: a day can hold several weigh-ins. Which one is the day's number for the chart, the
             trend, the goal line, widgets, Wrapped and the Coach (lib/weigh-ins.js). Morning is the
             default: it is the weight worth comparing from one day to the next. */}

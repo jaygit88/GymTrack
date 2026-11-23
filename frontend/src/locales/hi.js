@@ -3932,4 +3932,6 @@ export default {
   "No heart rate for this one. Wear the watch with the GymTrack watch app open to get one.": "इसके लिए हार्ट रेट नहीं है। पाने के लिए GymTrack वॉच ऐप खोलकर वॉच पहनें।",
   "Too short to count.": "गिनने के लिए बहुत छोटा।",
   "Worked out for age 35. Add your year of birth in Settings, About you, for a closer number.": "35 की उम्र के लिए गिना गया। सटीक संख्या के लिए सेटिंग्स, आपके बारे में में जन्म वर्ष जोड़ें।",
+  "Add it now": "अभी जोड़ें",
+  "Year of birth and sex, for calories and strength levels": "जन्म वर्ष और लिंग, कैलोरी और स्ट्रेंथ लेवल के लिए",
 }

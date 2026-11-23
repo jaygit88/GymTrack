@@ -3925,4 +3925,6 @@ export default {
   "No heart rate for this one. Wear the watch with the GymTrack watch app open to get one.": "這次沒有心率。戴上手錶並開啟 GymTrack 手錶 App 即可記錄。",
   "Too short to count.": "時間太短，不計入。",
   "Worked out for age 35. Add your year of birth in Settings, About you, for a closer number.": "以 35 歲計算。在設定、關於你中填寫出生年份可以更準確。",
+  "Add it now": "現在新增",
+  "Year of birth and sex, for calories and strength levels": "出生年份和性別，用於熱量和肌力等級",
 }

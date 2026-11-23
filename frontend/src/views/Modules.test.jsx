@@ -131,7 +131,7 @@ describe('Settings follows the modules', () => {
     for (const [q, title, mod] of [
       ['rir', 'Effort per set', 'effort'], ['weigh', 'Weigh in before workouts', 'body'], ['recap', 'Week and month recap', 'motivation'],
       ['challenges', 'Monthly challenges', 'motivation'], ['halloween', 'Halloween', 'seasonal'], ['recovery', 'Recovery tips', 'health'],
-      ['webhook', 'Webhooks', 'integrations'], ['nfc', 'Set up an NFC sticker', 'checkin'], ['about you', 'About you', 'strength'],
+      ['webhook', 'Webhooks', 'integrations'], ['nfc', 'Set up an NFC sticker', 'checkin'],
       ['warm-up', 'Automatic warm-ups', 'plates'],
     ]) {
       expect(has(q, web, title), title).toBe(true)

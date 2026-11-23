@@ -4011,4 +4011,6 @@ export default {
   "No heart rate for this one. Wear the watch with the GymTrack watch app open to get one.": "এটির জন্য হৃদস্পন্দন নেই। পেতে GymTrack ঘড়ির অ্যাপ খোলা রেখে ঘড়ি পরুন।",
   "Too short to count.": "গোনার জন্য খুব ছোট।",
   "Worked out for age 35. Add your year of birth in Settings, About you, for a closer number.": "৩৫ বছর বয়স ধরে হিসাব। আরও সঠিক সংখ্যার জন্য সেটিংস, আপনার সম্পর্কে জন্মসাল যোগ করুন।",
+  "Add it now": "এখনই যোগ করুন",
+  "Year of birth and sex, for calories and strength levels": "জন্মসাল ও লিঙ্গ, ক্যালোরি ও শক্তির স্তরের জন্য",
 }
