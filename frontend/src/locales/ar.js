@@ -3984,4 +3984,7 @@ export default {
   "Undone. Your plan is as it was.": "تم التراجع. خطتك كما كانت.",
   "From Samsung Health": "من Samsung Health",
   "No calories from Samsung Health yet. In Settings, Health Connect, turn Runs from your watch off and on to allow them.": "لا سعرات من Samsung Health بعد. في الإعدادات، Health Connect، أوقف ثم شغّل الجري من ساعتك للسماح بها.",
+  "No heart rate for this one. Wear the watch with the GymTrack watch app open to get one.": "لا نبض لهذا التمرين. البس الساعة وتطبيق GymTrack مفتوح عليها للحصول عليه.",
+  "Too short to count.": "أقصر من أن يُحسب.",
+  "Worked out for age 35. Add your year of birth in Settings, About you, for a closer number.": "محسوب لعمر 35. أضف سنة ميلادك في الإعدادات، عنك، لرقم أدق.",
 }

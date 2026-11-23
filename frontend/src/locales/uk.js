@@ -3926,4 +3926,7 @@ export default {
   "Undone. Your plan is as it was.": "Скасовано. План як був.",
   "From Samsung Health": "Із Samsung Health",
   "No calories from Samsung Health yet. In Settings, Health Connect, turn Runs from your watch off and on to allow them.": "Калорій із Samsung Health ще немає. У Налаштуваннях, Health Connect, вимкни й увімкни Пробіжки з годинника, щоб дозволити їх.",
+  "No heart rate for this one. Wear the watch with the GymTrack watch app open to get one.": "Для цього тренування немає пульсу. Носи годинник із відкритим застосунком GymTrack, щоб він був.",
+  "Too short to count.": "Надто коротко, щоб рахувати.",
+  "Worked out for age 35. Add your year of birth in Settings, About you, for a closer number.": "Пораховано для 35 років. Додай рік народження в Налаштування, Про тебе, для точності.",
 }

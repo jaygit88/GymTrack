@@ -16,10 +16,11 @@ describe('workoutCalories', () => {
     expect(r.kcal).toBe(430)
   })
 
-  it('says what is missing instead of guessing', () => {
+  it('says what is missing, and assumes only the age', () => {
     expect(workoutCalories(S(), w({ hr: null })).missing).toBe('hr')
     expect(workoutCalories(S(), w({ hr: { avg: 60 } })).missing).toBe('hr')
-    expect(workoutCalories(S({ birthYear: null }), w()).missing).toBe('age')
+    // No year of birth: 35, said as assumed. 38 years old gave 695; three years younger is a touch less.
+    expect(workoutCalories(S({ birthYear: null }), w())).toEqual({ kcal: 685, avgHr: 125, minutes: 60, assumed: 'age' })
     expect(workoutCalories(S({ bodyweight: [] }), w()).missing).toBe('weight')
     expect(workoutCalories(S(), w({ end: 2 * 60e3 })).missing).toBe('time')
   })
@@ -86,6 +87,6 @@ describe('runCalorieInfo', () => {
   it('says what is missing when there is no way to a number', () => {
     expect(runCalorieInfo(S(), run())).toEqual({ kcal: null, missing: 'calories' })
     expect(runCalorieInfo(S({ bodyweight: [] }), run({ hr: { avg: 150, max: 170 } }))).toEqual({ kcal: null, missing: 'weight' })
-    expect(runCalorieInfo(S({ birthYear: null }), run({ hr: { avg: 150, max: 170 } }))).toEqual({ kcal: null, missing: 'age' })
+    expect(runCalorieInfo(S({ birthYear: null }), run({ hr: { avg: 150, max: 170 } }))).toMatchObject({ from: 'hr', assumed: 'age' })
   })
 })

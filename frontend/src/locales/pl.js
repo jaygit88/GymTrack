@@ -3929,4 +3929,7 @@ export default {
   "Undone. Your plan is as it was.": "Cofnięto. Plan jest jak wcześniej.",
   "From Samsung Health": "Z Samsung Health",
   "No calories from Samsung Health yet. In Settings, Health Connect, turn Runs from your watch off and on to allow them.": "Brak jeszcze kalorii z Samsung Health. W Ustawieniach, Health Connect, wyłącz i włącz Biegi z zegarka, aby na nie zezwolić.",
+  "No heart rate for this one. Wear the watch with the GymTrack watch app open to get one.": "Brak tętna dla tego treningu. Noś zegarek z otwartą aplikacją GymTrack, aby je mieć.",
+  "Too short to count.": "Za krótko, by liczyć.",
+  "Worked out for age 35. Add your year of birth in Settings, About you, for a closer number.": "Policzone dla wieku 35 lat. Dodaj rok urodzenia w Ustawieniach, O tobie, aby było dokładniej.",
 }

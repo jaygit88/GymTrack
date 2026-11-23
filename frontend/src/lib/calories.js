@@ -15,6 +15,8 @@ const HR_MIN = 80
 const HR_MAX = 210
 // A session someone forgot to stop is not four hours of burning.
 const MAX_MIN = 180
+// The age used until one is set in Settings, About you.
+const DEFAULT_AGE = 35
 
 /**
  * Your weight in kg for a workout: its own weigh-in, else the latest one on or before its day,
@@ -59,8 +61,10 @@ export function workoutCalories(S, w) {
   if (!(avg >= HR_MIN && avg <= HR_MAX)) return { kcal: null, missing: 'hr' }
   const minutes = (Number(w?.end) - Number(w?.start)) / 60000
   if (!(minutes >= 5)) return { kcal: null, missing: 'time' }
-  const age = ageOf(S, new Date(w.d + 'T12:00:00').getFullYear())
-  if (!age) return { kcal: null, missing: 'age' }
+  // Without a year of birth, 35: age moves the formula by only about 1 % a decade, and no number
+  // at all helped nobody. `assumed` says so, for a hint to add it.
+  const known = ageOf(S, new Date(w.d + 'T12:00:00').getFullYear())
+  const age = known || DEFAULT_AGE
   const kg = weightKgFor(S, w)
   if (!kg) return { kcal: null, missing: 'weight' }
   const female = (sexOf(S) || (S?.body === 'female' ? 'female' : 'male')) === 'female'
@@ -68,7 +72,7 @@ export function workoutCalories(S, w) {
     ? (-20.4022 + 0.4472 * avg - 0.1263 * kg + 0.074 * age) / 4.184
     : (-55.0969 + 0.6309 * avg + 0.1988 * kg + 0.2017 * age) / 4.184
   const kcal = Math.max(0, perMin * Math.min(minutes, MAX_MIN))
-  return { kcal: Math.round(kcal / 5) * 5, avgHr: Math.round(avg), minutes: Math.round(minutes) }
+  return { kcal: Math.round(kcal / 5) * 5, avgHr: Math.round(avg), minutes: Math.round(minutes), ...(known ? {} : { assumed: 'age' }) }
 }
 
 /**
@@ -89,7 +93,7 @@ export function runCalorieInfo(S, r) {
     if (k > 0) return { kcal: round(k), from: 'total' }
   }
   const est = workoutCalories(S, { d: r?.d, start: r?.start, end: r?.end, hr: r?.hr })
-  if (est.kcal) return { kcal: est.kcal, from: 'hr' }
+  if (est.kcal) return { kcal: est.kcal, from: 'hr', ...(est.assumed ? { assumed: est.assumed } : {}) }
   return { kcal: null, missing: est.missing === 'hr' ? 'calories' : est.missing }
 }
 export const runCalories = (S, r) => runCalorieInfo(S, r).kcal

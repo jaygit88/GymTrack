@@ -5,7 +5,7 @@ import CardHead from '../components/CardHead.jsx'
 import { Button } from '../components/ui.jsx'
 import { findFoodSheet, amountSheet, recipeSheet, targetsSheet, extraBurnSheet, macroLine, MEAL_LABEL } from '../components/FoodSheets.jsx'
 import { MEALS, dayEntries, dayTotals, mealTotals, averages, targetsOf, recipeNutrients, dayBudget, copyMeal } from '../lib/nutrition.js'
-import { burnedOn, extraOn, removeExtra, runCalorieInfo } from '../lib/calories.js'
+import { burnedOn, extraOn, removeExtra, runCalorieInfo, workoutCalories } from '../lib/calories.js'
 import { runsOn, runDistance } from '../lib/runs.js'
 import { todayISO, isoOf, fmtDate, fmtNum, uid } from '../lib/format.js'
 import { t } from '../lib/i18n.js'
@@ -63,7 +63,11 @@ export default function Nutrition() {
   const extras = extraOn(S, iso)
   const runs = runsOn(S, iso)
   // Why a run has no calories, and what fixes it (lib/calories.js runCalorieInfo).
+  const workouts = S.workouts.filter(w => w && w.d === iso)
+  const assumedAge = [...workouts.map(w => workoutCalories(S, w)), ...runs.map(r => runCalorieInfo(S, r))].some(x => x.assumed === 'age')
   const MISSING = {
+    hr: () => t('No heart rate for this one. Wear the watch with the GymTrack watch app open to get one.'),
+    time: () => t('Too short to count.'),
     calories: () => t('No calories from Samsung Health yet. In Settings, Health Connect, turn Runs from your watch off and on to allow them.'),
     weight: () => t('Log your weight once to see the calories.'),
     age: () => t('Add your year of birth in Settings, About you, to see the calories.'),
@@ -142,8 +146,14 @@ export default function Nutrition() {
         <div><div className="nut-meal-t">{t('Exercise')}</div>{burned.total > 0 && <div className="small muted">{t('About {0} kcal burned', burned.total)}{budget?.earned > 0 ? ' · ' + t('{0} added to today', fmtNum(budget.earned)) : ''}</div>}</div>
         <Button size="sm" variant="tinted" icon="plus" onClick={() => extraBurnSheet(iso)}>{t('Add')}</Button>
       </div>
-      {(burned.total > 0 || runs.length > 0) && <div className="list">
-        {burned.workouts > 0 && <div className="item"><div className="grow"><div className="tt">{t('Workouts')}</div><div className="ss">{t('From your heart rate')}</div></div><b className="nut-kcal">{burned.workouts}</b></div>}
+      {(burned.total > 0 || runs.length > 0 || workouts.length > 0) && <div className="list">
+        {workouts.map((w, i) => {
+          const c = workoutCalories(S, w)
+          return <div key={w.id || i} className="item"><div className="grow">
+            <div className="tt">{w.name || t('Workout')}</div>
+            <div className="ss">{c.kcal ? t('From your heart rate') : MISSING[c.missing]?.()}</div>
+          </div><b className="nut-kcal">{c.kcal ? fmtNum(c.kcal) : '–'}</b></div>
+        })}
         {runs.map(r => {
           const info = runCalorieInfo(S, r), dist = runDistance(r, S.unit)
           return <div key={r.id} className="item"><div className="grow">
@@ -157,6 +167,7 @@ export default function Nutrition() {
           <button className="iconbtn" aria-label={t('Remove')} onClick={() => update(s => removeExtra(s, iso, x.id))}><Icon name="xmark" /></button>
         </div>)}
       </div>}
+      {assumedAge && <div className="small muted" style={{ marginTop: 8 }}>{t('Worked out for age 35. Add your year of birth in Settings, About you, for a closer number.')}</div>}
     </div>
   </div>
 }

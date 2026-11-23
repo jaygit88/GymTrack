@@ -2556,6 +2556,9 @@ export const PT_BR_OVERRIDES = {
   "Start it now": "Começar agora",
   "Undone. Your plan is as it was.": "Desfeito. Seu plano está como antes.",
   "No calories from Samsung Health yet. In Settings, Health Connect, turn Runs from your watch off and on to allow them.": "Ainda sem calorias do Samsung Health. Em Configurações, Health Connect, desligue e ligue Corridas do relógio para permitir.",
+  "No heart rate for this one. Wear the watch with the GymTrack watch app open to get one.": "Sem frequência cardíaca neste. Use o relógio com o app GymTrack aberto para ter.",
+  "Too short to count.": "Curto demais para contar.",
+  "Worked out for age 35. Add your year of birth in Settings, About you, for a closer number.": "Calculado para 35 anos. Adicione seu ano de nascimento em Configurações, Sobre você, para um número mais certo.",
 }
 
 export default { ...pt, ...PT_BR_OVERRIDES }

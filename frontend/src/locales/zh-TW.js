@@ -3922,4 +3922,7 @@ export default {
   "Undone. Your plan is as it was.": "已復原。課表恢復原樣。",
   "From Samsung Health": "來自 Samsung Health",
   "No calories from Samsung Health yet. In Settings, Health Connect, turn Runs from your watch off and on to allow them.": "還沒有來自 Samsung Health 的熱量。在設定、Health Connect 中關閉再開啟「來自手錶的跑步」以允許讀取。",
+  "No heart rate for this one. Wear the watch with the GymTrack watch app open to get one.": "這次沒有心率。戴上手錶並開啟 GymTrack 手錶 App 即可記錄。",
+  "Too short to count.": "時間太短，不計入。",
+  "Worked out for age 35. Add your year of birth in Settings, About you, for a closer number.": "以 35 歲計算。在設定、關於你中填寫出生年份可以更準確。",
 }

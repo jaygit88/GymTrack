@@ -4008,4 +4008,7 @@ export default {
   "Undone. Your plan is as it was.": "ফেরানো হয়েছে। প্ল্যান আগের মতো।",
   "From Samsung Health": "Samsung Health থেকে",
   "No calories from Samsung Health yet. In Settings, Health Connect, turn Runs from your watch off and on to allow them.": "Samsung Health থেকে এখনো ক্যালোরি আসেনি। সেটিংস, Health Connect-এ ঘড়ি থেকে দৌড় বন্ধ করে আবার চালু করুন।",
+  "No heart rate for this one. Wear the watch with the GymTrack watch app open to get one.": "এটির জন্য হৃদস্পন্দন নেই। পেতে GymTrack ঘড়ির অ্যাপ খোলা রেখে ঘড়ি পরুন।",
+  "Too short to count.": "গোনার জন্য খুব ছোট।",
+  "Worked out for age 35. Add your year of birth in Settings, About you, for a closer number.": "৩৫ বছর বয়স ধরে হিসাব। আরও সঠিক সংখ্যার জন্য সেটিংস, আপনার সম্পর্কে জন্মসাল যোগ করুন।",
 }

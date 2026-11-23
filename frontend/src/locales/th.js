@@ -3940,4 +3940,7 @@ export default {
   "Undone. Your plan is as it was.": "ยกเลิกแล้ว แผนกลับเป็นเหมือนเดิม",
   "From Samsung Health": "จาก Samsung Health",
   "No calories from Samsung Health yet. In Settings, Health Connect, turn Runs from your watch off and on to allow them.": "ยังไม่มีแคลอรีจาก Samsung Health ใน การตั้งค่า, Health Connect ให้ปิดแล้วเปิด การวิ่งจากนาฬิกา เพื่ออนุญาต",
+  "No heart rate for this one. Wear the watch with the GymTrack watch app open to get one.": "ไม่มีอัตราการเต้นของหัวใจสำหรับครั้งนี้ สวมนาฬิกาโดยเปิดแอป GymTrack ไว้เพื่อให้ได้ค่า",
+  "Too short to count.": "สั้นเกินกว่าจะนับ",
+  "Worked out for age 35. Add your year of birth in Settings, About you, for a closer number.": "คำนวณที่อายุ 35 เพิ่มปีเกิดใน การตั้งค่า, เกี่ยวกับคุณ เพื่อตัวเลขที่ใกล้เคียงขึ้น",
 }
