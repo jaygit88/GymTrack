@@ -11,6 +11,7 @@ import { getApiKey } from './coach-secrets.js'
 import { buildReviewPayload, buildReviewPrompt, checkReview, checkRunPlan, checkQuick, planToSave, schemaFor, REVIEW_MODES } from './ai-review.js'
 import { chatContext, buildChatPrompt, checkChat, CHAT_SCHEMA } from './ai-chat.js'
 import { buildLabelPrompt, checkLabel, LABEL_SCHEMA } from './label-read.js'
+import { checkProposal } from './ai-plan.js'
 import { getLang } from './i18n-core.js'
 import { t } from './i18n.js'
 import { todayISO } from './format.js'
@@ -113,7 +114,9 @@ export async function runAiChat(where, history, question, { deps = {} } = {}) {
   }))
   const checked = parsed.error ? { ok: false } : checkChat(parsed.value)
   if (!checked.ok) throw fail(t('GymTrackAI did not answer. Try again in a moment.'))
-  return { answer: checked.answer, followUps: checked.followUps }
+  // A plan change, checked against the plan as it is now: real exercises, a routine that exists.
+  const plan = checked.proposal ? checkProposal(useStore.getState().S, checked.proposal, todayISO()) : null
+  return { answer: checked.answer, followUps: checked.followUps, ...(plan?.ok ? { proposal: plan.proposal, ...(plan.dropped?.length ? { dropped: plan.dropped } : {}) } : {}) }
 }
 
 /**

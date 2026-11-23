@@ -130,4 +130,27 @@ describe('GymTrackAI in the chat', () => {
     expect(tail[1].followUps).toEqual(['What should I eat tonight?'])
     expect(byText(/What should I eat tonight\?/)).toBeTruthy()
   })
+
+  it('shows a plan change as a card: Save puts it on today, Undo takes it back', async () => {
+    const today = todayISO()
+    mocks.runAiChat = vi.fn(async () => ({ answer: 'Here is a neck-friendly session. Tap Save below.', followUps: [],
+      proposal: { kind: 'newRoutine', name: 'Push & Back (neck-friendly)', on: { date: today }, exercises: [{ id: '0025', sets: 3, reps: 12, repsMin: 10, weight: 37 }] } }))
+    const S = state()
+    S.routines = [{ id: 'r1', name: 'Push & Back', ex: [] }]
+    S.coach.chat.push({ id: 'c3', role: 'coach', kind: 'text', text: 'Hello', at: 3, followUps: ['Save it as a routine'] })
+    await mount(null, null, { S })
+    await click(byText(/Save it as a routine/))
+    await act(async () => { await new Promise(r => setTimeout(r, 0)) })
+    expect(container.textContent).toContain('New routine: Push & Back (neck-friendly)')
+    expect(container.textContent).toContain('Just for today')
+    await click(byText(/^Save$/))
+    const made = S.routines.find(r => r.name === 'Push & Back (neck-friendly)')
+    expect(made.ex[0]).toMatchObject({ id: '0025', sets: 3, reps: 12, repsMin: 10, weight: 37 })
+    expect(S.dayPlan[today]).toBe(made.id)
+    await act(async () => { root.render(React.createElement(CoachChat)) })
+    expect(container.textContent).toContain('Saved to your plan')
+    await click(byText(/^Undo$/))
+    expect(S.routines.map(r => r.id)).toEqual(['r1'])
+    expect(S.dayPlan[today]).toBeUndefined()
+  })
 })

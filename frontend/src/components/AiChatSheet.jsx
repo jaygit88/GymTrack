@@ -5,6 +5,8 @@ import { useUI } from '../store/useUI.js'
 import { useStore } from '../store/useStore.js'
 import { aiReviewReady, runAiChat } from '../lib/ai-review-run.js'
 import { appendChat } from '../lib/coach.js'
+import { uid } from '../lib/format.js'
+import AiProposalCard from './AiProposalCard.jsx'
 import { isOn } from '../lib/modules.js'
 import { EXIDX } from '../lib/exercises.js'
 import { t } from '../lib/i18n.js'
@@ -62,11 +64,12 @@ function AiChat({ close, where }) {
     setTurns([...history, { role: 'you', text: question }]); setText(''); setBusy(true); setError(null)
     try {
       const r = await runAiChat(where, history, question)
-      setTurns(x => [...x, { role: 'ai', text: r.answer, followUps: r.followUps }])
+      const id = uid()
+      setTurns(x => [...x, { role: 'ai', text: r.answer, followUps: r.followUps, id, proposal: !!r.proposal }])
       // The same conversation as the GymTrackAI screen: it is there to read back, and to go on with.
       useStore.getState().update(s => {
         appendChat(s, { role: 'user', kind: 'text', text: question })
-        appendChat(s, { role: 'coach', kind: 'text', text: r.answer })
+        appendChat(s, { id, role: 'coach', kind: 'text', text: r.answer, ...(r.proposal ? { proposal: r.proposal, ...(r.dropped ? { dropped: r.dropped } : {}) } : {}) })
       })
     } catch (e) {
       if (e?.code !== 'declined') setError(e?.message || t('Try again'))
@@ -84,7 +87,7 @@ function AiChat({ close, where }) {
       <Button variant="primary" icon="sparkles" onClick={setUp}>{t('Set up GymTrackAI')}</Button>
     </> : <>
       <div className="ai-chat">
-        {turns.map((x, i) => <div key={i} className={'ai-msg ' + (x.role === 'ai' ? 'ai' : 'you')}>{x.role === 'ai' ? <Answer text={x.text} /> : x.text}</div>)}
+        {turns.map((x, i) => <div key={i} className={'ai-msg ' + (x.role === 'ai' ? 'ai' : 'you')}>{x.role === 'ai' ? <><Answer text={x.text} />{x.proposal && <AiProposalCard msgId={x.id} />}</> : x.text}</div>)}
         {busy && <div className="ai-msg ai muted">{t('GymTrackAI is thinking…')}</div>}
         <div ref={end} />
       </div>

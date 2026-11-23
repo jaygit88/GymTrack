@@ -21,6 +21,7 @@ import { runGoalOf } from './running.js'
 import { runDistance } from './runs.js'
 import { MEALS, dayEntries, dayTotals, mealTotals, averages, targetsOf, recipeNutrients, recentFoods, nutritionSummary, dayBudget } from './nutrition.js'
 import { isoOf } from './format.js'
+import { planForModel, libraryForModel } from './ai-plan.js'
 
 export const CHAT_SCREENS = ['nutrition', 'exercise', 'general']
 const DAY = 86400e3
@@ -109,7 +110,10 @@ function generalContext(S, now) {
 export function chatContext(S, { screen = 'general', iso, exId, now = Date.now() } = {}) {
   const sc = CHAT_SCREENS.includes(screen) ? screen : 'general'
   const day = iso || isoOf(new Date(now))
-  const base = { screen: sc, today: isoOf(new Date(now)), unit: unitOf(S), you: you(S) }
+  const today = isoOf(new Date(now))
+  const weekday = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][new Date(now).getDay()]
+  // The plan and the exercises it may use, on every screen: any answer can turn into a change.
+  const base = { screen: sc, today, weekday, unit: unitOf(S), you: you(S), plan: planForModel(S || {}, today), library: libraryForModel(S || {}) }
   if (sc === 'nutrition') return { ...base, nutrition: nutritionContext(S || {}, day) }
   if (sc === 'exercise' && exId) return { ...base, exercise: exerciseContext(S || {}, exId, now) }
   return { ...base, screen: 'general', recent: generalContext(S || {}, now) }
@@ -123,12 +127,15 @@ const RULES = [
   'On an exercise: give concrete cues for getting more from it (setup, range of motion, tempo, where to feel it, the squeeze, common mistakes), and when asked about load, read their last sessions and today\'s sets.',
   'Be specific and kind, never preachy. No medical advice; for pain or injury suggest seeing a professional.',
   'Also give "followUps": up to three short questions they might ask next, in their words, each under 8 words.',
-  'Return exactly one JSON object and nothing else: {"answer": string, "followUps": [string]}.',
+  'You can change their plan, but only by proposing it: they see your "proposal" as a card with a Save button, and nothing changes until they tap it. Add one when they ask you to save, create, change or schedule a routine or workout, or when you give them a workout to do and saving it would clearly help (then offer it). Never claim you cannot save routines.',
+  'A "proposal" is null or one of: {"kind": "newRoutine", "name": string, "exercises": [...], "on": ...}; {"kind": "editRoutine", "routineId": string, "exercises": [...], "on": ...} (the routine\'s whole new exercise list); {"kind": "schedule", "routineId": string, "on": ...}. Each exercise is {"id": string, "sets": number, "reps": number, "repsMin": number or null, "weight": number or null}, weight in their unit. Use ids from "plan" and "library"; for an exercise in neither, give its common English name as "name" instead of "id". "on" is null, {"date": "YYYY-MM-DD"} for that day only ("today" in "today", "just for today"), or {"weekdays": ["Mon", ...]} for every week. Their usual routine for a day stays in their plan when you put something on a date.',
+  'When you add a proposal, say in "answer" what it does and that they can tap Save below; do not list the exercises a second time in full.',
+  'Return exactly one JSON object and nothing else: {"answer": string, "followUps": [string], "proposal": object or null}.',
 ]
 
 export const CHAT_SCHEMA = {
   type: 'object', additionalProperties: false, required: ['answer', 'followUps'],
-  properties: { answer: { type: 'string' }, followUps: { type: 'array', items: { type: 'string' } } },
+  properties: { answer: { type: 'string' }, followUps: { type: 'array', items: { type: 'string' } }, proposal: { type: ['object', 'null'] } },
 }
 
 /**
@@ -156,5 +163,6 @@ export function checkChat(v) {
   if (!answer) return { ok: false }
   const followUps = (Array.isArray(v.followUps) ? v.followUps : []).filter(x => typeof x === 'string' && x.trim())
     .map(x => x.trim().slice(0, 80)).slice(0, 3)
-  return { ok: true, answer, followUps }
+  // The proposal goes on as the model wrote it; lib/ai-plan.js checkProposal reads it against the state.
+  return { ok: true, answer, followUps, ...(v.proposal && typeof v.proposal === 'object' ? { proposal: v.proposal } : {}) }
 }

@@ -2547,6 +2547,14 @@ export const PT_BR_OVERRIDES = {
   "Scheduled reviews take a break while GymTrackAI is off. Your setup and chats stay.": "As revisões agendadas param enquanto o GymTrackAI estiver desligado. Sua configuração e conversas ficam.",
   "Set up GymTrackAI with your own API key first: Settings, GymTrackAI.": "Configure primeiro o GymTrackAI com sua chave de API: Configurações, GymTrackAI.",
   "Your AI provider rejected the key on this phone. Check it under Settings → GymTrackAI.": "Seu provedor de IA recusou a chave neste celular. Confira em Configurações → GymTrackAI.",
+  "Just for today. Your usual plan stays as it is.": "Só para hoje. Seu plano de sempre continua igual.",
+  "Left out, not in the exercise list: {0}": "Ficou de fora, não está na lista de exercícios: {0}",
+  "Not saved": "Não salvo",
+  "On {0} only. Your usual plan stays as it is.": "Só em {0}. Seu plano de sempre continua igual.",
+  "Put “{0}” on your plan": "Colocar “{0}” no seu plano",
+  "Saved to your plan": "Salvo no seu plano",
+  "Start it now": "Começar agora",
+  "Undone. Your plan is as it was.": "Desfeito. Seu plano está como antes.",
 }
 
 export default { ...pt, ...PT_BR_OVERRIDES }

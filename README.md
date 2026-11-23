@@ -96,8 +96,10 @@ day of food against your budget, and your average weight against the week before
 GymTrackAI is the app's coach. The chat (Plan, **GymTrackAI**) answers questions from your
 training, food diary, weigh-ins and runs, and keeps the conversation; the sparkle buttons on
 Nutrition, Home and an exercise's menu ask it about that screen and save to the same chat.
-**Review my training**, **Improve a routine** and **Adjust this workout** change your plan as
-cards you accept, as openGym's Coach did.
+It can also change your plan from the conversation: ask it to save a workout as a routine, change a
+routine, or put one on today or on weekdays, and the change comes as a card under its answer
+with **Save** (and **Undo** after). **Review my training**, **Improve a routine** and **Adjust
+this workout** still work as before.
 
 - **Ask GymTrackAI:** a short chat about what is on screen. On Nutrition it knows the day's food,
   what is left of your targets, what you burned and your recipes ("What should I have for

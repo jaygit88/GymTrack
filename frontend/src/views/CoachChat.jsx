@@ -37,6 +37,7 @@ import { AiConsentSection } from '../components/CoachConsentSheet.jsx'
 import { useCoachGate } from '../lib/use-coach-gate.js'
 import { aiReviewReady, runAiChat } from '../lib/ai-review-run.js'
 import { chatHistoryOf } from '../lib/ai-chat.js'
+import AiProposalCard from '../components/AiProposalCard.jsx'
 import { confirmSheet } from '../sheets.jsx'
 import Icon from '../components/Icon.jsx'
 import { glyphOf } from '../lib/glyphs.js'
@@ -162,7 +163,8 @@ export default function CoachChat() {
     setAiBusy(true)
     try {
       const r = await runAiChat({ screen: 'general' }, history, msg)
-      update(s => appendChat(s, { role: 'coach', kind: 'text', text: r.answer, ...(r.followUps?.length ? { followUps: r.followUps } : {}) }))
+      update(s => appendChat(s, { role: 'coach', kind: 'text', text: r.answer, ...(r.followUps?.length ? { followUps: r.followUps } : {}),
+        ...(r.proposal ? { proposal: r.proposal, ...(r.dropped ? { dropped: r.dropped } : {}) } : {}) }))
       refresh()
     } catch (e) {
       if (!isDeclined(e) && e?.code !== 'declined') toast(e?.message || t('Try again'))
@@ -313,6 +315,8 @@ function Message({ m, S, profile, openSheet }) {
     </div>
   }
   if (m.kind === 'reverted' || m.kind === 'nochange' || m.kind === 'error' || m.kind === 'text') {
+    // GymTrackAI's plan change, when the answer carries one (components/AiProposalCard.jsx).
+    if (m.proposal) return <Bubble role={m.role} kind={m.kind} at={m.at}>{m.text}<AiProposalCard msgId={m.id} /></Bubble>
     return <Bubble role={m.role} kind={m.kind} at={m.at}>{m.text}</Bubble>
   }
   return null
